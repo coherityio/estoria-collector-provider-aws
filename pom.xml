@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>io.coherity.shared.parent.java</groupId>
+        <artifactId>parent-pom-java</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
+    <groupId>io.coherity.estoria.provider</groupId>
+    <artifactId>estoria-collector-provider-aws</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+    
+    <name>Estoria Collector Provider AWS</name>
+    <description>Service Provider for AWS</description>
+
+	<properties>
+		<project.repo.url>https://maven.pkg.github.com/coherityio/estoria-collector-provider-aws</project.repo.url>
+        <slf4j.version>2.0.12</slf4j.version>
+        <log4j2.version>2.23.1</log4j2.version>
+        <coherity-common.version>1.0.0-SNAPSHOT</coherity-common.version>
+        <estoria.version>1.0.0-SNAPSHOT</estoria.version>
+	</properties>
+
+	<distributionManagement>
+		<repository>
+			<id>estoria-collector-provider-aws-repo</id>
+			<name>Estoria Collector SPI Repo</name>
+			<url>https://maven.pkg.github.com/coherityio/estoria-collector-provider-aws</url>
+		</repository>
+		<snapshotRepository>
+			<id>estoria-collector-provider-aws-repo</id>
+			<name>Estoria Collector SPI Snapshots Repo</name>
+			<url>https://maven.pkg.github.com/coherityio/estoria-collector-provider-aws</url>
+		</snapshotRepository>
+	</distributionManagement>
+
+    <dependencies>
+
+
+        <dependency>
+            <groupId>io.coherity.shared</groupId>
+            <artifactId>coherity-common</artifactId>
+            <version>${coherity-common.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.coherity.estoria</groupId>
+            <artifactId>estoria-collector-spi</artifactId>
+            <version>${estoria.version}</version>
+        </dependency>
+
+        <!-- Lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- Logging: SLF4J API + Log4j2 implementation -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>${log4j2.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>${log4j2.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j2-impl</artifactId>
+            <version>${log4j2.version}</version>
+        </dependency>
+
+        <!-- Test Dependencies -->
+		
+		
+    </dependencies>
+    
+    <build>
+        <plugins>
+        </plugins>
+    </build>
+
+</project>
