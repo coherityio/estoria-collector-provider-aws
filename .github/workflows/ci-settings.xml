@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	Maven Settings Template for Coherity Shared POM
+	
+	This file should be placed at ~/.m2/settings.xml (or use -s flag)
+	
+	For CI/CD: Use environment variables or GitHub secrets
+	For Local Development: Replace placeholders with actual credentials
+-->
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+					xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+					xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
+			    https://maven.apache.org/xsd/settings-1.0.0.xsd">
+
+	<servers>
+		<server>
+			<id>coherity-parent-pom-java-repo</id>
+			<username>${MAVEN_USERNAME}</username>
+			<password>${MAVEN_PASSWORD}</password>
+		</server>
+
+		<server>
+			<id>estoria-collector-spi-repo</id>
+			<username>${MAVEN_USERNAME}</username>
+			<password>${MAVEN_PASSWORD}</password>
+		</server>
+
+		<server>
+			<id>estoria-collector-provider-aws-repo</id>
+			<username>${MAVEN_USERNAME}</username>
+			<password>${MAVEN_PASSWORD}</password>
+		</server>
+
+	</servers>
+
+	<profiles>
+		<!-- Profile for connecting to Coherity repositories -->
+		<profile>
+			<id>coherity-repos</id>
+			<repositories>
+				<!-- Maven Central (explicit) -->
+				<repository>
+					<id>central</id>
+					<name>Maven Central Repository</name>
+					<url>https://repo1.maven.org/maven2</url>
+					<releases>
+						<enabled>true</enabled>
+					</releases>
+					<snapshots>
+						<enabled>false</enabled>
+					</snapshots>
+				</repository>
+				
+				<!-- Coherity Repositories (GitHub Packages) -->
+				<repository>
+					<id>coherity-parent-pom-java-repo</id>
+					<name>coherity-parent-pom-java-repo</name>
+					<url>https://maven.pkg.github.com/coherityio/parent-pom-java</url>
+					<releases>
+						<enabled>true</enabled>
+					</releases>
+					<snapshots>
+						<enabled>true</enabled>
+					</snapshots>
+				</repository>
+
+				<repository>
+					<id>estoria-collector-spi-repo</id>
+					<name>estoria-collector-spi-repo</name>
+					<url>https://maven.pkg.github.com/coherityio/estoria-collector-spi</url>
+					<releases>
+						<enabled>true</enabled>
+					</releases>
+					<snapshots>
+						<enabled>true</enabled>
+					</snapshots>
+				</repository>
+
+				<repository>
+					<id>estoria-collector-provider-aws-repo</id>
+					<name>estoria-collector-spi-repo</name>
+					<url>https://maven.pkg.github.com/coherityio/estoria-collector-provider-aws</url>
+					<releases>
+						<enabled>true</enabled>
+					</releases>
+					<snapshots>
+						<enabled>true</enabled>
+					</snapshots>
+				</repository>
+
+
+			</repositories>
+			
+			<pluginRepositories>
+				<!-- Maven Central for plugins (explicit) -->
+				<pluginRepository>
+					<id>central</id>
+					<name>Maven Central Repository</name>
+					<url>https://repo1.maven.org/maven2</url>
+					<releases>
+						<enabled>true</enabled>
+					</releases>
+					<snapshots>
+						<enabled>false</enabled>
+					</snapshots>
+				</pluginRepository>
+			</pluginRepositories>
+		</profile>
+	</profiles>
+
+	<activeProfiles>
+		<activeProfile>coherity-repos</activeProfile>
+	</activeProfiles>
+</settings>
