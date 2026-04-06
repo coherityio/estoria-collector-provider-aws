@@ -1,0 +1,320 @@
+Proposed AWS Collectors for estoria-collector-provider-aws
+=========================================================
+
+Design assumption: one Collector class per entity type exposed by the AWS
+provider. Naming convention (suggested):
+
+    Aws<Vpc>Collector for entity type "Vpc"
+    Aws<Subnet>Collector for entity type "Subnet"
+
+Below is an extensive (though still finite) list of entity types grouped by
+AWS domain. Each bullet corresponds to one potential Collector implementation.
+
+---------------------------------------------------------------------
+[Core Networking]
+---------------------------------------------------------------------
+- VpcCollector                 – VPCs (configuration, CIDR blocks, tags)
+- SubnetCollector              – Subnets (AZ, CIDR, route table association)
+- RouteTableCollector          – Route tables and routes
+- InternetGatewayCollector     – Internet gateways and VPC attachments
+- NatGatewayCollector          – NAT gateways
+- VpcEndpointCollector         – VPC endpoints (interface/gateway)
+- VpcEndpointServiceCollector  – Endpoint services
+- NetworkAclCollector          – Network ACLs and entries
+- SecurityGroupCollector       – Security groups and rules
+- TransitGatewayCollector      – Transit gateways
+- TransitGatewayAttachmentCollector – TGW attachments (VPC, VPN, DX, etc.)
+- VpcPeeringConnectionCollector – VPC peering connections
+- CustomerGatewayCollector     – Customer gateways (for VPN)
+- VpnConnectionCollector       – Site-to-site VPN connections
+- CarrierGatewayCollector      – Carrier gateways
+- LocalGatewayCollector        – Local gateways (on-prem integration)
+- NetworkInterfaceCollector    – Elastic network interfaces (ENIs)
+- ElasticIpCollector           – Elastic IP addresses
+- PrefixListCollector          – Managed prefix lists
+- DhcpOptionsCollector         – DHCP options sets
+- IpamCollector                – IP Address Manager (IPAM) scopes and pools
+- IpamPoolCollector            – Individual IPAM pools
+- IpamScopeCollector           – IPAM scopes
+
+---------------------------------------------------------------------
+[Load Balancing & App Networking]
+---------------------------------------------------------------------
+- ClassicLoadBalancerCollector – Classic ELB load balancers
+- ApplicationLoadBalancerCollector – ALB load balancers
+- NetworkLoadBalancerCollector – NLB load balancers
+- GatewayLoadBalancerCollector – GWLB load balancers
+- LoadBalancerListenerCollector – LB listeners
+- TargetGroupCollector         – Target groups
+- TargetHealthCollector        – Target health state
+- GlobalAcceleratorCollector   – Global Accelerator accelerators and endpoints
+- AppMeshMeshCollector         – AWS App Mesh meshes
+- AppMeshVirtualServiceCollector – App Mesh virtual services
+- AppMeshVirtualNodeCollector  – App Mesh virtual nodes
+- VpcLinkCollector             – API Gateway VPC links
+- PrivateLinkServiceCollector  – PrivateLink endpoint services exposure
+
+---------------------------------------------------------------------
+[Compute: EC2 & Auto Scaling]
+---------------------------------------------------------------------
+- Ec2InstanceCollector         – EC2 instances (state, type, metadata)
+- Ec2LaunchTemplateCollector   – Launch templates
+- Ec2LaunchConfigurationCollector – Launch configurations (legacy ASG)
+- AutoScalingGroupCollector    – Auto Scaling groups
+- AutoScalingPolicyCollector   – Scaling policies and schedules
+- CapacityReservationCollector – EC2 capacity reservations
+- SpotFleetRequestCollector    – Spot fleet requests
+- Ec2PlacementGroupCollector   – Placement groups
+- Ec2KeyPairCollector          – SSH key pairs
+- Ec2ImageCollector            – Amazon Machine Images (AMIs)
+- Ec2HostCollector             – Dedicated hosts
+- Ec2SnapshotCollector         – EBS snapshots
+- EbsVolumeCollector           – EBS volumes
+- EbsVolumeAttachmentCollector – Volume attachments to instances
+
+---------------------------------------------------------------------
+[Compute: Containers & Serverless]
+---------------------------------------------------------------------
+- EcsClusterCollector          – ECS clusters
+- EcsServiceCollector          – ECS services
+- EcsTaskDefinitionCollector   – Task definitions
+- EcsTaskCollector             – Running tasks
+- EcsCapacityProviderCollector – ECS capacity providers
+- EcsContainerInstanceCollector – ECS container instances (EC2-backed)
+- EcsServiceDiscoveryCollector – ECS–Cloud Map integration
+- EksClusterCollector          – EKS clusters
+- EksNodeGroupCollector        – Managed node groups
+- EksAddonCollector            – EKS add-ons
+- EksFargateProfileCollector   – Fargate profiles
+- LambdaFunctionCollector      – Lambda functions and configuration
+- LambdaAliasCollector         – Lambda aliases
+- LambdaVersionCollector       – Published Lambda versions
+- LambdaLayerCollector         – Lambda layers
+- LambdaEventSourceMappingCollector – Event source mappings (e.g., Kinesis/SQS)
+- LambdaPermissionCollector    – Lambda resource-based policies
+
+---------------------------------------------------------------------
+[Storage & CDN]
+---------------------------------------------------------------------
+- S3BucketCollector            – S3 buckets (location, versioning, encryption)
+- S3BucketPolicyCollector      – Bucket policies
+- S3BucketAclCollector         – Bucket ACLs (if needed)
+- S3BucketLifecycleCollector   – Lifecycle configurations
+- S3BucketReplicationCollector – Cross-region replication rules
+- S3BucketLoggingCollector     – Server access logging configuration
+- S3BucketNotificationCollector – Event notifications
+- S3BucketWebsiteCollector     – Static website hosting config
+- S3ObjectLockConfigurationCollector – Object lock settings
+- S3MultiRegionAccessPointCollector – MRAPs
+- EfsFileSystemCollector       – EFS file systems
+- EfsMountTargetCollector      – EFS mount targets
+- EfsAccessPointCollector      – EFS access points
+- FsxFileSystemCollector       – FSx file systems (all flavors)
+- FsxBackupCollector           – FSx backups
+- StorageGatewayCollector      – Storage Gateway appliances
+- StorageGatewayVolumeCollector – Volumes/virtual tapes
+- CloudFrontDistributionCollector – CloudFront distributions
+- CloudFrontOriginAccessIdentityCollector – OAIs/Origin Access Controls
+- CloudFrontFunctionCollector  – CloudFront Functions
+- CloudFrontCachePolicyCollector – Cache policies
+- CloudFrontOriginRequestPolicyCollector – Origin request policies
+- CloudFrontResponseHeadersPolicyCollector – Response headers policies
+
+---------------------------------------------------------------------
+[Relational Databases]
+---------------------------------------------------------------------
+- RdsInstanceCollector         – RDS DB instances
+- RdsClusterCollector          – Aurora/RDS clusters
+- RdsSnapshotCollector         – DB snapshots (manual and automated)
+- RdsClusterSnapshotCollector  – Cluster snapshots
+- RdsSubnetGroupCollector      – DB subnet groups
+- RdsParameterGroupCollector   – Parameter groups
+- RdsOptionGroupCollector      – Option groups
+- RdsProxyCollector            – RDS proxies
+- RdsEventSubscriptionCollector – Event subscriptions
+- RdsGlobalClusterCollector    – Global database clusters
+
+---------------------------------------------------------------------
+[NoSQL, Search, Analytics]
+---------------------------------------------------------------------
+- DynamoDbTableCollector       – DynamoDB tables (throughput, autoscaling)
+- DynamoDbGlobalTableCollector – Global tables
+- DynamoDbBackupCollector      – Table backups
+- DynamoDbStreamCollector      – Table streams
+- DynamoDbIndexCollector       – Secondary indexes (if modeled separately)
+- OpenSearchDomainCollector    – OpenSearch/Elasticsearch domains
+- OpenSearchVpcEndpointCollector – VPC endpoints for OpenSearch
+- RedshiftClusterCollector     – Redshift clusters
+- RedshiftSnapshotCollector    – Redshift snapshots
+- RedshiftSubnetGroupCollector – Redshift subnet groups
+- RedshiftParameterGroupCollector – Parameter groups
+- ElastiCacheClusterCollector  – ElastiCache clusters
+- ElastiCacheReplicationGroupCollector – Replication groups
+- ElastiCacheSubnetGroupCollector – Subnet groups
+- ElastiCacheParameterGroupCollector – Parameter groups
+- NeptuneClusterCollector      – Neptune clusters
+- NeptuneInstanceCollector     – Neptune instances
+- NeptuneSubnetGroupCollector  – Neptune subnet groups
+- TimestreamDatabaseCollector  – Timestream databases
+- TimestreamTableCollector     – Timestream tables
+- KafkaMskClusterCollector     – MSK (Managed Streaming for Kafka) clusters
+
+---------------------------------------------------------------------
+[Streaming, Events, Integration]
+---------------------------------------------------------------------
+- KinesisStreamCollector       – Kinesis data streams
+- KinesisFirehoseCollector     – Kinesis Data Firehose delivery streams
+- KinesisAnalyticsAppCollector – Kinesis Data Analytics applications
+- SqsQueueCollector            – SQS queues (standard/FIFO)
+- SqsQueuePolicyCollector      – Queue policies and dead-letter configuration
+- SnsTopicCollector            – SNS topics
+- SnsSubscriptionCollector     – SNS subscriptions
+- EventBridgeBusCollector      – EventBridge event buses
+- EventBridgeRuleCollector     – EventBridge rules/targets
+- StepFunctionsStateMachineCollector – Step Functions state machines
+- StepFunctionsExecutionCollector – State machine executions (summaries)
+- AppConfigApplicationCollector – AppConfig applications
+- AppConfigEnvironmentCollector – AppConfig environments
+- AppConfigConfigurationProfileCollector – Config profiles
+
+---------------------------------------------------------------------
+[Identity, Security, Compliance]
+---------------------------------------------------------------------
+- IamUserCollector             – IAM users
+- IamGroupCollector            – IAM groups
+- IamRoleCollector             – IAM roles
+- IamPolicyCollector           – IAM managed and inline policies
+- IamInstanceProfileCollector  – Instance profiles
+- IamAccessKeyCollector        – Access keys metadata (status, last used)
+- IamServerCertificateCollector – IAM server certificates (legacy)
+- IamSamlProviderCollector     – SAML providers
+- IamOpenIdConnectProviderCollector – OIDC providers
+- IamAccountPasswordPolicyCollector – Account-level password policy
+- OrganizationsAccountCollector – AWS Organizations accounts
+- OrganizationsOrganizationCollector – The Organization root config
+- OrganizationsOrganizationalUnitCollector – OUs
+- OrganizationsPolicyCollector – Service control policies (SCPs)
+- OrganizationsPolicyAttachmentCollector – SCP attachments
+- SsoPermissionSetCollector    – AWS IAM Identity Center permission sets
+- SsoAssignmentCollector       – Assignments (user/group to account+role)
+- KmsKeyCollector              – KMS keys (CMKs)
+- KmsAliasCollector            – KMS key aliases
+- SecretsManagerSecretCollector – Secrets Manager secrets
+- SecretsManagerRotationCollector – Rotation configuration
+- SsmParameterCollector        – SSM Parameter Store parameters
+- SsmParameterPolicyCollector  – Parameter policies
+- SsmManagedInstanceCollector  – Managed instances (SSM agents)
+- SsmAssociationCollector      – SSM associations
+- SsmDocumentCollector         – SSM documents
+- WafWebAclCollector           – WAF web ACLs
+- WafRuleGroupCollector        – WAF rule groups
+- WafIpSetCollector            – WAF IP sets
+- ShieldProtectionCollector    – AWS Shield protections
+- MacieFindingCollector        – Macie findings (aggregated)
+- GuardDutyDetectorCollector   – GuardDuty detectors
+- GuardDutyFindingCollector    – GuardDuty findings
+- SecurityHubHubCollector      – Security Hub hubs/standards subscriptions
+- SecurityHubFindingCollector  – Security Hub findings
+- ConfigRuleCollector          – AWS Config rules
+- ConfigRecorderCollector      – Config recorders and delivery channels
+
+---------------------------------------------------------------------
+[Monitoring & Logging]
+---------------------------------------------------------------------
+- CloudWatchLogGroupCollector  – CloudWatch log groups
+- CloudWatchLogStreamCollector – Log streams (summary-level)
+- CloudWatchMetricAlarmCollector – CloudWatch alarms
+- CloudWatchCompositeAlarmCollector – Composite alarms
+- CloudWatchDashboardCollector – Dashboards
+- CloudTrailTrailCollector     – CloudTrail trails
+- CloudTrailEventDataStoreCollector – Event data stores
+- XRayGroupCollector           – X-Ray groups/config
+- XRaySamplingRuleCollector    – Sampling rules
+- XRayEncryptionConfigCollector – Encryption configuration
+
+---------------------------------------------------------------------
+[Management, Governance, Backup]
+---------------------------------------------------------------------
+- CloudFormationStackCollector – CloudFormation stacks
+- CloudFormationStackSetCollector – StackSets
+- CloudFormationChangeSetCollector – Change sets (summaries)
+- ServiceCatalogPortfolioCollector – Service Catalog portfolios
+- ServiceCatalogProductCollector – Products
+- ServiceCatalogProvisionedProductCollector – Provisioned products
+- BackupVaultCollector         – AWS Backup vaults
+- BackupPlanCollector          – Backup plans
+- BackupSelectionCollector     – Backup selections
+- BackupRecoveryPointCollector – Recovery points
+- LicenseManagerLicenseConfigurationCollector – License configs
+- ResourceGroupsGroupCollector – Resource Groups
+- TagEditorResourceCollector   – Global tag/resource views (if exposed)
+
+---------------------------------------------------------------------
+[Developer Tools]
+---------------------------------------------------------------------
+- CodeCommitRepositoryCollector – CodeCommit repositories
+- CodeBuildProjectCollector    – CodeBuild projects
+- CodePipelinePipelineCollector – CodePipeline pipelines
+- CodeDeployApplicationCollector – CodeDeploy applications
+- CodeDeployDeploymentGroupCollector – Deployment groups
+- CodeArtifactRepositoryCollector – CodeArtifact repositories
+- CodeGuruProfilerGroupCollector – Profiler groups
+- CodeGuruReviewerRepositoryAssociationCollector – Reviewer repo associations
+- Cloud9EnvironmentCollector   – Cloud9 environments
+
+---------------------------------------------------------------------
+[Data Integration & Analytics Services]
+---------------------------------------------------------------------
+- GlueDatabaseCollector        – Glue Data Catalog databases
+- GlueTableCollector           – Glue tables
+- GlueCrawlerCollector         – Crawlers
+- GlueJobCollector             – Glue ETL jobs
+- GlueDataCatalogResourcePolicyCollector – Catalog resource policies
+- LakeFormationDataLakeSettingsCollector – Lake Formation settings
+- LakeFormationResourceCollector – LF-registered resources
+- AthenaWorkGroupCollector     – Athena workgroups
+- AthenaNamedQueryCollector    – Saved queries
+- EmrClusterCollector          – EMR clusters
+- EmrInstanceGroupCollector    – EMR instance groups/steps (summary)
+- DataPipelinePipelineCollector – AWS Data Pipeline pipelines (legacy)
+
+---------------------------------------------------------------------
+[Messaging & Email]
+---------------------------------------------------------------------
+- SesConfigurationSetCollector – SES configuration sets
+- SesIdentityCollector         – Verified identities (domains/emails)
+- SesReceiptRuleSetCollector   – Receipt rule sets
+- SesTemplateCollector         – Email templates
+
+---------------------------------------------------------------------
+[Account, Billing, Cost]
+---------------------------------------------------------------------
+- AccountAlternateContactCollector – Alternate contacts
+- AccountContactInformationCollector – Primary contact info
+- BudgetsBudgetCollector       – AWS Budgets definitions
+- CostCategoryCollector        – Cost categories
+
+---------------------------------------------------------------------
+[End-User Computing & Misc]
+---------------------------------------------------------------------
+- WorkSpacesWorkspaceCollector – WorkSpaces
+- WorkSpacesDirectoryCollector – WorkSpaces directories
+- WorkSpacesApplicationCollector – WorkSpaces applications (if needed)
+- AppStreamFleetCollector      – AppStream fleets
+- AppStreamStackCollector      – AppStream stacks
+
+---------------------------------------------------------------------
+[High-Level Notes]
+---------------------------------------------------------------------
+- This list is intentionally broad; you would prioritize implementation
+  based on use cases (e.g., security posture, cost, inventory, topology).
+- Some entity types may be modeled as attributes of another collector
+  instead of separate collectors, depending on how you design
+  `CloudEntity` and relationships (e.g., DynamoDB indexes, S3 bucket
+  ACLs, etc.).
+- For large/streaming datasets (e.g., individual CloudTrail events,
+  X-Ray traces, or log records), you might avoid per-event collectors
+  and instead model higher-level configuration or aggregated findings.
+- Cross-cutting concepts like tags can be exposed as attributes on
+  each resource entity instead of a separate `TagCollector` unless a
+  distinct entity model is required.

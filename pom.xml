@@ -24,6 +24,7 @@
         <log4j2.version>2.23.1</log4j2.version>
         <coherity-common.version>1.0.0-SNAPSHOT</coherity-common.version>
         <estoria.version>1.0.0-SNAPSHOT</estoria.version>
+        <aws.sdk.v2.version>2.25.60</aws.sdk.v2.version>
 	</properties>
 
 	<distributionManagement>
@@ -39,9 +40,19 @@
 		</snapshotRepository>
 	</distributionManagement>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>software.amazon.awssdk</groupId>
+                <artifactId>bom</artifactId>
+                <version>${aws.sdk.v2.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <dependencies>
-
-
         <dependency>
             <groupId>io.coherity.shared</groupId>
             <artifactId>coherity-common</artifactId>
@@ -80,6 +91,24 @@
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-slf4j2-impl</artifactId>
             <version>${log4j2.version}</version>
+        </dependency>
+
+        <!-- AWS SDK v2 for EC2 (used by VpcCollector) -->
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>ec2</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>sts</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>auth</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>regions</artifactId>
         </dependency>
 
         <!-- Test Dependencies -->

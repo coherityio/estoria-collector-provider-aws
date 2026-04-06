@@ -1,0 +1,2 @@
+io.coherity.estoria.collector.provider.aws.TestCollector
+io.coherity.estoria.collector.provider.aws.VpcCollector

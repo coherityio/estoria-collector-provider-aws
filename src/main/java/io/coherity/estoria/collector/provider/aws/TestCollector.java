@@ -9,15 +9,16 @@ import io.coherity.estoria.collector.spi.CloudEntity;
 import io.coherity.estoria.collector.spi.Collector;
 import io.coherity.estoria.collector.spi.CollectorCursor;
 import io.coherity.estoria.collector.spi.CollectorException;
-import io.coherity.estoria.collector.spi.CollectorRequest;
+import io.coherity.estoria.collector.spi.CollectorRequestParameters;
 import io.coherity.estoria.collector.spi.CursorMetadata;
+import io.coherity.estoria.collector.spi.ProviderSession;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class TestCollector implements Collector
 {
 	private static final String PROVIDER_ID = "aws";
-	private static final String ENTITY_TYPE = "AwsTestEntity";
+	public static final String ENTITY_TYPE = "AwsTestEntity";
 
 	public TestCollector()
 	{
@@ -41,8 +42,8 @@ public class TestCollector implements Collector
 	@Override
 	public Set<String> requiresEntityTypes()
 	{
-		log.debug("TestCollector.requiresEntityTypes called - no dependencies");
-		return Set.of();
+		log.debug("TestCollector.requiresEntityTypes called - 1 dependencies");
+		return Set.of(VpcCollector.ENTITY_TYPE);
 	}
 
 	@Override
@@ -53,7 +54,7 @@ public class TestCollector implements Collector
 	}
 
 	@Override
-	public CollectorCursor collect(CollectorRequest request) throws CollectorException
+	public CollectorCursor collect(CollectorRequestParameters request, ProviderSession providerSession) throws CollectorException
 	{
 		log.debug("TestCollector.collect called with request: {}", request);
 
