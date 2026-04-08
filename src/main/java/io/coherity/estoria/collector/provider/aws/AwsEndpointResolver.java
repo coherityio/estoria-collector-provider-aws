@@ -194,7 +194,7 @@ public class AwsEndpointResolver implements EndpointResolver
 		String canonicalServiceId)
 	{
 		Map<String, Object> metadata = new LinkedHashMap<>();
-		metadata.put("providerId", providerContext == null ? null : providerContext.getProviderId());
+		//metadata.put("providerId", providerContext == null ? null : providerContext.getProviderId());
 		metadata.put("requestKey", requestKey);
 		metadata.put("serviceId", canonicalServiceId);
 		metadata.put("signingName", serviceDefinition.getSigningName());

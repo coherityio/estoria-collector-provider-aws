@@ -5,22 +5,22 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.Validate;
+import org.apache.commons.lang3.StringUtils;
 
 import io.coherity.estoria.collector.spi.CloudEntity;
-import io.coherity.estoria.collector.spi.CollectorContext;
 import io.coherity.estoria.collector.spi.Collector;
+import io.coherity.estoria.collector.spi.CollectorContext;
 import io.coherity.estoria.collector.spi.CollectorCursor;
 import io.coherity.estoria.collector.spi.CollectorException;
-import io.coherity.estoria.collector.spi.CollectorRequestParameters;
+import io.coherity.estoria.collector.spi.CollectorInfo;
+import io.coherity.estoria.collector.spi.CollectorRequestParams;
 import io.coherity.estoria.collector.spi.CursorMetadata;
 import io.coherity.estoria.collector.spi.EntityIdentifier;
-import io.coherity.estoria.collector.spi.ProviderSession;
+import io.coherity.estoria.collector.spi.ProviderContext;
 import lombok.extern.slf4j.Slf4j;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.ec2.Ec2Client;
@@ -38,6 +38,21 @@ public class VpcCollector implements Collector
 {
 	private static final String PROVIDER_ID = "aws";
 	public static final String ENTITY_TYPE = "Vpc";
+	
+	private Ec2Client ec2Client;
+	
+	
+	
+	
+	private final CollectorInfo collectorInfo = 
+			CollectorInfo
+				.builder()
+				.providerId(PROVIDER_ID)
+				.entityType(ENTITY_TYPE)
+				.requiredEntityTypes(Set.of())
+				.tags(Set.of("networking", "vpc", "aws"))
+				.build();
+	
 
 	public VpcCollector()
 	{
@@ -45,51 +60,38 @@ public class VpcCollector implements Collector
 	}
 
 	@Override
-	public String getProviderId()
+	public CollectorInfo getCollectorInfo()
 	{
-		log.debug("VpcCollector.getProviderId called - returning {}", PROVIDER_ID);
-		return PROVIDER_ID;
+		log.debug("TestCollector.getCollectorInfo called - returning {}", this.collectorInfo);
+		return this.collectorInfo;
 	}
-
+	
 	@Override
-	public String getEntityType()
+	public CollectorCursor collect(ProviderContext providerContext, CollectorContext collectorContext, CollectorRequestParams collectorRequestParams) throws CollectorException
 	{
-		log.debug("VpcCollector.getEntityType called - returning {}", ENTITY_TYPE);
-		return ENTITY_TYPE;
-	}
-
-	@Override
-	public Set<String> requiresEntityTypes()
-	{
-		log.debug("VpcCollector.requiresEntityTypes called - no dependencies");
-		return Set.of();
-	}
-
-	@Override
-	public Set<String> getTags()
-	{
-		log.debug("VpcCollector.getTags called");
-		return Set.of("networking", "vpc", "aws");
-	}
-
-	@Override
-	public CollectorCursor collect(CollectorRequestParameters collectorRequestParameters, ProviderSession providerSession) throws CollectorException
-	{
-		Objects.requireNonNull(providerSession);
 		
-		log.debug("VpcCollector.collect called with request: {}", collectorRequestParameters);
+		log.debug("VpcCollector.collect called with request: {}", collectorRequestParams);
 
+		if(this.ec2Client == null)
+		{
+			this.ec2Client = AwsClientFactory.getInstance().getEc2Client(providerContext);
+		}
+		
 		try
 		{
-			CollectorContext collectorContext = collectorRequestParameters.getCollectorContext();
-			String regionFromScope = null;
-			if (collectorContext != null && collectorContext.getAttributes() != null)
+			
+			
+			
+			
+			
+			String regionFromProviderContext = null;
+			if (providerContext != null && providerContext.getAttributes() != null)
 			{
-				regionFromScope = collectorContext.getAttributes().get("region").toString();
+				regionFromProviderContext = providerContext.getAttributes().get("region").toString();
 			}
 
-			Region region = regionFromScope != null && !regionFromScope.isBlank()
-				? Region.of(regionFromScope)
+			Region region = (StringUtils.isNotEmpty(regionFromProviderContext))
+				? Region.of(regionFromProviderContext)
 				: null;
 
 			log.debug("VpcCollector.collect using region: {}", region);
@@ -97,17 +99,17 @@ public class VpcCollector implements Collector
 			
 			
 			
-			Ec2Client ec2 = null; //AwsClientFactory.getInstance().getEc2Client(collectorContext);
+			//Ec2Client ec2 = null; //AwsClientFactory.getInstance().getEc2Client(collectorContext);
 
 			DescribeVpcsRequest.Builder requestBuilder = DescribeVpcsRequest.builder();
 
-			int pageSize = collectorRequestParameters.getPageSize();
+			int pageSize = collectorRequestParams.getPageSize();
 			if (pageSize > 0)
 			{
 				requestBuilder.maxResults(pageSize);
 			}
 
-			collectorRequestParameters.getCursorToken().ifPresent(token -> {
+			collectorRequestParams.getCursorToken().ifPresent(token -> {
 				log.debug("VpcCollector.collect resuming from nextToken: {}", token);
 				requestBuilder.nextToken(token);
 			});
@@ -115,7 +117,7 @@ public class VpcCollector implements Collector
 			DescribeVpcsRequest describeRequest = requestBuilder.build();
 			log.debug("VpcCollector.collect calling DescribeVpcs with maxResults={} nextToken={}",
 				describeRequest.maxResults(), describeRequest.nextToken());
-			DescribeVpcsResponse response = ec2.describeVpcs(describeRequest);
+			DescribeVpcsResponse response = this.ec2Client.describeVpcs(describeRequest);
 			List<Vpc> vpcs = response.vpcs();
 			String nextToken = response.nextToken();
 
@@ -138,11 +140,7 @@ public class VpcCollector implements Collector
 					String vpcId = vpc.vpcId();
 					String ownerId = vpc.ownerId();
 					String regionName = region != null ? region.id() : null;
-					String arn = null;
-					if (vpcId != null && ownerId != null && regionName != null)
-					{
-						arn = String.format("arn:aws:ec2:%s:%s:vpc/%s", regionName, ownerId, vpcId);
-					}
+					String arn = ARNHelper.ec2VpcArn(regionName, ownerId, vpcId);
 
 					Map<String, Object> attributes = new HashMap<>();
 					attributes.put("vpcId", vpcId);

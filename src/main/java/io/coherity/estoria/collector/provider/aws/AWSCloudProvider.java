@@ -1,13 +1,17 @@
 package io.coherity.estoria.collector.provider.aws;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Optional;
+import java.util.ServiceLoader;
+
+import org.apache.commons.lang3.StringUtils;
 
 import io.coherity.estoria.collector.spi.CloudProvider;
-import io.coherity.estoria.collector.spi.ProviderContext;
+import io.coherity.estoria.collector.spi.Collector;
+import io.coherity.estoria.collector.spi.CollectorRegistry;
 import io.coherity.estoria.collector.spi.ProviderException;
-import io.coherity.estoria.collector.spi.ProviderSession;
+import io.coherity.estoria.collector.spi.ProviderIdentifier;
+import io.coherity.estoria.collector.spi.ProviderInfo;
+import io.coherity.estoria.collector.spi.SimpleCollectorRegistry;
 import lombok.extern.slf4j.Slf4j;
 import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
 import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
@@ -24,49 +28,101 @@ public class AWSCloudProvider extends CloudProvider
 	private static final String VERSION = "0.1.0";
 	private static final String PROVIDER_NAME = "aws-provider";
 
-	public AWSCloudProvider()
+	//private final CollectorRegistry loadedCollectorRegistry;
+	
+	
+	//public AWSCloudProvider(String providerId, String version, String providerName, Map<String, Object> providerAttributes, CollectorRegistry collectorRegistry)
+	public AWSCloudProvider(ProviderInfo providerInfo, CollectorRegistry collectorRegistry)
 	{
-		super(PROVIDER_ID, VERSION, PROVIDER_NAME, null);
-		// super(PROVIDER_ID, VERSION, PROVIDER_NAME, null);
+		super(providerInfo, collectorRegistry);
 		log.debug("AWSCloudProvider.AWSCloudProvider creating AWSCloudProvider");
 	}
 
-	@Override
-	public ProviderSession openSession(ProviderContext providerContext) throws ProviderException
+	public AWSCloudProvider()
 	{
-		if (providerContext == null)
-		{
-			throw new IllegalArgumentException("providerContext cannot be null");
-		}
+		this(
+			ProviderInfo
+				.builder()
+				.providerIdentifier(ProviderIdentifier.builder().id(PROVIDER_ID).version(VERSION).build())
+				.name(PROVIDER_NAME)
+				.build(), 
+			AWSCloudProvider.loadCollectorRegistry(PROVIDER_ID));
+	}
 
-		Map<String, String> attributes = new HashMap<>();
-		if (providerContext.getAttributes() != null)
+	protected static CollectorRegistry loadCollectorRegistry(String providerId)
+	{
+		CollectorRegistry collectorRegistry = new SimpleCollectorRegistry();
+		ServiceLoader<Collector> loader = ServiceLoader.load(io.coherity.estoria.collector.spi.Collector.class);
+		for (Collector collector : loader)
 		{
-			Map<String, Object> providerContextConfigMap = providerContext.getAttributes();
-			for (String key : providerContextConfigMap.keySet())
+			if(collector.getCollectorInfo() != null 
+				&& StringUtils.isNotEmpty(collector.getCollectorInfo().getProviderId()) 
+				&& collector.getCollectorInfo().getProviderId().equals(providerId))
 			{
-				attributes.put(key, providerContextConfigMap.get(key).toString());
+				collectorRegistry.register(collector);
 			}
 		}
-
-		String profile = firstNonBlank(attributes.get("profile"), System.getenv("AWS_PROFILE"),
-				System.getProperty("aws.profile"));
-
-		String region = firstNonBlank(attributes.get("region"), System.getenv("AWS_REGION"),
-				System.getenv("AWS_DEFAULT_REGION"), System.getProperty("aws.region"));
-
-		AwsCredentialsProvider credentialsProvider = buildCredentialsProvider(profile);
-		String resolvedRegion = resolveRegion(region);
-
-		validateCredentials(credentialsProvider, resolvedRegion, profile);
-
-		return AwsProviderSession.builder().provider(this).providerContext(providerContext).profile(profile)
-				.region(resolvedRegion).attributes(Collections.unmodifiableMap(attributes))
-				.credentialsProvider(credentialsProvider)
-				//.clientFactory(AwsClientFactory.getInstance(credentialsProvider, resolvedRegion))
-				.clientFactory(AwsClientFactory.getInstance())
-				.build();
+		return collectorRegistry;
 	}
+	
+	
+	@Override
+	public Optional<Collector> getConnectedCollector(String entityType) throws ProviderException
+	{
+		// TODO Auto-generated method stub
+		return Optional.empty();
+		
+		
+		
+		
+		
+		
+		
+	}
+	
+	
+	
+//	public Optional<CollectorRegistry> getLoadedCollectorRegistry()
+//	{
+//		return Optional.ofNullable(loadedCollectorRegistry);
+//	}
+	
+	//@Override
+//	public ProviderSession openSession(ProviderContext providerContext) throws ProviderException
+//	{
+//		if (providerContext == null)
+//		{
+//			throw new IllegalArgumentException("providerContext cannot be null");
+//		}
+//
+//		Map<String, String> attributes = new HashMap<>();
+//		if (providerContext.getAttributes() != null)
+//		{
+//			Map<String, Object> providerContextConfigMap = providerContext.getAttributes();
+//			for (String key : providerContextConfigMap.keySet())
+//			{
+//				attributes.put(key, providerContextConfigMap.get(key).toString());
+//			}
+//		}
+//
+//		String profile = firstNonBlank(attributes.get("profile"), System.getenv("AWS_PROFILE"),
+//				System.getProperty("aws.profile"));
+//
+//		String region = firstNonBlank(attributes.get("region"), System.getenv("AWS_REGION"),
+//				System.getenv("AWS_DEFAULT_REGION"), System.getProperty("aws.region"));
+//
+//		AwsCredentialsProvider credentialsProvider = buildCredentialsProvider(profile);
+//		String resolvedRegion = resolveRegion(region);
+//
+//		validateCredentials(credentialsProvider, resolvedRegion, profile);
+//
+//		return AwsProviderSession.builder().provider(this).providerContext(providerContext).profile(profile)
+//				.region(resolvedRegion).attributes(Collections.unmodifiableMap(attributes))
+//				.credentialsProvider(credentialsProvider)
+//				//.clientFactory(AwsClientFactory.getInstance(credentialsProvider, resolvedRegion))
+//				.clientFactory(AwsClientFactory.getInstance())
+//				.build();
+//	}
 
 	private AwsCredentialsProvider buildCredentialsProvider(String profile)
 	{
@@ -137,4 +193,8 @@ public class AWSCloudProvider extends CloudProvider
 		}
 		return null;
 	}
+
+	
+	
+
 }
