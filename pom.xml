@@ -112,12 +112,108 @@
         </dependency>
         <dependency>
             <groupId>software.amazon.awssdk</groupId>
+            <artifactId>regions</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
             <artifactId>ec2</artifactId>
         </dependency>
         <dependency>
             <groupId>software.amazon.awssdk</groupId>
             <artifactId>regions</artifactId>
         </dependency>
+
+        <!-- Auto Scaling -->
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>autoscaling</artifactId>
+        </dependency>
+
+        <!-- Load Balancing -->
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>elasticloadbalancing</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>elasticloadbalancingv2</artifactId>
+        </dependency>
+
+        <!-- Containers -->
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>ecs</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>eks</artifactId>
+        </dependency>
+
+        <!-- Serverless -->
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>lambda</artifactId>
+        </dependency>
+
+        <!-- Storage -->
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>s3</artifactId>
+        </dependency>
+
+        <!-- Databases -->
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>rds</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>dynamodb</artifactId>
+        </dependency>
+
+        <!-- Messaging -->
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>sqs</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>sns</artifactId>
+        </dependency>
+
+        <!-- Identity & Security -->
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>iam</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>kms</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>secretsmanager</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>ssm</artifactId>
+        </dependency>
+
+        <!-- Monitoring & Logging -->
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>cloudwatch</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>cloudwatchlogs</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>cloudtrail</artifactId>
+        </dependency>
+
 
         <!-- Test Dependencies -->
 		

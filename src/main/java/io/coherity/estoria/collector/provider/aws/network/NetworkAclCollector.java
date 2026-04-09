@@ -1,4 +1,4 @@
-package io.coherity.estoria.collector.provider.aws;
+package io.coherity.estoria.collector.provider.aws.network;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -11,6 +11,8 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 
+import io.coherity.estoria.collector.provider.aws.ARNHelper;
+import io.coherity.estoria.collector.provider.aws.AwsClientFactory;
 import io.coherity.estoria.collector.spi.CloudEntity;
 import io.coherity.estoria.collector.spi.Collector;
 import io.coherity.estoria.collector.spi.CollectorContext;
@@ -24,66 +26,56 @@ import io.coherity.estoria.collector.spi.ProviderContext;
 import lombok.extern.slf4j.Slf4j;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.ec2.Ec2Client;
-import software.amazon.awssdk.services.ec2.model.DescribeVpcsRequest;
-import software.amazon.awssdk.services.ec2.model.DescribeVpcsResponse;
+import software.amazon.awssdk.services.ec2.model.DescribeNetworkAclsRequest;
+import software.amazon.awssdk.services.ec2.model.DescribeNetworkAclsResponse;
 import software.amazon.awssdk.services.ec2.model.Ec2Exception;
+import software.amazon.awssdk.services.ec2.model.NetworkAcl;
 import software.amazon.awssdk.services.ec2.model.Tag;
-import software.amazon.awssdk.services.ec2.model.Vpc;
 
 /**
- * VPC collector for AWS backed by the EC2 DescribeVpcs API.
+ * Network ACL collector for AWS backed by the EC2 DescribeNetworkAcls API.
  */
 @Slf4j
-public class VpcCollector implements Collector
+public class NetworkAclCollector implements Collector
 {
 	private static final String PROVIDER_ID = "aws";
-	public static final String ENTITY_TYPE = "Vpc";
-	
+	public static final String ENTITY_TYPE = "NetworkAcl";
+
 	private Ec2Client ec2Client;
-	
-	
-	
-	
-	private final CollectorInfo collectorInfo = 
+
+	private final CollectorInfo collectorInfo =
 			CollectorInfo
 				.builder()
 				.providerId(PROVIDER_ID)
 				.entityType(ENTITY_TYPE)
-				.requiredEntityTypes(Set.of())
-				.tags(Set.of("networking", "vpc", "aws"))
+				.requiredEntityTypes(Set.of("Vpc"))
+				.tags(Set.of("networking", "vpc", "aws", "security"))
 				.build();
-	
 
-	public VpcCollector()
+	public NetworkAclCollector()
 	{
-		log.debug("VpcCollector.VpcCollector creating VpcCollector");
+		log.debug("NetworkAclCollector.NetworkAclCollector creating NetworkAclCollector");
 	}
 
 	@Override
 	public CollectorInfo getCollectorInfo()
 	{
-		log.debug("TestCollector.getCollectorInfo called - returning {}", this.collectorInfo);
+		log.debug("NetworkAclCollector.getCollectorInfo called - returning {}", this.collectorInfo);
 		return this.collectorInfo;
 	}
-	
+
 	@Override
 	public CollectorCursor collect(ProviderContext providerContext, CollectorContext collectorContext, CollectorRequestParams collectorRequestParams) throws CollectorException
 	{
-		
-		log.debug("VpcCollector.collect called with request: {}", collectorRequestParams);
+		log.debug("NetworkAclCollector.collect called with request: {}", collectorRequestParams);
 
-		if(this.ec2Client == null)
+		if (this.ec2Client == null)
 		{
 			this.ec2Client = AwsClientFactory.getInstance().getEc2Client(providerContext);
 		}
-		
+
 		try
 		{
-			
-			
-			
-			
-			
 			String regionFromProviderContext = null;
 			if (providerContext != null && providerContext.getAttributes() != null)
 			{
@@ -94,14 +86,9 @@ public class VpcCollector implements Collector
 				? Region.of(regionFromProviderContext)
 				: null;
 
-			log.debug("VpcCollector.collect using region: {}", region);
+			log.debug("NetworkAclCollector.collect using region: {}", region);
 
-			
-			
-			
-			//Ec2Client ec2 = null; //AwsClientFactory.getInstance().getEc2Client(collectorContext);
-
-			DescribeVpcsRequest.Builder requestBuilder = DescribeVpcsRequest.builder();
+			DescribeNetworkAclsRequest.Builder requestBuilder = DescribeNetworkAclsRequest.builder();
 
 			int pageSize = collectorRequestParams.getPageSize();
 			if (pageSize > 0)
@@ -110,62 +97,60 @@ public class VpcCollector implements Collector
 			}
 
 			collectorRequestParams.getCursorToken().ifPresent(token -> {
-				log.debug("VpcCollector.collect resuming from nextToken: {}", token);
+				log.debug("NetworkAclCollector.collect resuming from nextToken: {}", token);
 				requestBuilder.nextToken(token);
 			});
 
-			DescribeVpcsRequest describeRequest = requestBuilder.build();
-			log.debug("VpcCollector.collect calling DescribeVpcs with maxResults={} nextToken={}",
+			DescribeNetworkAclsRequest describeRequest = requestBuilder.build();
+			log.debug("NetworkAclCollector.collect calling DescribeNetworkAcls with maxResults={} nextToken={}",
 				describeRequest.maxResults(), describeRequest.nextToken());
-			DescribeVpcsResponse response = this.ec2Client.describeVpcs(describeRequest);
-			List<Vpc> vpcs = response.vpcs();
+			DescribeNetworkAclsResponse response = this.ec2Client.describeNetworkAcls(describeRequest);
+			List<NetworkAcl> networkAcls = response.networkAcls();
 			String nextToken = response.nextToken();
 
-			log.debug("VpcCollector.collect received {} VPCs, nextToken={}",
-				vpcs != null ? vpcs.size() : 0,
-				nextToken);
+			log.debug("NetworkAclCollector.collect received {} network ACLs, nextToken={}",
+				networkAcls != null ? networkAcls.size() : 0, nextToken);
 
 			List<CloudEntity> entities = new ArrayList<>();
 			Instant now = Instant.now();
 
-			if (vpcs != null)
+			if (networkAcls != null)
 			{
-				for (Vpc vpc : vpcs)
+				for (NetworkAcl acl : networkAcls)
 				{
-					if (vpc == null)
+					if (acl == null)
 					{
 						continue;
 					}
 
-					String vpcId = vpc.vpcId();
-					String ownerId = vpc.ownerId();
+					String networkAclId = acl.networkAclId();
+					String ownerId = acl.ownerId();
 					String regionName = region != null ? region.id() : null;
-					String arn = ARNHelper.ec2VpcArn(regionName, ownerId, vpcId);
+					String arn = ARNHelper.ec2NetworkAclArn(regionName, ownerId, networkAclId);
 
 					Map<String, Object> attributes = new HashMap<>();
-					attributes.put("vpcId", vpcId);
-					attributes.put("cidrBlock", vpc.cidrBlock());
-					attributes.put("state", vpc.stateAsString());
-					attributes.put("isDefault", vpc.isDefault());
+					attributes.put("networkAclId", networkAclId);
+					attributes.put("vpcId", acl.vpcId());
+					attributes.put("isDefault", acl.isDefault());
 					attributes.put("ownerId", ownerId);
 
-					Map<String, String> tags = vpc.tags() == null ? Map.of()
-						: vpc.tags().stream()
+					Map<String, String> tags = acl.tags() == null ? Map.of()
+						: acl.tags().stream()
 							.collect(Collectors.toMap(Tag::key, Tag::value, (a, b) -> b));
 					attributes.put("tags", tags);
 
-					String name = tags.getOrDefault("Name", vpcId);
+					String name = tags.getOrDefault("Name", networkAclId);
 
 					CloudEntity entity = CloudEntity.builder()
 						.entityIdentifier(EntityIdentifier.builder()
-							.id(vpcId)
+							.id(networkAclId)
 							.qualifiedResourceName(arn)
 							.build())
 						.entityType(ENTITY_TYPE)
 						.name(name)
 						.collectorContext(collectorContext)
 						.attributes(attributes)
-						.rawPayload(vpc)
+						.rawPayload(acl)
 						.collectedAt(now)
 						.build();
 
@@ -204,13 +189,13 @@ public class VpcCollector implements Collector
 		}
 		catch (Ec2Exception e)
 		{
-			log.error("VpcCollector.collect EC2 error: {}", e.awsErrorDetails() != null ? e.awsErrorDetails().errorMessage() : e.getMessage(), e);
-			throw new CollectorException("Failed to collect VPCs from AWS EC2", e);
+			log.error("NetworkAclCollector.collect EC2 error: {}", e.awsErrorDetails() != null ? e.awsErrorDetails().errorMessage() : e.getMessage(), e);
+			throw new CollectorException("Failed to collect NetworkAcls from AWS EC2", e);
 		}
 		catch (Exception e)
 		{
-			log.error("VpcCollector.collect unexpected error", e);
-			throw new CollectorException("Unexpected error while collecting VPCs", e);
+			log.error("NetworkAclCollector.collect unexpected error", e);
+			throw new CollectorException("Unexpected error while collecting NetworkAcls", e);
 		}
 	}
 }

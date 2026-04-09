@@ -33,6 +33,17 @@ public final class ARNHelper
     public static final String RESOURCE_ROUTE_TABLE = "route-table";
     public static final String RESOURCE_INTERNET_GATEWAY = "internet-gateway";
     public static final String RESOURCE_NAT_GATEWAY = "natgateway";
+    public static final String RESOURCE_VPC_ENDPOINT = "vpc-endpoint";
+    public static final String RESOURCE_NETWORK_ACL = "network-acl";
+    public static final String RESOURCE_TRANSIT_GATEWAY = "transit-gateway";
+    public static final String RESOURCE_TRANSIT_GATEWAY_ATTACHMENT = "transit-gateway-attachment";
+    public static final String RESOURCE_VPC_PEERING_CONNECTION = "vpc-peering-connection";
+    public static final String RESOURCE_CUSTOMER_GATEWAY = "customer-gateway";
+    public static final String RESOURCE_VPN_CONNECTION = "vpn-connection";
+    public static final String RESOURCE_CARRIER_GATEWAY = "carrier-gateway";
+    public static final String RESOURCE_LOCAL_GATEWAY = "local-gateway";
+    public static final String RESOURCE_NETWORK_INTERFACE = "network-interface";
+    public static final String RESOURCE_ELASTIC_IP = "elastic-ip";
     public static final String RESOURCE_INSTANCE = "instance";
 
     // ===== ECS / ECR =====
@@ -183,6 +194,90 @@ public final class ARNHelper
     {
         return buildArn(partitionForRegion(region), SERVICE_EC2, region, accountId,
             RESOURCE_INSTANCE, instanceId, ResourceSeparator.SLASH);
+    }
+
+    public static String ec2RouteTableArn(String region, String accountId, String routeTableId)
+    {
+        return buildArn(partitionForRegion(region), SERVICE_EC2, region, accountId,
+            RESOURCE_ROUTE_TABLE, routeTableId, ResourceSeparator.SLASH);
+    }
+
+    public static String ec2InternetGatewayArn(String region, String accountId, String igwId)
+    {
+        return buildArn(partitionForRegion(region), SERVICE_EC2, region, accountId,
+            RESOURCE_INTERNET_GATEWAY, igwId, ResourceSeparator.SLASH);
+    }
+
+    public static String ec2NatGatewayArn(String region, String accountId, String natGatewayId)
+    {
+        return buildArn(partitionForRegion(region), SERVICE_EC2, region, accountId,
+            RESOURCE_NAT_GATEWAY, natGatewayId, ResourceSeparator.SLASH);
+    }
+
+    public static String ec2VpcEndpointArn(String region, String accountId, String vpcEndpointId)
+    {
+        return buildArn(partitionForRegion(region), SERVICE_EC2, region, accountId,
+            RESOURCE_VPC_ENDPOINT, vpcEndpointId, ResourceSeparator.SLASH);
+    }
+
+    public static String ec2NetworkAclArn(String region, String accountId, String networkAclId)
+    {
+        return buildArn(partitionForRegion(region), SERVICE_EC2, region, accountId,
+            RESOURCE_NETWORK_ACL, networkAclId, ResourceSeparator.SLASH);
+    }
+
+    public static String ec2TransitGatewayArn(String region, String accountId, String tgwId)
+    {
+        return buildArn(partitionForRegion(region), SERVICE_EC2, region, accountId,
+            RESOURCE_TRANSIT_GATEWAY, tgwId, ResourceSeparator.SLASH);
+    }
+
+    public static String ec2TransitGatewayAttachmentArn(String region, String accountId, String attachmentId)
+    {
+        return buildArn(partitionForRegion(region), SERVICE_EC2, region, accountId,
+            RESOURCE_TRANSIT_GATEWAY_ATTACHMENT, attachmentId, ResourceSeparator.SLASH);
+    }
+
+    public static String ec2VpcPeeringConnectionArn(String region, String accountId, String peeringId)
+    {
+        return buildArn(partitionForRegion(region), SERVICE_EC2, region, accountId,
+            RESOURCE_VPC_PEERING_CONNECTION, peeringId, ResourceSeparator.SLASH);
+    }
+
+    public static String ec2CustomerGatewayArn(String region, String accountId, String cgwId)
+    {
+        return buildArn(partitionForRegion(region), SERVICE_EC2, region, accountId,
+            RESOURCE_CUSTOMER_GATEWAY, cgwId, ResourceSeparator.SLASH);
+    }
+
+    public static String ec2VpnConnectionArn(String region, String accountId, String vpnId)
+    {
+        return buildArn(partitionForRegion(region), SERVICE_EC2, region, accountId,
+            RESOURCE_VPN_CONNECTION, vpnId, ResourceSeparator.SLASH);
+    }
+
+    public static String ec2CarrierGatewayArn(String region, String accountId, String cgwId)
+    {
+        return buildArn(partitionForRegion(region), SERVICE_EC2, region, accountId,
+            RESOURCE_CARRIER_GATEWAY, cgwId, ResourceSeparator.SLASH);
+    }
+
+    public static String ec2LocalGatewayArn(String region, String accountId, String lgwId)
+    {
+        return buildArn(partitionForRegion(region), SERVICE_EC2, region, accountId,
+            RESOURCE_LOCAL_GATEWAY, lgwId, ResourceSeparator.SLASH);
+    }
+
+    public static String ec2NetworkInterfaceArn(String region, String accountId, String eniId)
+    {
+        return buildArn(partitionForRegion(region), SERVICE_EC2, region, accountId,
+            RESOURCE_NETWORK_INTERFACE, eniId, ResourceSeparator.SLASH);
+    }
+
+    public static String ec2ElasticIpArn(String region, String accountId, String allocationId)
+    {
+        return buildArn(partitionForRegion(region), SERVICE_EC2, region, accountId,
+            RESOURCE_ELASTIC_IP, allocationId, ResourceSeparator.SLASH);
     }
 
     // ===== ECS / ECR =====

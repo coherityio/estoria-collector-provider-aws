@@ -60,6 +60,7 @@ public class AWSCloudProvider extends CloudProvider
 				&& collector.getCollectorInfo().getProviderId().equals(providerId))
 			{
 				collectorRegistry.register(collector);
+				log.debug("loaded collector for entityType: " + collector.getCollectorInfo().getEntityType() + " under provider: " + collector.getCollectorInfo().getProviderId());
 			}
 		}
 		return collectorRegistry;

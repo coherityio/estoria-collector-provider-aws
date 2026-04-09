@@ -1,10 +1,11 @@
-package io.coherity.estoria.collector.provider.aws;
+package io.coherity.estoria.collector.provider.aws.test;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import io.coherity.estoria.collector.provider.aws.network.VpcCollector;
 import io.coherity.estoria.collector.spi.CloudEntity;
 import io.coherity.estoria.collector.spi.Collector;
 import io.coherity.estoria.collector.spi.CollectorContext;
