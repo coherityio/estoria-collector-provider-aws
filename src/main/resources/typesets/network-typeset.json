@@ -1,0 +1,22 @@
+{
+	"entityTypes": [
+		"Vpc",
+		"Subnet",
+		"RouteTable",
+		"InternetGateway",
+		"NatGateway",
+		"VpcEndpoint",
+		"VpcEndpointService",
+		"NetworkAcl",
+		"SecurityGroup",
+		"TransitGateway",
+		"TransitGatewayAttachment",
+		"VpcPeeringConnection",
+		"CustomerGateway",
+		"VpnConnection",
+		"CarrierGateway",
+		"LocalGateway",
+		"NetworkInterface",
+		"ElasticIp"
+	]
+}

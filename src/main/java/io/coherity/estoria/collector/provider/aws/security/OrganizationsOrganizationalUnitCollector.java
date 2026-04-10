@@ -1,0 +1,170 @@
+package io.coherity.estoria.collector.provider.aws.security;
+
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+
+import io.coherity.estoria.collector.provider.aws.AwsClientFactory;
+import io.coherity.estoria.collector.spi.CloudEntity;
+import io.coherity.estoria.collector.spi.Collector;
+import io.coherity.estoria.collector.spi.CollectorContext;
+import io.coherity.estoria.collector.spi.CollectorCursor;
+import io.coherity.estoria.collector.spi.CollectorException;
+import io.coherity.estoria.collector.spi.CollectorInfo;
+import io.coherity.estoria.collector.spi.CollectorRequestParams;
+import io.coherity.estoria.collector.spi.CursorMetadata;
+import io.coherity.estoria.collector.spi.EntityIdentifier;
+import io.coherity.estoria.collector.spi.ProviderContext;
+import lombok.extern.slf4j.Slf4j;
+import software.amazon.awssdk.services.organizations.OrganizationsClient;
+import software.amazon.awssdk.services.organizations.model.ListOrganizationalUnitsForParentRequest;
+import software.amazon.awssdk.services.organizations.model.ListOrganizationalUnitsForParentResponse;
+import software.amazon.awssdk.services.organizations.model.ListRootsRequest;
+import software.amazon.awssdk.services.organizations.model.ListRootsResponse;
+import software.amazon.awssdk.services.organizations.model.OrganizationalUnit;
+import software.amazon.awssdk.services.organizations.model.OrganizationsException;
+import software.amazon.awssdk.services.organizations.model.Root;
+
+/**
+ * Collects all AWS Organizational Units by recursively traversing the
+ * Organizations tree starting from the root(s).
+ */
+@Slf4j
+public class OrganizationsOrganizationalUnitCollector implements Collector
+{
+    private static final String PROVIDER_ID = "aws";
+    public  static final String ENTITY_TYPE = "OrganizationsOrganizationalUnit";
+    private static final int PAGE_SIZE = 20;
+
+    private OrganizationsClient organizationsClient;
+
+    private final CollectorInfo collectorInfo =
+        CollectorInfo.builder()
+            .providerId(PROVIDER_ID)
+            .entityType(ENTITY_TYPE)
+            .requiredEntityTypes(Set.of())
+            .tags(Set.of("security", "organizations", "aws"))
+            .build();
+
+    public OrganizationsOrganizationalUnitCollector()
+    {
+        log.debug("OrganizationsOrganizationalUnitCollector created");
+    }
+
+    @Override
+    public CollectorInfo getCollectorInfo()
+    {
+        return this.collectorInfo;
+    }
+
+    @Override
+    public CollectorCursor collect(
+        ProviderContext providerContext,
+        CollectorContext collectorContext,
+        CollectorRequestParams collectorRequestParams) throws CollectorException
+    {
+        log.debug("OrganizationsOrganizationalUnitCollector.collect called");
+
+        if (this.organizationsClient == null)
+        {
+            this.organizationsClient = AwsClientFactory.getInstance().getOrganizationsClient(providerContext);
+        }
+
+        try
+        {
+            List<CloudEntity> entities = new ArrayList<>();
+
+            // Step 1: list all roots
+            List<String> parentIds = new ArrayList<>();
+            String rootNextToken = null;
+            do
+            {
+                ListRootsResponse rootResponse = this.organizationsClient.listRoots(
+                    ListRootsRequest.builder()
+                        .maxResults(PAGE_SIZE)
+                        .nextToken(rootNextToken)
+                        .build());
+                for (Root root : rootResponse.roots())
+                {
+                    parentIds.add(root.id());
+                }
+                rootNextToken = rootResponse.nextToken();
+            }
+            while (rootNextToken != null);
+
+            // Step 2: BFS/recursive descent
+            List<String> queue = new ArrayList<>(parentIds);
+            while (!queue.isEmpty())
+            {
+                String parentId = queue.remove(0);
+                String ouNextToken = null;
+                do
+                {
+                    ListOrganizationalUnitsForParentResponse ouResponse =
+                        this.organizationsClient.listOrganizationalUnitsForParent(
+                            ListOrganizationalUnitsForParentRequest.builder()
+                                .parentId(parentId)
+                                .maxResults(PAGE_SIZE)
+                                .nextToken(ouNextToken)
+                                .build());
+
+                    for (OrganizationalUnit ou : ouResponse.organizationalUnits())
+                    {
+                        Map<String, Object> attributes = new HashMap<>();
+                        attributes.put("ouId", ou.id());
+                        attributes.put("arn", ou.arn());
+                        attributes.put("name", ou.name());
+                        attributes.put("parentId", parentId);
+
+                        CloudEntity entity = CloudEntity.builder()
+                            .entityIdentifier(EntityIdentifier.builder()
+                                .id(ou.arn())
+                                .qualifiedResourceName(ou.arn())
+                                .build())
+                            .entityType(ENTITY_TYPE)
+                            .name(ou.name())
+                            .collectorContext(collectorContext)
+                            .attributes(attributes)
+                            .rawPayload(ou)
+                            .collectedAt(Instant.now())
+                            .build();
+                        entities.add(entity);
+
+                        // enqueue OU for its own children
+                        queue.add(ou.id());
+                    }
+                    ouNextToken = ouResponse.nextToken();
+                }
+                while (ouNextToken != null);
+            }
+
+            final int count = entities.size();
+            Map<String, Object> metadataValues = new HashMap<>();
+            metadataValues.put("count", count);
+
+            return new CollectorCursor()
+            {
+                @Override public List<CloudEntity> getEntities() { return entities; }
+                @Override public Optional<String> getNextCursorToken() { return Optional.empty(); }
+                @Override public CursorMetadata getMetadata()
+                {
+                    return CursorMetadata.builder().values(metadataValues).build();
+                }
+            };
+        }
+        catch (OrganizationsException e)
+        {
+            log.error("OrganizationsOrganizationalUnitCollector error: {}", e.awsErrorDetails() != null ? e.awsErrorDetails().errorMessage() : e.getMessage(), e);
+            throw new CollectorException("Failed to collect Organizations organizational units", e);
+        }
+        catch (Exception e)
+        {
+            log.error("OrganizationsOrganizationalUnitCollector unexpected error", e);
+            throw new CollectorException("Unexpected error collecting Organizations organizational units", e);
+        }
+    }
+}

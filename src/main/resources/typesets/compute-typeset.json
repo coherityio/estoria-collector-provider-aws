@@ -1,0 +1,18 @@
+{
+    "entityTypes": [
+        "Ec2Instance",
+        "Ec2LaunchTemplate",
+        "Ec2LaunchConfiguration",
+        "AutoScalingGroup",
+        "AutoScalingPolicy",
+        "CapacityReservation",
+        "SpotFleetRequest",
+        "Ec2PlacementGroup",
+        "Ec2KeyPair",
+        "Ec2Image",
+        "Ec2Host",
+        "Ec2Snapshot",
+        "EbsVolume",
+        "EbsVolumeAttachment"
+    ]
+}

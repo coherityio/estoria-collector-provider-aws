@@ -25,6 +25,10 @@ public final class ARNHelper
     public static final String SERVICE_LAMBDA = "lambda";
     public static final String SERVICE_CLOUDTRAIL = "cloudtrail";
     public static final String SERVICE_S3 = "s3";
+    public static final String SERVICE_ELB = "elasticloadbalancing";
+    public static final String SERVICE_GLOBAL_ACCELERATOR = "globalaccelerator";
+    public static final String SERVICE_APP_MESH = "appmesh";
+    public static final String SERVICE_EXECUTE_API = "execute-api";
 
     // ===== EC2 Resource Types =====
     public static final String RESOURCE_VPC = "vpc";
@@ -45,6 +49,22 @@ public final class ARNHelper
     public static final String RESOURCE_NETWORK_INTERFACE = "network-interface";
     public static final String RESOURCE_ELASTIC_IP = "elastic-ip";
     public static final String RESOURCE_INSTANCE = "instance";
+    public static final String RESOURCE_LOADBALANCER = "loadbalancer";
+    public static final String RESOURCE_VPC_ENDPOINT_SERVICE = "vpc-endpoint-service";
+    public static final String RESOURCE_ACCELERATOR = "accelerator";
+    public static final String RESOURCE_MESH = "mesh";
+    public static final String RESOURCE_VPCLINK = "vpclink";
+
+    // ===== EC2 Compute Resources =====
+    public static final String RESOURCE_IMAGE = "image";
+    public static final String RESOURCE_DEDICATED_HOST = "dedicated-host";
+    public static final String RESOURCE_VOLUME = "volume";
+    public static final String RESOURCE_SNAPSHOT = "snapshot";
+    public static final String RESOURCE_LAUNCH_TEMPLATE = "launch-template";
+    public static final String RESOURCE_KEY_PAIR = "key-pair";
+    public static final String RESOURCE_PLACEMENT_GROUP = "placement-group";
+    public static final String RESOURCE_CAPACITY_RESERVATION = "capacity-reservation";
+    public static final String RESOURCE_SPOT_FLEET_REQUEST = "spot-fleet-request";
 
     // ===== ECS / ECR =====
     public static final String RESOURCE_CLUSTER = "cluster";
@@ -280,6 +300,60 @@ public final class ARNHelper
             RESOURCE_ELASTIC_IP, allocationId, ResourceSeparator.SLASH);
     }
 
+    public static String ec2ImageArn(String region, String accountId, String imageId)
+    {
+        return buildArn(partitionForRegion(region), SERVICE_EC2, region, accountId,
+            RESOURCE_IMAGE, imageId, ResourceSeparator.SLASH);
+    }
+
+    public static String ec2HostArn(String region, String accountId, String hostId)
+    {
+        return buildArn(partitionForRegion(region), SERVICE_EC2, region, accountId,
+            RESOURCE_DEDICATED_HOST, hostId, ResourceSeparator.SLASH);
+    }
+
+    public static String ec2VolumeArn(String region, String accountId, String volumeId)
+    {
+        return buildArn(partitionForRegion(region), SERVICE_EC2, region, accountId,
+            RESOURCE_VOLUME, volumeId, ResourceSeparator.SLASH);
+    }
+
+    public static String ec2SnapshotArn(String region, String accountId, String snapshotId)
+    {
+        return buildArn(partitionForRegion(region), SERVICE_EC2, region, accountId,
+            RESOURCE_SNAPSHOT, snapshotId, ResourceSeparator.SLASH);
+    }
+
+    public static String ec2LaunchTemplateArn(String region, String accountId, String templateId)
+    {
+        return buildArn(partitionForRegion(region), SERVICE_EC2, region, accountId,
+            RESOURCE_LAUNCH_TEMPLATE, templateId, ResourceSeparator.SLASH);
+    }
+
+    public static String ec2KeyPairArn(String region, String accountId, String keyPairId)
+    {
+        return buildArn(partitionForRegion(region), SERVICE_EC2, region, accountId,
+            RESOURCE_KEY_PAIR, keyPairId, ResourceSeparator.SLASH);
+    }
+
+    public static String ec2PlacementGroupArn(String region, String accountId, String groupId)
+    {
+        return buildArn(partitionForRegion(region), SERVICE_EC2, region, accountId,
+            RESOURCE_PLACEMENT_GROUP, groupId, ResourceSeparator.SLASH);
+    }
+
+    public static String ec2CapacityReservationArn(String region, String accountId, String reservationId)
+    {
+        return buildArn(partitionForRegion(region), SERVICE_EC2, region, accountId,
+            RESOURCE_CAPACITY_RESERVATION, reservationId, ResourceSeparator.SLASH);
+    }
+
+    public static String ec2SpotFleetArn(String region, String accountId, String requestId)
+    {
+        return buildArn(partitionForRegion(region), SERVICE_EC2, region, accountId,
+            RESOURCE_SPOT_FLEET_REQUEST, requestId, ResourceSeparator.SLASH);
+    }
+
     // ===== ECS / ECR =====
 
     public static String ecsClusterArn(String region, String accountId, String clusterName)
@@ -326,6 +400,58 @@ public final class ARNHelper
         return ARN_PREFIX + SEPARATOR + PARTITION_AWS + SEPARATOR + SERVICE_S3
             + SEPARATOR + SEPARATOR + SEPARATOR
             + bucketName + RESOURCE_SEPARATOR_SLASH + objectKey;
+    }
+
+    public static String s3MultiRegionAccessPointArn(String accountId, String name)
+    {
+        // arn:aws:s3::accountId:accesspoint/name
+        requireNonBlank(accountId, "accountId");
+        requireNonBlank(name, "name");
+        return ARN_PREFIX + SEPARATOR + PARTITION_AWS + SEPARATOR + SERVICE_S3
+            + SEPARATOR + SEPARATOR + accountId + SEPARATOR
+            + "accesspoint" + RESOURCE_SEPARATOR_SLASH + name;
+    }
+
+    // ===== ELB Classic =====
+
+    public static String elbClassicArn(String region, String accountId, String lbName)
+    {
+        return buildArn(partitionForRegion(region), SERVICE_ELB, region, accountId,
+            RESOURCE_LOADBALANCER + RESOURCE_SEPARATOR_SLASH + lbName);
+    }
+
+    // ===== EC2 PrivateLink =====
+
+    public static String ec2PrivateLinkServiceArn(String region, String accountId, String serviceId)
+    {
+        return buildArn(partitionForRegion(region), SERVICE_EC2, region, accountId,
+            RESOURCE_VPC_ENDPOINT_SERVICE, serviceId, ResourceSeparator.SLASH);
+    }
+
+    // ===== Global Accelerator =====
+
+    public static String globalAcceleratorArn(String accountId, String acceleratorId)
+    {
+        // Global Accelerator ARNs have no region: arn:aws:globalaccelerator::accountId:accelerator/id
+        return buildArn(PARTITION_AWS, SERVICE_GLOBAL_ACCELERATOR, "", accountId,
+            RESOURCE_ACCELERATOR, acceleratorId, ResourceSeparator.SLASH);
+    }
+
+    // ===== App Mesh =====
+
+    public static String appMeshMeshArn(String region, String accountId, String meshName)
+    {
+        return buildArn(partitionForRegion(region), SERVICE_APP_MESH, region, accountId,
+            RESOURCE_MESH, meshName, ResourceSeparator.SLASH);
+    }
+
+    // ===== API Gateway =====
+
+    public static String apiGatewayVpcLinkArn(String region, String accountId, String vpcLinkId)
+    {
+        // arn:aws:apigateway:region::/vpclinks/id  (account is empty for API GW)
+        return buildArn(partitionForRegion(region), SERVICE_EXECUTE_API, region, "",
+            RESOURCE_VPCLINK, vpcLinkId, ResourceSeparator.SLASH);
     }
 
     // ===== Helpers =====

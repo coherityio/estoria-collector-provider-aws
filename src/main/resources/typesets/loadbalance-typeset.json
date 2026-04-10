@@ -1,0 +1,17 @@
+{
+    "entityTypes": [
+        "ClassicLoadBalancer",
+        "ApplicationLoadBalancer",
+        "NetworkLoadBalancer",
+        "GatewayLoadBalancer",
+        "LoadBalancerListener",
+        "TargetGroup",
+        "TargetHealth",
+        "GlobalAccelerator",
+        "AppMeshMesh",
+        "AppMeshVirtualService",
+        "AppMeshVirtualNode",
+        "VpcLink",
+        "PrivateLinkService"
+    ]
+}

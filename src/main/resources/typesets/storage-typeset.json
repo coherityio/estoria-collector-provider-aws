@@ -1,0 +1,27 @@
+{
+    "entityTypes": [
+        "S3Bucket",
+        "S3BucketPolicy",
+        "S3BucketAcl",
+        "S3BucketLifecycle",
+        "S3BucketReplication",
+        "S3BucketLogging",
+        "S3BucketNotification",
+        "S3BucketWebsite",
+        "S3ObjectLockConfiguration",
+        "S3MultiRegionAccessPoint",
+        "EfsFileSystem",
+        "EfsMountTarget",
+        "EfsAccessPoint",
+        "FsxFileSystem",
+        "FsxBackup",
+        "StorageGateway",
+        "StorageGatewayVolume",
+        "CloudFrontDistribution",
+        "CloudFrontOriginAccessIdentity",
+        "CloudFrontFunction",
+        "CloudFrontCachePolicy",
+        "CloudFrontOriginRequestPolicy",
+        "CloudFrontResponseHeadersPolicy"
+    ]
+}
