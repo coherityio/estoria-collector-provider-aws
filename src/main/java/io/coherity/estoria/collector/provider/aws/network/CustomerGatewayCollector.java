@@ -9,12 +9,14 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.StringUtils;
-
 import io.coherity.estoria.collector.provider.aws.ARNHelper;
+import io.coherity.estoria.collector.provider.aws.AbstractAwsContextAwareCollector;
+import io.coherity.estoria.collector.provider.aws.AccountScope;
 import io.coherity.estoria.collector.provider.aws.AwsClientFactory;
+import io.coherity.estoria.collector.provider.aws.AwsSessionContext;
+import io.coherity.estoria.collector.provider.aws.ContainmentScope;
+import io.coherity.estoria.collector.provider.aws.EntityCategory;
 import io.coherity.estoria.collector.spi.CloudEntity;
-import io.coherity.estoria.collector.spi.Collector;
 import io.coherity.estoria.collector.spi.CollectorContext;
 import io.coherity.estoria.collector.spi.CollectorCursor;
 import io.coherity.estoria.collector.spi.CollectorException;
@@ -37,7 +39,7 @@ import software.amazon.awssdk.services.ec2.model.Tag;
  * Note: DescribeCustomerGateways does not support pagination; it returns all results.
  */
 @Slf4j
-public class CustomerGatewayCollector implements Collector
+public class CustomerGatewayCollector extends AbstractAwsContextAwareCollector
 {
 	private static final String PROVIDER_ID = "aws";
 	public static final String ENTITY_TYPE = "CustomerGateway";
@@ -66,9 +68,27 @@ public class CustomerGatewayCollector implements Collector
 	}
 
 	@Override
-	public CollectorCursor collect(ProviderContext providerContext, CollectorContext collectorContext, CollectorRequestParams collectorRequestParams) throws CollectorException
+	public AccountScope getRequiredAccountScope()
 	{
-		log.debug("CustomerGatewayCollector.collect called with request: {}", collectorRequestParams);
+		return AccountScope.MEMBER_ACCOUNT;
+	}
+
+	@Override
+	public ContainmentScope getEntityContainmentScope()
+	{
+		return ContainmentScope.ACCOUNT_REGIONAL;
+	}
+
+	@Override
+	public EntityCategory getEntityCategory()
+	{
+		return EntityCategory.RESOURCE;
+	}
+
+	@Override
+	public CollectorCursor collectEntities(ProviderContext providerContext, AwsSessionContext awsSessionContext, CollectorContext collectorContext, CollectorRequestParams collectorRequestParams) throws CollectorException
+	{
+		log.debug("CustomerGatewayCollector.collectEntities called with request: {}", collectorRequestParams);
 
 		if (this.ec2Client == null)
 		{
@@ -77,15 +97,7 @@ public class CustomerGatewayCollector implements Collector
 
 		try
 		{
-			String regionFromProviderContext = null;
-			if (providerContext != null && providerContext.getAttributes() != null)
-			{
-				regionFromProviderContext = providerContext.getAttributes().get("region").toString();
-			}
-
-			Region region = (StringUtils.isNotEmpty(regionFromProviderContext))
-				? Region.of(regionFromProviderContext)
-				: null;
+			Region region = awsSessionContext.getRegion();
 
 			log.debug("CustomerGatewayCollector.collect using region: {}", region);
 
@@ -110,9 +122,9 @@ public class CustomerGatewayCollector implements Collector
 						continue;
 					}
 
-					String cgwId = cgw.customerGatewayId();
-					String ownerId    = resolveAccountId(providerContext);
-					String regionName = region != null ? region.id() : null;
+				String cgwId = cgw.customerGatewayId();
+				String ownerId    = awsSessionContext.getCurrentAccountId();
+				String regionName = region != null ? region.id() : null;
 					String arn = ARNHelper.ec2CustomerGatewayArn(regionName, ownerId, cgwId);
 
 					Map<String, Object> attributes = new HashMap<>();
@@ -187,17 +199,4 @@ public class CustomerGatewayCollector implements Collector
 		}
 	}
 	
-    private static String resolveAccountId(ProviderContext providerContext)
-    {
-        if (providerContext != null && providerContext.getAttributes() != null)
-        {
-            Object found = providerContext.getAttributes().get("accountId");
-            if (found != null)
-            {
-                return found.toString();
-            }
-        }
-        return null;
-    }
-
 }

@@ -10,9 +10,13 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import io.coherity.estoria.collector.provider.aws.ARNHelper;
+import io.coherity.estoria.collector.provider.aws.AbstractAwsContextAwareCollector;
+import io.coherity.estoria.collector.provider.aws.AccountScope;
 import io.coherity.estoria.collector.provider.aws.AwsClientFactory;
+import io.coherity.estoria.collector.provider.aws.AwsSessionContext;
+import io.coherity.estoria.collector.provider.aws.ContainmentScope;
+import io.coherity.estoria.collector.provider.aws.EntityCategory;
 import io.coherity.estoria.collector.spi.CloudEntity;
-import io.coherity.estoria.collector.spi.Collector;
 import io.coherity.estoria.collector.spi.CollectorContext;
 import io.coherity.estoria.collector.spi.CollectorCursor;
 import io.coherity.estoria.collector.spi.CollectorException;
@@ -34,7 +38,7 @@ import software.amazon.awssdk.services.ec2.model.Tag;
  * Note: DescribePlacementGroups does not support pagination; it returns all results.
  */
 @Slf4j
-public class Ec2PlacementGroupCollector implements Collector
+public class Ec2PlacementGroupCollector extends AbstractAwsContextAwareCollector
 {
     private static final String PROVIDER_ID = "aws";
     public  static final String ENTITY_TYPE = "Ec2PlacementGroup";
@@ -61,8 +65,27 @@ public class Ec2PlacementGroupCollector implements Collector
     }
 
     @Override
-    public CollectorCursor collect(
+    public AccountScope getRequiredAccountScope()
+    {
+        return AccountScope.MEMBER_ACCOUNT;
+    }
+
+    @Override
+    public ContainmentScope getEntityContainmentScope()
+    {
+        return ContainmentScope.ACCOUNT_REGIONAL;
+    }
+
+    @Override
+    public EntityCategory getEntityCategory()
+    {
+        return EntityCategory.RESOURCE;
+    }
+
+    @Override
+    public CollectorCursor collectEntities(
         ProviderContext providerContext,
+        AwsSessionContext awsSessionContext,
         CollectorContext collectorContext,
         CollectorRequestParams collectorRequestParams) throws CollectorException
     {
@@ -75,8 +98,8 @@ public class Ec2PlacementGroupCollector implements Collector
 
         try
         {
-            String region    = resolveRegion(providerContext);
-            String accountId = resolveAccountId(providerContext);
+            String region    = awsSessionContext.getRegion() != null ? awsSessionContext.getRegion().id() : null;
+            String accountId = awsSessionContext.getCurrentAccountId();
 
             // DescribePlacementGroups does not support pagination
             DescribePlacementGroupsResponse response = this.ec2Client.describePlacementGroups(
@@ -157,23 +180,4 @@ public class Ec2PlacementGroupCollector implements Collector
         }
     }
 
-    private static String resolveRegion(ProviderContext ctx)
-    {
-        if (ctx != null && ctx.getAttributes() != null)
-        {
-            Object v = ctx.getAttributes().get("region");
-            if (v != null) return v.toString();
-        }
-        return null;
-    }
-
-    private static String resolveAccountId(ProviderContext ctx)
-    {
-        if (ctx != null && ctx.getAttributes() != null)
-        {
-            Object v = ctx.getAttributes().get("accountId");
-            if (v != null) return v.toString();
-        }
-        return null;
-    }
 }

@@ -9,12 +9,14 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.StringUtils;
-
 import io.coherity.estoria.collector.provider.aws.ARNHelper;
+import io.coherity.estoria.collector.provider.aws.AbstractAwsContextAwareCollector;
+import io.coherity.estoria.collector.provider.aws.AccountScope;
 import io.coherity.estoria.collector.provider.aws.AwsClientFactory;
+import io.coherity.estoria.collector.provider.aws.AwsSessionContext;
+import io.coherity.estoria.collector.provider.aws.ContainmentScope;
+import io.coherity.estoria.collector.provider.aws.EntityCategory;
 import io.coherity.estoria.collector.spi.CloudEntity;
-import io.coherity.estoria.collector.spi.Collector;
 import io.coherity.estoria.collector.spi.CollectorContext;
 import io.coherity.estoria.collector.spi.CollectorCursor;
 import io.coherity.estoria.collector.spi.CollectorException;
@@ -36,7 +38,7 @@ import software.amazon.awssdk.services.ec2.model.Tag;
  * NAT Gateway collector for AWS backed by the EC2 DescribeNatGateways API.
  */
 @Slf4j
-public class NatGatewayCollector implements Collector
+public class NatGatewayCollector extends AbstractAwsContextAwareCollector
 {
 	private static final String PROVIDER_ID = "aws";
 	public static final String ENTITY_TYPE = "NatGateway";
@@ -65,9 +67,27 @@ public class NatGatewayCollector implements Collector
 	}
 
 	@Override
-	public CollectorCursor collect(ProviderContext providerContext, CollectorContext collectorContext, CollectorRequestParams collectorRequestParams) throws CollectorException
+	public AccountScope getRequiredAccountScope()
 	{
-		log.debug("NatGatewayCollector.collect called with request: {}", collectorRequestParams);
+		return AccountScope.MEMBER_ACCOUNT;
+	}
+
+	@Override
+	public ContainmentScope getEntityContainmentScope()
+	{
+		return ContainmentScope.VPC;
+	}
+
+	@Override
+	public EntityCategory getEntityCategory()
+	{
+		return EntityCategory.RESOURCE;
+	}
+
+	@Override
+	public CollectorCursor collectEntities(ProviderContext providerContext, AwsSessionContext awsSessionContext, CollectorContext collectorContext, CollectorRequestParams collectorRequestParams) throws CollectorException
+	{
+		log.debug("NatGatewayCollector.collectEntities called with request: {}", collectorRequestParams);
 
 		if (this.ec2Client == null)
 		{
@@ -76,15 +96,7 @@ public class NatGatewayCollector implements Collector
 
 		try
 		{
-			String regionFromProviderContext = null;
-			if (providerContext != null && providerContext.getAttributes() != null)
-			{
-				regionFromProviderContext = providerContext.getAttributes().get("region").toString();
-			}
-
-			Region region = (StringUtils.isNotEmpty(regionFromProviderContext))
-				? Region.of(regionFromProviderContext)
-				: null;
+			Region region = awsSessionContext.getRegion();
 
 			log.debug("NatGatewayCollector.collect using region: {}", region);
 

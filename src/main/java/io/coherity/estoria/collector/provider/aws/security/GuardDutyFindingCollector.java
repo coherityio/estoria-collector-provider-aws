@@ -8,9 +8,13 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import io.coherity.estoria.collector.provider.aws.AbstractAwsContextAwareCollector;
+import io.coherity.estoria.collector.provider.aws.AccountScope;
 import io.coherity.estoria.collector.provider.aws.AwsClientFactory;
+import io.coherity.estoria.collector.provider.aws.AwsSessionContext;
+import io.coherity.estoria.collector.provider.aws.ContainmentScope;
+import io.coherity.estoria.collector.provider.aws.EntityCategory;
 import io.coherity.estoria.collector.spi.CloudEntity;
-import io.coherity.estoria.collector.spi.Collector;
 import io.coherity.estoria.collector.spi.CollectorContext;
 import io.coherity.estoria.collector.spi.CollectorCursor;
 import io.coherity.estoria.collector.spi.CollectorException;
@@ -35,7 +39,7 @@ import software.amazon.awssdk.services.guardduty.model.ListFindingsResponse;
  * Fetches finding IDs per detector, then retrieves up to 50 findings at a time.
  */
 @Slf4j
-public class GuardDutyFindingCollector implements Collector
+public class GuardDutyFindingCollector extends AbstractAwsContextAwareCollector
 {
     private static final String PROVIDER_ID = "aws";
     public  static final String ENTITY_TYPE = "GuardDutyFinding";
@@ -64,8 +68,18 @@ public class GuardDutyFindingCollector implements Collector
     }
 
     @Override
-    public CollectorCursor collect(
+    public AccountScope getRequiredAccountScope() { return AccountScope.MEMBER_ACCOUNT; }
+
+    @Override
+    public ContainmentScope getEntityContainmentScope() { return ContainmentScope.ACCOUNT_REGIONAL; }
+
+    @Override
+    public EntityCategory getEntityCategory() { return EntityCategory.RESOURCE; }
+
+    @Override
+    public CollectorCursor collectEntities(
         ProviderContext providerContext,
+        AwsSessionContext awsSessionContext,
         CollectorContext collectorContext,
         CollectorRequestParams collectorRequestParams) throws CollectorException
     {

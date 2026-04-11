@@ -9,9 +9,13 @@ import java.util.Optional;
 import java.util.Set;
 
 import io.coherity.estoria.collector.provider.aws.ARNHelper;
+import io.coherity.estoria.collector.provider.aws.AbstractAwsContextAwareCollector;
+import io.coherity.estoria.collector.provider.aws.AccountScope;
 import io.coherity.estoria.collector.provider.aws.AwsClientFactory;
+import io.coherity.estoria.collector.provider.aws.AwsSessionContext;
+import io.coherity.estoria.collector.provider.aws.ContainmentScope;
+import io.coherity.estoria.collector.provider.aws.EntityCategory;
 import io.coherity.estoria.collector.spi.CloudEntity;
-import io.coherity.estoria.collector.spi.Collector;
 import io.coherity.estoria.collector.spi.CollectorContext;
 import io.coherity.estoria.collector.spi.CollectorCursor;
 import io.coherity.estoria.collector.spi.CollectorException;
@@ -32,7 +36,7 @@ import software.amazon.awssdk.services.s3control.model.S3ControlException;
  * Collects S3 Multi-Region Access Points (MRAPs) via the S3Control API.
  */
 @Slf4j
-public class S3MultiRegionAccessPointCollector implements Collector
+public class S3MultiRegionAccessPointCollector extends AbstractAwsContextAwareCollector
 {
     private static final String PROVIDER_ID = "aws";
     public  static final String ENTITY_TYPE = "S3MultiRegionAccessPoint";
@@ -59,8 +63,18 @@ public class S3MultiRegionAccessPointCollector implements Collector
     }
 
     @Override
-    public CollectorCursor collect(
+    public AccountScope getRequiredAccountScope() { return AccountScope.MEMBER_ACCOUNT; }
+
+    @Override
+    public ContainmentScope getEntityContainmentScope() { return ContainmentScope.AWS_GLOBAL; }
+
+    @Override
+    public EntityCategory getEntityCategory() { return EntityCategory.RESOURCE; }
+
+    @Override
+    public CollectorCursor collectEntities(
         ProviderContext providerContext,
+        AwsSessionContext awsSessionContext,
         CollectorContext collectorContext,
         CollectorRequestParams collectorRequestParams) throws CollectorException
     {
@@ -71,7 +85,7 @@ public class S3MultiRegionAccessPointCollector implements Collector
             this.s3ControlClient = AwsClientFactory.getInstance().getS3ControlClient(providerContext);
         }
 
-        String accountId = resolveAccountId(providerContext);
+        String accountId = awsSessionContext.getCurrentAccountId();
 
         try
         {
@@ -181,10 +195,4 @@ public class S3MultiRegionAccessPointCollector implements Collector
         }
     }
 
-    private String resolveAccountId(ProviderContext providerContext)
-    {
-        if (providerContext == null || providerContext.getAttributes() == null) return "";
-        Object val = providerContext.getAttributes().get("accountId");
-        return val != null ? val.toString() : "";
-    }
 }

@@ -8,9 +8,13 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import io.coherity.estoria.collector.provider.aws.AbstractAwsContextAwareCollector;
+import io.coherity.estoria.collector.provider.aws.AccountScope;
 import io.coherity.estoria.collector.provider.aws.AwsClientFactory;
+import io.coherity.estoria.collector.provider.aws.AwsSessionContext;
+import io.coherity.estoria.collector.provider.aws.ContainmentScope;
+import io.coherity.estoria.collector.provider.aws.EntityCategory;
 import io.coherity.estoria.collector.spi.CloudEntity;
-import io.coherity.estoria.collector.spi.Collector;
 import io.coherity.estoria.collector.spi.CollectorContext;
 import io.coherity.estoria.collector.spi.CollectorCursor;
 import io.coherity.estoria.collector.spi.CollectorException;
@@ -30,7 +34,7 @@ import software.amazon.awssdk.services.cloudfront.model.ListCloudFrontOriginAcce
  * Collects CloudFront Origin Access Identities (OAIs) via the CloudFront ListCloudFrontOriginAccessIdentities API.
  */
 @Slf4j
-public class CloudFrontOriginAccessIdentityCollector implements Collector
+public class CloudFrontOriginAccessIdentityCollector extends AbstractAwsContextAwareCollector
 {
     private static final String PROVIDER_ID = "aws";
     public  static final String ENTITY_TYPE = "CloudFrontOriginAccessIdentity";
@@ -57,8 +61,18 @@ public class CloudFrontOriginAccessIdentityCollector implements Collector
     }
 
     @Override
-    public CollectorCursor collect(
+    public AccountScope getRequiredAccountScope() { return AccountScope.MEMBER_ACCOUNT; }
+
+    @Override
+    public ContainmentScope getEntityContainmentScope() { return ContainmentScope.AWS_GLOBAL; }
+
+    @Override
+    public EntityCategory getEntityCategory() { return EntityCategory.RESOURCE; }
+
+    @Override
+    public CollectorCursor collectEntities(
         ProviderContext providerContext,
+        AwsSessionContext awsSessionContext,
         CollectorContext collectorContext,
         CollectorRequestParams collectorRequestParams) throws CollectorException
     {

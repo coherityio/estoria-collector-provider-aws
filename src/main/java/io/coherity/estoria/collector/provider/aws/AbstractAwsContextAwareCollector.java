@@ -1,0 +1,143 @@
+package io.coherity.estoria.collector.provider.aws;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.apache.commons.lang3.Validate;
+
+import io.coherity.estoria.collector.spi.CloudEntity;
+import io.coherity.estoria.collector.spi.Collector;
+import io.coherity.estoria.collector.spi.CollectorContext;
+import io.coherity.estoria.collector.spi.CollectorCursor;
+import io.coherity.estoria.collector.spi.CollectorException;
+import io.coherity.estoria.collector.spi.CollectorRequestParams;
+import io.coherity.estoria.collector.spi.CursorMetadata;
+import io.coherity.estoria.collector.spi.ProviderContext;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+public abstract class AbstractAwsContextAwareCollector implements Collector
+{
+    @Override
+    public final CollectorCursor collect(
+        ProviderContext providerContext,
+        CollectorContext collectorContext,
+        CollectorRequestParams collectorRequestParams) throws CollectorException
+    {
+        Validate.notNull(providerContext, "required: providerContext");
+        Validate.notNull(collectorContext, "required: collectorContext");
+        Validate.notNull(collectorRequestParams, "required: collectorRequestParams");
+
+        AccountScope requiredAccountScope = this.getRequiredAccountScope();
+        Validate.notNull(requiredAccountScope, "required: requiredAccountScope");
+
+        AwsSessionContext awsSessionContext;
+        try
+        {
+            awsSessionContext = AwsSessionContextResolver.getInstance().resolveSessionContext(providerContext, collectorContext);
+        }
+        catch (Exception e)
+        {
+            throw new CollectorException("Failed to resolve AWS session context", e);
+        }
+
+        if (awsSessionContext == null)
+        {
+            throw new CollectorException("Resolved AWS session context was null");
+        }
+
+        AccountScope actualAccountScope = awsSessionContext.getAccountScope();
+        if (actualAccountScope == null)
+        {
+            throw new CollectorException("Resolved AWS account scope was null");
+        }
+
+        if (!actualAccountScope.satisfies(requiredAccountScope))
+        {
+//        	CollectorInfo collectorInfo = this.getCollectorInfo();	
+//        	log.warn(
+//                    "Collector: " + collectorInfo.getEntityType() + " requires account scope "
+//                            + requiredAccountScope
+//                            + " but current AWS session context resolved to "
+//                            + actualAccountScope
+//                            + " (profile="
+//                            + awsSessionContext.getProfile()
+//                            + ", currentAccountId="
+//                            + awsSessionContext.getCurrentAccountId()
+//                            + ", managementAccountId="
+//                            + awsSessionContext.getManagementAccountId()
+//                            + ")");
+//        	return null;
+        	
+            throw new CollectorException(
+                "Collector requires account scope "
+                    + requiredAccountScope
+                    + " but current AWS session context resolved to "
+                    + actualAccountScope
+                    + " (profile="
+                    + awsSessionContext.getProfile()
+                    + ", currentAccountId="
+                    + awsSessionContext.getCurrentAccountId()
+                    + ", managementAccountId="
+                    + awsSessionContext.getManagementAccountId()
+                    + ")");
+        }
+
+        // If the caller specified a containment scope filter, skip collectors that don't fall within it.
+        ContainmentScope requestedContainmentScope =
+            AwsSessionContextResolver.resolveContainmentScope(collectorContext);
+        if (requestedContainmentScope != null
+            && !requestedContainmentScope.includes(this.getEntityContainmentScope()))
+        {
+            log.debug(
+                "Skipping collector {}: containment scope {} is not included by requested {}",
+                this.getClass().getSimpleName(),
+                this.getEntityContainmentScope(),
+                requestedContainmentScope);
+            return emptyCollectorCursor();
+        }
+
+        // If the caller did not opt in to reference entities, skip REFERENCE collectors.
+        boolean includeReference = AwsSessionContextResolver.resolveIncludeReferenceCategory(collectorContext);
+        if (!includeReference && this.getEntityCategory() == EntityCategory.REFERENCE)
+        {
+            log.debug(
+                "Skipping collector {}: entity category is REFERENCE and include-reference is false",
+                this.getClass().getSimpleName());
+            return emptyCollectorCursor();
+        }
+
+        return this.collectEntities(
+            providerContext,
+            awsSessionContext,
+            collectorContext,
+            collectorRequestParams);
+    }
+
+    private static CollectorCursor emptyCollectorCursor()
+    {
+        return new CollectorCursor()
+        {
+            @Override public List<CloudEntity> getEntities() { return List.of(); }
+            @Override public Optional<String> getNextCursorToken() { return Optional.empty(); }
+            @Override public CursorMetadata getMetadata() { return CursorMetadata.builder().build(); }
+        };
+    }
+    
+    // ==================================================================
+    // ABSTRACT METHODS
+    // ==================================================================
+    
+    public abstract AccountScope getRequiredAccountScope();
+
+    public abstract ContainmentScope getEntityContainmentScope();
+
+    public abstract EntityCategory getEntityCategory();
+
+    public abstract CollectorCursor collectEntities(
+        ProviderContext providerContext, 
+        AwsSessionContext awsSessionContext, 
+        CollectorContext collectorContext,
+        CollectorRequestParams collectorRequestParams) throws CollectorException;
+
+}

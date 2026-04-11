@@ -8,9 +8,13 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import io.coherity.estoria.collector.provider.aws.AbstractAwsContextAwareCollector;
+import io.coherity.estoria.collector.provider.aws.AccountScope;
 import io.coherity.estoria.collector.provider.aws.AwsClientFactory;
+import io.coherity.estoria.collector.provider.aws.AwsSessionContext;
+import io.coherity.estoria.collector.provider.aws.ContainmentScope;
+import io.coherity.estoria.collector.provider.aws.EntityCategory;
 import io.coherity.estoria.collector.spi.CloudEntity;
-import io.coherity.estoria.collector.spi.Collector;
 import io.coherity.estoria.collector.spi.CollectorContext;
 import io.coherity.estoria.collector.spi.CollectorCursor;
 import io.coherity.estoria.collector.spi.CollectorException;
@@ -30,7 +34,7 @@ import software.amazon.awssdk.services.organizations.model.OrganizationsExceptio
  * Collects AWS Organizations accounts via the Organizations ListAccounts API.
  */
 @Slf4j
-public class OrganizationsAccountCollector implements Collector
+public class OrganizationsAccountCollector extends AbstractAwsContextAwareCollector
 {
     private static final String PROVIDER_ID = "aws";
     public  static final String ENTITY_TYPE = "OrganizationsAccount";
@@ -57,8 +61,18 @@ public class OrganizationsAccountCollector implements Collector
     }
 
     @Override
-    public CollectorCursor collect(
+    public AccountScope getRequiredAccountScope() { return AccountScope.MANAGEMENT_ACCOUNT; }
+
+    @Override
+    public ContainmentScope getEntityContainmentScope() { return ContainmentScope.ORGANIZATION; }
+
+    @Override
+    public EntityCategory getEntityCategory() { return EntityCategory.RESOURCE; }
+
+    @Override
+    public CollectorCursor collectEntities(
         ProviderContext providerContext,
+        AwsSessionContext awsSessionContext,
         CollectorContext collectorContext,
         CollectorRequestParams collectorRequestParams) throws CollectorException
     {

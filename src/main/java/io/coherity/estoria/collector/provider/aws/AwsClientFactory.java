@@ -244,7 +244,7 @@ public class AwsClientFactory
     {
         // IAM is global — region is not applied
         return getClient(iamClients, providerContext,
-            (profile, region) -> buildClient(IamClient.builder(), profile, null, CLIENT_NAME_IAM));
+            (profile, region) -> buildClient(IamClient.builder(), profile, region, CLIENT_NAME_IAM));
     }
 
     public KmsClient getKmsClient(ProviderContext providerContext)

@@ -8,10 +8,14 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import io.coherity.estoria.collector.provider.aws.AwsClientFactory;
 import io.coherity.estoria.collector.provider.aws.ARNHelper;
+import io.coherity.estoria.collector.provider.aws.AbstractAwsContextAwareCollector;
+import io.coherity.estoria.collector.provider.aws.AccountScope;
+import io.coherity.estoria.collector.provider.aws.AwsClientFactory;
+import io.coherity.estoria.collector.provider.aws.AwsSessionContext;
+import io.coherity.estoria.collector.provider.aws.ContainmentScope;
+import io.coherity.estoria.collector.provider.aws.EntityCategory;
 import io.coherity.estoria.collector.spi.CloudEntity;
-import io.coherity.estoria.collector.spi.Collector;
 import io.coherity.estoria.collector.spi.CollectorContext;
 import io.coherity.estoria.collector.spi.CollectorCursor;
 import io.coherity.estoria.collector.spi.CollectorException;
@@ -36,7 +40,7 @@ import software.amazon.awssdk.services.s3.model.ServerSideEncryptionRule;
  * Collects S3 buckets including location, versioning, and encryption configuration.
  */
 @Slf4j
-public class S3BucketCollector implements Collector
+public class S3BucketCollector extends AbstractAwsContextAwareCollector
 {
     private static final String PROVIDER_ID = "aws";
     public  static final String ENTITY_TYPE = "S3Bucket";
@@ -63,8 +67,18 @@ public class S3BucketCollector implements Collector
     }
 
     @Override
-    public CollectorCursor collect(
+    public AccountScope getRequiredAccountScope() { return AccountScope.MEMBER_ACCOUNT; }
+
+    @Override
+    public ContainmentScope getEntityContainmentScope() { return ContainmentScope.ACCOUNT_GLOBAL; }
+
+    @Override
+    public EntityCategory getEntityCategory() { return EntityCategory.RESOURCE; }
+
+    @Override
+    public CollectorCursor collectEntities(
         ProviderContext providerContext,
+        AwsSessionContext awsSessionContext,
         CollectorContext collectorContext,
         CollectorRequestParams collectorRequestParams) throws CollectorException
     {
