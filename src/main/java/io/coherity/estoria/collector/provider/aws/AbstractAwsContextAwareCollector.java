@@ -76,33 +76,33 @@ public abstract class AbstractAwsContextAwareCollector implements Collector
 			throw new CollectorException("Resolved AWS session context was null");
 		}
 
-		AccountScope actualAccountScope = awsSessionContext.getAccountScope();
-		if (actualAccountScope == null)
+		AccountScope accountScope = awsSessionContext.getAccountScope();
+		if (accountScope == null)
 		{
 			throw new CollectorException("Resolved AWS account scope was null");
 		}
 
-		if (!actualAccountScope.satisfies(requiredAccountScope))
+		if (!accountScope.satisfies(requiredAccountScope))
 		{
-//        	CollectorInfo collectorInfo = this.getCollectorInfo();	
-//        	log.warn(
-//                    "Collector: " + collectorInfo.getEntityType() + " requires account scope "
-//                            + requiredAccountScope
-//                            + " but current AWS session context resolved to "
-//                            + actualAccountScope
-//                            + " (profile="
-//                            + awsSessionContext.getProfile()
-//                            + ", currentAccountId="
-//                            + awsSessionContext.getCurrentAccountId()
-//                            + ", managementAccountId="
-//                            + awsSessionContext.getManagementAccountId()
-//                            + ")");
-//        	return null;
+        	CollectorInfo collectorInfo = this.getCollectorInfo();	
+        	log.warn(
+                    "Collector: " + collectorInfo.getEntityType() + " requires account scope "
+                            + requiredAccountScope
+                            + " but current AWS session context resolved to "
+                            + accountScope
+                            + " (profile="
+                            + awsSessionContext.getProfile()
+                            + ", currentAccountId="
+                            + awsSessionContext.getCurrentAccountId()
+                            + ", managementAccountId="
+                            + awsSessionContext.getManagementAccountId()
+                            + ")");
+        	return null;
 
-			throw new CollectorException("Collector requires account scope " + requiredAccountScope
-					+ " but current AWS session context resolved to " + actualAccountScope + " (profile="
-					+ awsSessionContext.getProfile() + ", currentAccountId=" + awsSessionContext.getCurrentAccountId()
-					+ ", managementAccountId=" + awsSessionContext.getManagementAccountId() + ")");
+//			throw new CollectorException("Collector requires account scope " + requiredAccountScope
+//					+ " but current AWS session context resolved to " + accountScope + " (profile="
+//					+ awsSessionContext.getProfile() + ", currentAccountId=" + awsSessionContext.getCurrentAccountId()
+//					+ ", managementAccountId=" + awsSessionContext.getManagementAccountId() + ")");
 		}
 
 		// If the caller specified a containment scope filter, skip collectors that
