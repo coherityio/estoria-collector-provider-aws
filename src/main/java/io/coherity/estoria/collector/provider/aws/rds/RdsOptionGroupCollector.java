@@ -37,28 +37,14 @@ import software.amazon.awssdk.services.rds.model.RdsException;
 @Slf4j
 public class RdsOptionGroupCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID = "aws";
-    public  static final String ENTITY_TYPE = "RdsOptionGroup";
+    public static final String ENTITY_TYPE = "RdsOptionGroup";
 
     private RdsClient rdsClient;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of())
-            .tags(Set.of("database", "rds", "configuration", "aws"))
-            .build();
-
     public RdsOptionGroupCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("database", "rds", "configuration", "aws")).build());
         log.debug("RdsOptionGroupCollector created");
-    }
-
-    @Override
-    public CollectorInfo getCollectorInfo()
-    {
-        return this.collectorInfo;
     }
 
     @Override

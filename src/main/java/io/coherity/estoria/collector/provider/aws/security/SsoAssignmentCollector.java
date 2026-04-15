@@ -46,30 +46,16 @@ import software.amazon.awssdk.services.ssoadmin.model.SsoAdminException;
 @Slf4j
 public class SsoAssignmentCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID = "aws";
-    public  static final String ENTITY_TYPE = "SsoAssignment";
+    public static final String ENTITY_TYPE = "SsoAssignment";
     private static final int PAGE_SIZE = 100;
 
     private SsoAdminClient ssoAdminClient;
     private OrganizationsClient organizationsClient;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of())
-            .tags(Set.of("security", "sso", "aws"))
-            .build();
-
     public SsoAssignmentCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("security", "sso", "aws")).build());
         log.debug("SsoAssignmentCollector created");
-    }
-
-    @Override
-    public CollectorInfo getCollectorInfo()
-    {
-        return this.collectorInfo;
     }
 
     @Override

@@ -40,32 +40,16 @@ import software.amazon.awssdk.services.ec2.model.Vpc;
 @Slf4j
 public class VpcCollector extends AbstractAwsContextAwareCollector
 {
-	private static final String PROVIDER_ID = "aws";
 	public static final String ENTITY_TYPE = "Vpc";
-	
+
 	private Ec2Client ec2Client;
-	
-	private final CollectorInfo collectorInfo = 
-			CollectorInfo
-				.builder()
-				.providerId(PROVIDER_ID)
-				.entityType(ENTITY_TYPE)
-				.requiredEntityTypes(Set.of())
-				.tags(Set.of("networking", "vpc", "aws"))
-				.build();
-	
+
 	public VpcCollector()
 	{
+		super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("networking", "vpc", "aws")).build());
 		log.debug("VpcCollector.VpcCollector creating VpcCollector");
 	}
 
-	@Override
-	public CollectorInfo getCollectorInfo()
-	{
-		log.debug("TestCollector.getCollectorInfo called - returning {}", this.collectorInfo);
-		return this.collectorInfo;
-	}
-	
 	@Override
 	public AccountScope getRequiredAccountScope()
 	{
@@ -93,7 +77,7 @@ public class VpcCollector extends AbstractAwsContextAwareCollector
 		{
 			this.ec2Client = AwsClientFactory.getInstance().getEc2Client(providerContext);
 		}
-		
+
 		try
 		{
 			Region region = awsSessionContext.getRegion();

@@ -36,28 +36,14 @@ import software.amazon.awssdk.services.autoscaling.model.ScalingPolicy;
 @Slf4j
 public class AutoScalingPolicyCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID = "aws";
-    public  static final String ENTITY_TYPE = "AutoScalingPolicy";
+    public static final String ENTITY_TYPE = "AutoScalingPolicy";
 
     private AutoScalingClient autoScalingClient;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of())
-            .tags(Set.of("compute", "autoscaling", "policy", "aws"))
-            .build();
-
     public AutoScalingPolicyCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("compute", "autoscaling", "policy", "aws")).build());
         log.debug("AutoScalingPolicyCollector created");
-    }
-
-    @Override
-    public CollectorInfo getCollectorInfo()
-    {
-        return this.collectorInfo;
     }
 
     @Override

@@ -37,29 +37,15 @@ import software.amazon.awssdk.services.shield.model.ShieldException;
 @Slf4j
 public class ShieldProtectionCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID = "aws";
-    public  static final String ENTITY_TYPE = "ShieldProtection";
+    public static final String ENTITY_TYPE = "ShieldProtection";
     private static final int PAGE_SIZE = 100;
 
     private ShieldClient shieldClient;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of())
-            .tags(Set.of("security", "shield", "aws"))
-            .build();
-
     public ShieldProtectionCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("security", "shield", "aws")).build());
         log.debug("ShieldProtectionCollector created");
-    }
-
-    @Override
-    public CollectorInfo getCollectorInfo()
-    {
-        return this.collectorInfo;
     }
 
     @Override

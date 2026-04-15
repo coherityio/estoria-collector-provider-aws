@@ -36,28 +36,14 @@ import software.amazon.awssdk.services.cloudfront.model.ListFunctionsResponse;
 @Slf4j
 public class CloudFrontFunctionCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID = "aws";
-    public  static final String ENTITY_TYPE = "CloudFrontFunction";
+    public static final String ENTITY_TYPE = "CloudFrontFunction";
 
     private CloudFrontClient cloudFrontClient;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of())
-            .tags(Set.of("storage", "cdn", "cloudfront", "function", "aws"))
-            .build();
-
     public CloudFrontFunctionCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("storage", "cdn", "cloudfront", "function", "aws")).build());
         log.debug("CloudFrontFunctionCollector created");
-    }
-
-    @Override
-    public CollectorInfo getCollectorInfo()
-    {
-        return this.collectorInfo;
     }
 
     @Override

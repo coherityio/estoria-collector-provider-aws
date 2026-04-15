@@ -37,26 +37,15 @@ import software.amazon.awssdk.services.lakeformation.model.LakeFormationExceptio
 @Slf4j
 public class LakeFormationDataLakeSettingsCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID = "aws";
-    public  static final String ENTITY_TYPE = "LakeFormationDataLakeSettings";
+    public static final String ENTITY_TYPE = "LakeFormationDataLakeSettings";
 
     private LakeFormationClient lakeFormationClient;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of())
-            .tags(Set.of("integration", "lake-formation", "governance", "aws"))
-            .build();
-
     public LakeFormationDataLakeSettingsCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("integration", "lake-formation", "governance", "aws")).build());
         log.debug("LakeFormationDataLakeSettingsCollector created");
     }
-
-    @Override
-    public CollectorInfo getCollectorInfo() { return this.collectorInfo; }
 
     @Override
     public AccountScope getRequiredAccountScope() { return AccountScope.MEMBER_ACCOUNT; }

@@ -40,30 +40,14 @@ import software.amazon.awssdk.services.ec2.model.Tag;
 @Slf4j
 public class NetworkAclCollector extends AbstractAwsContextAwareCollector
 {
-	private static final String PROVIDER_ID = "aws";
 	public static final String ENTITY_TYPE = "NetworkAcl";
 
 	private Ec2Client ec2Client;
 
-	private final CollectorInfo collectorInfo =
-			CollectorInfo
-				.builder()
-				.providerId(PROVIDER_ID)
-				.entityType(ENTITY_TYPE)
-				.requiredEntityTypes(Set.of("Vpc"))
-				.tags(Set.of("networking", "vpc", "aws", "security"))
-				.build();
-
 	public NetworkAclCollector()
 	{
+		super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of("Vpc"), Set.of("networking", "vpc", "aws", "security")).build());
 		log.debug("NetworkAclCollector.NetworkAclCollector creating NetworkAclCollector");
-	}
-
-	@Override
-	public CollectorInfo getCollectorInfo()
-	{
-		log.debug("NetworkAclCollector.getCollectorInfo called - returning {}", this.collectorInfo);
-		return this.collectorInfo;
 	}
 
 	@Override

@@ -38,28 +38,14 @@ import software.amazon.awssdk.services.s3control.model.S3ControlException;
 @Slf4j
 public class S3MultiRegionAccessPointCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID = "aws";
-    public  static final String ENTITY_TYPE = "S3MultiRegionAccessPoint";
+    public static final String ENTITY_TYPE = "S3MultiRegionAccessPoint";
 
     private S3ControlClient s3ControlClient;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of())
-            .tags(Set.of("storage", "s3", "mrap", "multi-region", "aws"))
-            .build();
-
     public S3MultiRegionAccessPointCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("storage", "s3", "mrap", "multi-region", "aws")).build());
         log.debug("S3MultiRegionAccessPointCollector created");
-    }
-
-    @Override
-    public CollectorInfo getCollectorInfo()
-    {
-        return this.collectorInfo;
     }
 
     @Override

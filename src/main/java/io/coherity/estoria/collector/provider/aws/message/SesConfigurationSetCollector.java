@@ -36,26 +36,15 @@ import software.amazon.awssdk.services.sesv2.model.SesV2Exception;
 @Slf4j
 public class SesConfigurationSetCollector extends AbstractAwsContextAwareCollector
 {
-	private static final String PROVIDER_ID = "aws";
-	public  static final String ENTITY_TYPE = "SesConfigurationSet";
+	public static final String ENTITY_TYPE = "SesConfigurationSet";
 
 	private SesV2Client sesV2Client;
 
-	private final CollectorInfo collectorInfo =
-		CollectorInfo.builder()
-			.providerId(PROVIDER_ID)
-			.entityType(ENTITY_TYPE)
-			.requiredEntityTypes(Set.of())
-			.tags(Set.of("messaging", "ses", "email", "aws"))
-			.build();
-
 	public SesConfigurationSetCollector()
 	{
+		super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("messaging", "ses", "email", "aws")).build());
 		log.debug("SesConfigurationSetCollector created");
 	}
-
-	@Override
-	public CollectorInfo getCollectorInfo() { return this.collectorInfo; }
 
 	@Override
 	public AccountScope getRequiredAccountScope() { return AccountScope.MEMBER_ACCOUNT; }

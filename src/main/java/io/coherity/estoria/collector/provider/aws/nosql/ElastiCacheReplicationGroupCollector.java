@@ -36,26 +36,15 @@ import software.amazon.awssdk.services.elasticache.model.ReplicationGroup;
 @Slf4j
 public class ElastiCacheReplicationGroupCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID = "aws";
-    public  static final String ENTITY_TYPE = "ElastiCacheReplicationGroup";
+    public static final String ENTITY_TYPE = "ElastiCacheReplicationGroup";
 
     private ElastiCacheClient elastiCacheClient;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of())
-            .tags(Set.of("database", "elasticache", "cache", "redis", "aws"))
-            .build();
-
     public ElastiCacheReplicationGroupCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("database", "elasticache", "cache", "redis", "aws")).build());
         log.debug("ElastiCacheReplicationGroupCollector created");
     }
-
-    @Override
-    public CollectorInfo getCollectorInfo() { return this.collectorInfo; }
 
     @Override
     public AccountScope getRequiredAccountScope() { return AccountScope.MEMBER_ACCOUNT; }

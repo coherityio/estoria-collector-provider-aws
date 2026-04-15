@@ -36,26 +36,15 @@ import software.amazon.awssdk.services.lakeformation.model.ResourceInfo;
 @Slf4j
 public class LakeFormationResourceCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID = "aws";
-    public  static final String ENTITY_TYPE = "LakeFormationResource";
+    public static final String ENTITY_TYPE = "LakeFormationResource";
 
     private LakeFormationClient lakeFormationClient;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of())
-            .tags(Set.of("integration", "lake-formation", "governance", "aws"))
-            .build();
-
     public LakeFormationResourceCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("integration", "lake-formation", "governance", "aws")).build());
         log.debug("LakeFormationResourceCollector created");
     }
-
-    @Override
-    public CollectorInfo getCollectorInfo() { return this.collectorInfo; }
 
     @Override
     public AccountScope getRequiredAccountScope() { return AccountScope.MEMBER_ACCOUNT; }

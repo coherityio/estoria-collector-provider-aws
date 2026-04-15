@@ -38,28 +38,14 @@ import software.amazon.awssdk.services.efs.model.Tag;
 @Slf4j
 public class EfsAccessPointCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID = "aws";
-    public  static final String ENTITY_TYPE = "EfsAccessPoint";
+    public static final String ENTITY_TYPE = "EfsAccessPoint";
 
     private EfsClient efsClient;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of("EfsFileSystem"))
-            .tags(Set.of("storage", "efs", "access-point", "aws"))
-            .build();
-
     public EfsAccessPointCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of("EfsFileSystem"), Set.of("storage", "efs", "access-point", "aws")).build());
         log.debug("EfsAccessPointCollector created");
-    }
-
-    @Override
-    public CollectorInfo getCollectorInfo()
-    {
-        return this.collectorInfo;
     }
 
     @Override

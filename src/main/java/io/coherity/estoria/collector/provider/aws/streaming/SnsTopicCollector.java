@@ -37,26 +37,15 @@ import software.amazon.awssdk.services.sns.model.GetTopicAttributesRequest;
 @Slf4j
 public class SnsTopicCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID = "aws";
-    public  static final String ENTITY_TYPE = "SnsTopic";
+    public static final String ENTITY_TYPE = "SnsTopic";
 
     private SnsClient snsClient;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of())
-            .tags(Set.of("streaming", "messaging", "sns", "topic", "aws"))
-            .build();
-
     public SnsTopicCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("streaming", "messaging", "sns", "topic", "aws")).build());
         log.debug("SnsTopicCollector created");
     }
-
-    @Override
-    public CollectorInfo getCollectorInfo() { return this.collectorInfo; }
 
     @Override
     public AccountScope getRequiredAccountScope() { return AccountScope.MEMBER_ACCOUNT; }

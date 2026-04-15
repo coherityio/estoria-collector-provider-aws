@@ -40,28 +40,14 @@ import software.amazon.awssdk.services.s3.model.S3Exception;
 @Slf4j
 public class S3BucketReplicationCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID = "aws";
-    public  static final String ENTITY_TYPE = "S3BucketReplication";
+    public static final String ENTITY_TYPE = "S3BucketReplication";
 
     private S3Client s3Client;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of("S3Bucket"))
-            .tags(Set.of("storage", "s3", "replication", "aws"))
-            .build();
-
     public S3BucketReplicationCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of("S3Bucket"), Set.of("storage", "s3", "replication", "aws")).build());
         log.debug("S3BucketReplicationCollector created");
-    }
-
-    @Override
-    public CollectorInfo getCollectorInfo()
-    {
-        return this.collectorInfo;
     }
 
     @Override

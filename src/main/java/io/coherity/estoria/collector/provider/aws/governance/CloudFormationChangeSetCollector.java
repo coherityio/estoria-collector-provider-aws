@@ -40,26 +40,15 @@ import software.amazon.awssdk.services.cloudformation.model.Stack;
 @Slf4j
 public class CloudFormationChangeSetCollector extends AbstractAwsContextAwareCollector
 {
-	private static final String PROVIDER_ID = "aws";
-	public  static final String ENTITY_TYPE = "CloudFormationChangeSet";
+	public static final String ENTITY_TYPE = "CloudFormationChangeSet";
 
 	private CloudFormationClient cloudFormationClient;
 
-	private final CollectorInfo collectorInfo =
-		CollectorInfo.builder()
-			.providerId(PROVIDER_ID)
-			.entityType(ENTITY_TYPE)
-			.requiredEntityTypes(Set.of(CloudFormationStackCollector.ENTITY_TYPE))
-			.tags(Set.of("governance", "cloudformation", "iac", "aws"))
-			.build();
-
 	public CloudFormationChangeSetCollector()
 	{
+		super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(CloudFormationStackCollector.ENTITY_TYPE), Set.of("governance", "cloudformation", "iac", "aws")).build());
 		log.debug("CloudFormationChangeSetCollector created");
 	}
-
-	@Override
-	public CollectorInfo getCollectorInfo() { return this.collectorInfo; }
 
 	@Override
 	public AccountScope getRequiredAccountScope() { return AccountScope.MEMBER_ACCOUNT; }

@@ -39,28 +39,14 @@ import software.amazon.awssdk.services.elasticloadbalancingv2.model.TargetHealth
 @Slf4j
 public class TargetHealthCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID  = "aws";
-    public  static final String ENTITY_TYPE  = "TargetHealth";
+    public static final String ENTITY_TYPE = "TargetHealth";
 
     private ElasticLoadBalancingV2Client elbV2Client;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of())
-            .tags(Set.of("loadbalance", "target-health", "aws"))
-            .build();
-
     public TargetHealthCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("loadbalance", "target-health", "aws")).build());
         log.debug("TargetHealthCollector created");
-    }
-
-    @Override
-    public CollectorInfo getCollectorInfo()
-    {
-        return this.collectorInfo;
     }
 
     @Override

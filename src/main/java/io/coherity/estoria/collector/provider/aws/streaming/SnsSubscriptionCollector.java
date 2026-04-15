@@ -36,26 +36,15 @@ import software.amazon.awssdk.services.sns.model.Subscription;
 @Slf4j
 public class SnsSubscriptionCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID = "aws";
-    public  static final String ENTITY_TYPE = "SnsSubscription";
+    public static final String ENTITY_TYPE = "SnsSubscription";
 
     private SnsClient snsClient;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of())
-            .tags(Set.of("streaming", "messaging", "sns", "subscription", "aws"))
-            .build();
-
     public SnsSubscriptionCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("streaming", "messaging", "sns", "subscription", "aws")).build());
         log.debug("SnsSubscriptionCollector created");
     }
-
-    @Override
-    public CollectorInfo getCollectorInfo() { return this.collectorInfo; }
 
     @Override
     public AccountScope getRequiredAccountScope() { return AccountScope.MEMBER_ACCOUNT; }

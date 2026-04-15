@@ -38,28 +38,14 @@ import software.amazon.awssdk.services.apigateway.model.VpcLink;
 @Slf4j
 public class VpcLinkCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID  = "aws";
-    public  static final String ENTITY_TYPE  = "VpcLink";
+    public static final String ENTITY_TYPE = "VpcLink";
 
     private ApiGatewayClient apiGatewayClient;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of())
-            .tags(Set.of("loadbalance", "vpc-link", "api-gateway", "aws"))
-            .build();
-
     public VpcLinkCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("loadbalance", "vpc-link", "api-gateway", "aws")).build());
         log.debug("VpcLinkCollector created");
-    }
-
-    @Override
-    public CollectorInfo getCollectorInfo()
-    {
-        return this.collectorInfo;
     }
 
     @Override

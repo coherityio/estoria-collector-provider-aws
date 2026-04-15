@@ -38,28 +38,14 @@ import software.amazon.awssdk.services.autoscaling.model.TagDescription;
 @Slf4j
 public class AutoScalingGroupCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID = "aws";
-    public  static final String ENTITY_TYPE = "AutoScalingGroup";
+    public static final String ENTITY_TYPE = "AutoScalingGroup";
 
     private AutoScalingClient autoScalingClient;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of())
-            .tags(Set.of("compute", "autoscaling", "asg", "aws"))
-            .build();
-
     public AutoScalingGroupCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("compute", "autoscaling", "asg", "aws")).build());
         log.debug("AutoScalingGroupCollector created");
-    }
-
-    @Override
-    public CollectorInfo getCollectorInfo()
-    {
-        return this.collectorInfo;
     }
 
     @Override

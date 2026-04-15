@@ -36,28 +36,14 @@ import software.amazon.awssdk.services.iam.model.ListGroupsResponse;
 @Slf4j
 public class IamGroupCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID = "aws";
-    public  static final String ENTITY_TYPE = "IamGroup";
+    public static final String ENTITY_TYPE = "IamGroup";
 
     private IamClient iamClient;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of())
-            .tags(Set.of("security", "iam", "identity", "aws"))
-            .build();
-
     public IamGroupCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("security", "iam", "identity", "aws")).build());
         log.debug("IamGroupCollector created");
-    }
-
-    @Override
-    public CollectorInfo getCollectorInfo()
-    {
-        return this.collectorInfo;
     }
 
     @Override

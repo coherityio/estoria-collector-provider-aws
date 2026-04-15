@@ -37,26 +37,15 @@ import software.amazon.awssdk.services.servicecatalog.model.ServiceCatalogExcept
 @Slf4j
 public class ServiceCatalogProductCollector extends AbstractAwsContextAwareCollector
 {
-	private static final String PROVIDER_ID = "aws";
-	public  static final String ENTITY_TYPE = "ServiceCatalogProduct";
+	public static final String ENTITY_TYPE = "ServiceCatalogProduct";
 
 	private ServiceCatalogClient serviceCatalogClient;
 
-	private final CollectorInfo collectorInfo =
-		CollectorInfo.builder()
-			.providerId(PROVIDER_ID)
-			.entityType(ENTITY_TYPE)
-			.requiredEntityTypes(Set.of(ServiceCatalogPortfolioCollector.ENTITY_TYPE))
-			.tags(Set.of("governance", "service-catalog", "aws"))
-			.build();
-
 	public ServiceCatalogProductCollector()
 	{
+		super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(ServiceCatalogPortfolioCollector.ENTITY_TYPE), Set.of("governance", "service-catalog", "aws")).build());
 		log.debug("ServiceCatalogProductCollector created");
 	}
-
-	@Override
-	public CollectorInfo getCollectorInfo() { return this.collectorInfo; }
 
 	@Override
 	public AccountScope getRequiredAccountScope() { return AccountScope.MEMBER_ACCOUNT; }

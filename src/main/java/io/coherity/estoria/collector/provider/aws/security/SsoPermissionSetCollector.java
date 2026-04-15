@@ -42,29 +42,15 @@ import software.amazon.awssdk.services.ssoadmin.model.SsoAdminException;
 @Slf4j
 public class SsoPermissionSetCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID = "aws";
-    public  static final String ENTITY_TYPE = "SsoPermissionSet";
+    public static final String ENTITY_TYPE = "SsoPermissionSet";
     private static final int PAGE_SIZE = 100;
 
     private SsoAdminClient ssoAdminClient;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of())
-            .tags(Set.of("security", "sso", "aws"))
-            .build();
-
     public SsoPermissionSetCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("security", "sso", "aws")).build());
         log.debug("SsoPermissionSetCollector created");
-    }
-
-    @Override
-    public CollectorInfo getCollectorInfo()
-    {
-        return this.collectorInfo;
     }
 
     @Override

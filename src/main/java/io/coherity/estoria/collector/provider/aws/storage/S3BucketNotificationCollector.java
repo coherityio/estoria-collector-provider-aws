@@ -42,28 +42,14 @@ import software.amazon.awssdk.services.s3.model.TopicConfiguration;
 @Slf4j
 public class S3BucketNotificationCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID = "aws";
-    public  static final String ENTITY_TYPE = "S3BucketNotification";
+    public static final String ENTITY_TYPE = "S3BucketNotification";
 
     private S3Client s3Client;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of("S3Bucket"))
-            .tags(Set.of("storage", "s3", "notification", "aws"))
-            .build();
-
     public S3BucketNotificationCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of("S3Bucket"), Set.of("storage", "s3", "notification", "aws")).build());
         log.debug("S3BucketNotificationCollector created");
-    }
-
-    @Override
-    public CollectorInfo getCollectorInfo()
-    {
-        return this.collectorInfo;
     }
 
     @Override

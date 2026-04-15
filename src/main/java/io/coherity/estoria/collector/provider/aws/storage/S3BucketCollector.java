@@ -42,28 +42,14 @@ import software.amazon.awssdk.services.s3.model.ServerSideEncryptionRule;
 @Slf4j
 public class S3BucketCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID = "aws";
-    public  static final String ENTITY_TYPE = "S3Bucket";
+    public static final String ENTITY_TYPE = "S3Bucket";
 
     private S3Client s3Client;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of())
-            .tags(Set.of("storage", "s3", "aws"))
-            .build();
-
     public S3BucketCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("storage", "s3", "aws")).build());
         log.debug("S3BucketCollector created");
-    }
-
-    @Override
-    public CollectorInfo getCollectorInfo()
-    {
-        return this.collectorInfo;
     }
 
     @Override

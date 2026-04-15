@@ -36,28 +36,14 @@ import software.amazon.awssdk.services.iam.model.SAMLProviderListEntry;
 @Slf4j
 public class IamSamlProviderCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID = "aws";
-    public  static final String ENTITY_TYPE = "IamSamlProvider";
+    public static final String ENTITY_TYPE = "IamSamlProvider";
 
     private IamClient iamClient;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of())
-            .tags(Set.of("security", "iam", "saml", "federation", "aws"))
-            .build();
-
     public IamSamlProviderCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("security", "iam", "saml", "federation", "aws")).build());
         log.debug("IamSamlProviderCollector created");
-    }
-
-    @Override
-    public CollectorInfo getCollectorInfo()
-    {
-        return this.collectorInfo;
     }
 
     @Override

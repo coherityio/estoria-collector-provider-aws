@@ -39,28 +39,14 @@ import software.amazon.awssdk.services.ec2.model.Tag;
 @Slf4j
 public class Ec2HostCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID = "aws";
-    public  static final String ENTITY_TYPE = "Ec2Host";
+    public static final String ENTITY_TYPE = "Ec2Host";
 
     private Ec2Client ec2Client;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of())
-            .tags(Set.of("compute", "ec2", "dedicated-host", "aws"))
-            .build();
-
     public Ec2HostCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("compute", "ec2", "dedicated-host", "aws")).build());
         log.debug("Ec2HostCollector created");
-    }
-
-    @Override
-    public CollectorInfo getCollectorInfo()
-    {
-        return this.collectorInfo;
     }
 
     @Override

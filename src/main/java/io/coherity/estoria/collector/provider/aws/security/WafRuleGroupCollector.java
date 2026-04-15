@@ -37,28 +37,14 @@ import software.amazon.awssdk.services.wafv2.model.Scope;
 @Slf4j
 public class WafRuleGroupCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID = "aws";
-    public  static final String ENTITY_TYPE = "WafRuleGroup";
+    public static final String ENTITY_TYPE = "WafRuleGroup";
 
     private Wafv2Client wafv2Client;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of())
-            .tags(Set.of("security", "waf", "aws"))
-            .build();
-
     public WafRuleGroupCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("security", "waf", "aws")).build());
         log.debug("WafRuleGroupCollector created");
-    }
-
-    @Override
-    public CollectorInfo getCollectorInfo()
-    {
-        return this.collectorInfo;
     }
 
     @Override

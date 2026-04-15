@@ -39,28 +39,14 @@ import software.amazon.awssdk.services.ec2.model.VolumeAttachment;
 @Slf4j
 public class EbsVolumeAttachmentCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID = "aws";
-    public  static final String ENTITY_TYPE = "EbsVolumeAttachment";
+    public static final String ENTITY_TYPE = "EbsVolumeAttachment";
 
     private Ec2Client ec2Client;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of())
-            .tags(Set.of("compute", "ebs", "volume", "attachment", "aws"))
-            .build();
-
     public EbsVolumeAttachmentCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("compute", "ebs", "volume", "attachment", "aws")).build());
         log.debug("EbsVolumeAttachmentCollector created");
-    }
-
-    @Override
-    public CollectorInfo getCollectorInfo()
-    {
-        return this.collectorInfo;
     }
 
     @Override

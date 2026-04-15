@@ -36,28 +36,14 @@ import software.amazon.awssdk.services.cloudfront.model.ListDistributionsRespons
 @Slf4j
 public class CloudFrontDistributionCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID = "aws";
-    public  static final String ENTITY_TYPE = "CloudFrontDistribution";
+    public static final String ENTITY_TYPE = "CloudFrontDistribution";
 
     private CloudFrontClient cloudFrontClient;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of())
-            .tags(Set.of("storage", "cdn", "cloudfront", "aws"))
-            .build();
-
     public CloudFrontDistributionCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("storage", "cdn", "cloudfront", "aws")).build());
         log.debug("CloudFrontDistributionCollector created");
-    }
-
-    @Override
-    public CollectorInfo getCollectorInfo()
-    {
-        return this.collectorInfo;
     }
 
     @Override

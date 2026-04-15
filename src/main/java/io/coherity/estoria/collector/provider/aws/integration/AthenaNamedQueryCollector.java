@@ -38,27 +38,16 @@ import software.amazon.awssdk.services.athena.model.NamedQuery;
 @Slf4j
 public class AthenaNamedQueryCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID   = "aws";
-    public  static final String ENTITY_TYPE   = "AthenaNamedQuery";
+    public static final String ENTITY_TYPE = "AthenaNamedQuery";
     private static final int    BATCH_SIZE    = 50; // BatchGetNamedQuery max is 50
 
     private AthenaClient athenaClient;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of(AthenaWorkGroupCollector.ENTITY_TYPE))
-            .tags(Set.of("integration", "athena", "analytics", "aws"))
-            .build();
-
     public AthenaNamedQueryCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(AthenaWorkGroupCollector.ENTITY_TYPE), Set.of("integration", "athena", "analytics", "aws")).build());
         log.debug("AthenaNamedQueryCollector created");
     }
-
-    @Override
-    public CollectorInfo getCollectorInfo() { return this.collectorInfo; }
 
     @Override
     public AccountScope getRequiredAccountScope() { return AccountScope.MEMBER_ACCOUNT; }

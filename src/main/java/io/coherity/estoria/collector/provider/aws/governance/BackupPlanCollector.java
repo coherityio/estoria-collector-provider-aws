@@ -36,26 +36,15 @@ import software.amazon.awssdk.services.backup.model.ListBackupPlansResponse;
 @Slf4j
 public class BackupPlanCollector extends AbstractAwsContextAwareCollector
 {
-	private static final String PROVIDER_ID = "aws";
-	public  static final String ENTITY_TYPE = "BackupPlan";
+	public static final String ENTITY_TYPE = "BackupPlan";
 
 	private BackupClient backupClient;
 
-	private final CollectorInfo collectorInfo =
-		CollectorInfo.builder()
-			.providerId(PROVIDER_ID)
-			.entityType(ENTITY_TYPE)
-			.requiredEntityTypes(Set.of(BackupVaultCollector.ENTITY_TYPE))
-			.tags(Set.of("governance", "backup", "aws"))
-			.build();
-
 	public BackupPlanCollector()
 	{
+		super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(BackupVaultCollector.ENTITY_TYPE), Set.of("governance", "backup", "aws")).build());
 		log.debug("BackupPlanCollector created");
 	}
-
-	@Override
-	public CollectorInfo getCollectorInfo() { return this.collectorInfo; }
 
 	@Override
 	public AccountScope getRequiredAccountScope() { return AccountScope.MEMBER_ACCOUNT; }

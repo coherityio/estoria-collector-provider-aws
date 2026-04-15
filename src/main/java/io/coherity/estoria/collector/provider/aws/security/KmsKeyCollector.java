@@ -39,29 +39,15 @@ import software.amazon.awssdk.services.kms.model.ListKeysResponse;
 @Slf4j
 public class KmsKeyCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID = "aws";
-    public  static final String ENTITY_TYPE = "KmsKey";
+    public static final String ENTITY_TYPE = "KmsKey";
     private static final int PAGE_SIZE = 100;
 
     private KmsClient kmsClient;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of())
-            .tags(Set.of("security", "kms", "aws"))
-            .build();
-
     public KmsKeyCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("security", "kms", "aws")).build());
         log.debug("KmsKeyCollector created");
-    }
-
-    @Override
-    public CollectorInfo getCollectorInfo()
-    {
-        return this.collectorInfo;
     }
 
     @Override

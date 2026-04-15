@@ -40,26 +40,15 @@ import software.amazon.awssdk.services.dynamodb.model.TableDescription;
 @Slf4j
 public class DynamoDbIndexCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID = "aws";
-    public  static final String ENTITY_TYPE = "DynamoDbIndex";
+    public static final String ENTITY_TYPE = "DynamoDbIndex";
 
     private DynamoDbClient dynamoDbClient;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of())
-            .tags(Set.of("database", "nosql", "dynamodb", "index", "aws"))
-            .build();
-
     public DynamoDbIndexCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("database", "nosql", "dynamodb", "index", "aws")).build());
         log.debug("DynamoDbIndexCollector created");
     }
-
-    @Override
-    public CollectorInfo getCollectorInfo() { return this.collectorInfo; }
 
     @Override
     public AccountScope getRequiredAccountScope() { return AccountScope.MEMBER_ACCOUNT; }

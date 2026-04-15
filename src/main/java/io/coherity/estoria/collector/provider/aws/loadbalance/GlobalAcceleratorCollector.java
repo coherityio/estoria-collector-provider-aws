@@ -37,28 +37,14 @@ import software.amazon.awssdk.services.globalaccelerator.model.ListAcceleratorsR
 @Slf4j
 public class GlobalAcceleratorCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID  = "aws";
-    public  static final String ENTITY_TYPE  = "GlobalAccelerator";
+    public static final String ENTITY_TYPE = "GlobalAccelerator";
 
     private GlobalAcceleratorClient globalAcceleratorClient;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of())
-            .tags(Set.of("loadbalance", "global-accelerator", "aws"))
-            .build();
-
     public GlobalAcceleratorCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("loadbalance", "global-accelerator", "aws")).build());
         log.debug("GlobalAcceleratorCollector created");
-    }
-
-    @Override
-    public CollectorInfo getCollectorInfo()
-    {
-        return this.collectorInfo;
     }
 
     @Override

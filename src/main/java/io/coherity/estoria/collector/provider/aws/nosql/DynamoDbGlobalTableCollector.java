@@ -38,26 +38,15 @@ import software.amazon.awssdk.services.dynamodb.model.Replica;
 @Slf4j
 public class DynamoDbGlobalTableCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID = "aws";
-    public  static final String ENTITY_TYPE = "DynamoDbGlobalTable";
+    public static final String ENTITY_TYPE = "DynamoDbGlobalTable";
 
     private DynamoDbClient dynamoDbClient;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of())
-            .tags(Set.of("database", "nosql", "dynamodb", "global", "aws"))
-            .build();
-
     public DynamoDbGlobalTableCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("database", "nosql", "dynamodb", "global", "aws")).build());
         log.debug("DynamoDbGlobalTableCollector created");
     }
-
-    @Override
-    public CollectorInfo getCollectorInfo() { return this.collectorInfo; }
 
     @Override
     public AccountScope getRequiredAccountScope() { return AccountScope.MEMBER_ACCOUNT; }

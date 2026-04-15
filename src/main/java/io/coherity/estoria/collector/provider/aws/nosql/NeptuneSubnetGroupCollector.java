@@ -38,26 +38,15 @@ import software.amazon.awssdk.services.neptune.model.Tag;
 @Slf4j
 public class NeptuneSubnetGroupCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID = "aws";
-    public  static final String ENTITY_TYPE = "NeptuneSubnetGroup";
+    public static final String ENTITY_TYPE = "NeptuneSubnetGroup";
 
     private NeptuneClient neptuneClient;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of())
-            .tags(Set.of("database", "neptune", "networking", "aws"))
-            .build();
-
     public NeptuneSubnetGroupCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("database", "neptune", "networking", "aws")).build());
         log.debug("NeptuneSubnetGroupCollector created");
     }
-
-    @Override
-    public CollectorInfo getCollectorInfo() { return this.collectorInfo; }
 
     @Override
     public AccountScope getRequiredAccountScope() { return AccountScope.MEMBER_ACCOUNT; }
@@ -115,7 +104,6 @@ public class NeptuneSubnetGroupCollector extends AbstractAwsContextAwareCollecto
 
                     String groupName = group.dbSubnetGroupName();
                     String arn       = group.dbSubnetGroupArn();
-
 
                     Map<String, String> tags = new HashMap<>();
                     if (arn != null && !arn.isBlank())

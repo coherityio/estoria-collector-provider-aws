@@ -41,30 +41,14 @@ import software.amazon.awssdk.services.ec2.model.Tag;
 @Slf4j
 public class CustomerGatewayCollector extends AbstractAwsContextAwareCollector
 {
-	private static final String PROVIDER_ID = "aws";
 	public static final String ENTITY_TYPE = "CustomerGateway";
 
 	private Ec2Client ec2Client;
 
-	private final CollectorInfo collectorInfo =
-			CollectorInfo
-				.builder()
-				.providerId(PROVIDER_ID)
-				.entityType(ENTITY_TYPE)
-				.requiredEntityTypes(Set.of())
-				.tags(Set.of("networking", "vpn", "aws"))
-				.build();
-
 	public CustomerGatewayCollector()
 	{
+		super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("networking", "vpn", "aws")).build());
 		log.debug("CustomerGatewayCollector.CustomerGatewayCollector creating CustomerGatewayCollector");
-	}
-
-	@Override
-	public CollectorInfo getCollectorInfo()
-	{
-		log.debug("CustomerGatewayCollector.getCollectorInfo called - returning {}", this.collectorInfo);
-		return this.collectorInfo;
 	}
 
 	@Override
@@ -198,5 +182,5 @@ public class CustomerGatewayCollector extends AbstractAwsContextAwareCollector
 			throw new CollectorException("Unexpected error while collecting CustomerGateways", e);
 		}
 	}
-	
+
 }

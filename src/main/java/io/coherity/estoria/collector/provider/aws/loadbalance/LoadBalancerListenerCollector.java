@@ -36,28 +36,14 @@ import software.amazon.awssdk.services.elasticloadbalancingv2.model.Listener;
 @Slf4j
 public class LoadBalancerListenerCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID  = "aws";
-    public  static final String ENTITY_TYPE  = "LoadBalancerListener";
+    public static final String ENTITY_TYPE = "LoadBalancerListener";
 
     private ElasticLoadBalancingV2Client elbV2Client;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of())
-            .tags(Set.of("loadbalance", "listener", "aws"))
-            .build();
-
     public LoadBalancerListenerCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("loadbalance", "listener", "aws")).build());
         log.debug("LoadBalancerListenerCollector created");
-    }
-
-    @Override
-    public CollectorInfo getCollectorInfo()
-    {
-        return this.collectorInfo;
     }
 
     @Override

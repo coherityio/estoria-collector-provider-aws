@@ -39,26 +39,15 @@ import software.amazon.awssdk.services.costexplorer.model.ListCostCategoryDefini
 @Slf4j
 public class CostCategoryCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID = "aws";
-    public  static final String ENTITY_TYPE = "CostCategory";
+    public static final String ENTITY_TYPE = "CostCategory";
 
     private CostExplorerClient costExplorerClient;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of())
-            .tags(Set.of("account", "cost", "billing", "aws"))
-            .build();
-
     public CostCategoryCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("account", "cost", "billing", "aws")).build());
         log.debug("CostCategoryCollector created");
     }
-
-    @Override
-    public CollectorInfo getCollectorInfo() { return this.collectorInfo; }
 
     @Override
     public AccountScope getRequiredAccountScope() { return AccountScope.MEMBER_ACCOUNT; }
@@ -105,7 +94,7 @@ public class CostCategoryCollector extends AbstractAwsContextAwareCollector
             List<CostCategoryReference> categories =
             	    response.costCategoryReferences() == null ? List.of()
             	        : response.costCategoryReferences();            
-            
+
             String nextToken = response.nextToken();
 
             log.debug("CostCategoryCollector received {} cost categories, nextToken={}",

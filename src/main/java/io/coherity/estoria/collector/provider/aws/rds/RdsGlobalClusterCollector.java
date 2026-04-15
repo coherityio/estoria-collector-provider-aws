@@ -42,28 +42,14 @@ import software.amazon.awssdk.services.rds.model.RdsException;
 @Slf4j
 public class RdsGlobalClusterCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID = "aws";
-    public  static final String ENTITY_TYPE = "RdsGlobalCluster";
+    public static final String ENTITY_TYPE = "RdsGlobalCluster";
 
     private RdsClient rdsClient;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of())
-            .tags(Set.of("database", "rds", "aurora", "global", "aws"))
-            .build();
-
     public RdsGlobalClusterCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("database", "rds", "aurora", "global", "aws")).build());
         log.debug("RdsGlobalClusterCollector created");
-    }
-
-    @Override
-    public CollectorInfo getCollectorInfo()
-    {
-        return this.collectorInfo;
     }
 
     @Override

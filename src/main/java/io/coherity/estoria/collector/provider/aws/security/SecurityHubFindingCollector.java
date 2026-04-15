@@ -38,29 +38,15 @@ import software.amazon.awssdk.services.securityhub.model.SortOrder;
 @Slf4j
 public class SecurityHubFindingCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID = "aws";
-    public  static final String ENTITY_TYPE = "SecurityHubFinding";
+    public static final String ENTITY_TYPE = "SecurityHubFinding";
     private static final int PAGE_SIZE = 100;
 
     private SecurityHubClient securityHubClient;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of())
-            .tags(Set.of("security", "securityhub", "aws"))
-            .build();
-
     public SecurityHubFindingCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("security", "securityhub", "aws")).build());
         log.debug("SecurityHubFindingCollector created");
-    }
-
-    @Override
-    public CollectorInfo getCollectorInfo()
-    {
-        return this.collectorInfo;
     }
 
     @Override

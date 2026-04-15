@@ -36,26 +36,15 @@ import software.amazon.awssdk.services.glue.model.GlueException;
 @Slf4j
 public class GlueCrawlerCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID = "aws";
-    public  static final String ENTITY_TYPE = "GlueCrawler";
+    public static final String ENTITY_TYPE = "GlueCrawler";
 
     private GlueClient glueClient;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of())
-            .tags(Set.of("integration", "glue", "crawler", "aws"))
-            .build();
-
     public GlueCrawlerCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("integration", "glue", "crawler", "aws")).build());
         log.debug("GlueCrawlerCollector created");
     }
-
-    @Override
-    public CollectorInfo getCollectorInfo() { return this.collectorInfo; }
 
     @Override
     public AccountScope getRequiredAccountScope() { return AccountScope.MEMBER_ACCOUNT; }

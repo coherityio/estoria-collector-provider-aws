@@ -36,28 +36,14 @@ import software.amazon.awssdk.services.cloudfront.model.ResponseHeadersPolicySum
 @Slf4j
 public class CloudFrontResponseHeadersPolicyCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID = "aws";
-    public  static final String ENTITY_TYPE = "CloudFrontResponseHeadersPolicy";
+    public static final String ENTITY_TYPE = "CloudFrontResponseHeadersPolicy";
 
     private CloudFrontClient cloudFrontClient;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of())
-            .tags(Set.of("storage", "cdn", "cloudfront", "response-headers-policy", "aws"))
-            .build();
-
     public CloudFrontResponseHeadersPolicyCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("storage", "cdn", "cloudfront", "response-headers-policy", "aws")).build());
         log.debug("CloudFrontResponseHeadersPolicyCollector created");
-    }
-
-    @Override
-    public CollectorInfo getCollectorInfo()
-    {
-        return this.collectorInfo;
     }
 
     @Override

@@ -36,28 +36,14 @@ import software.amazon.awssdk.services.rds.model.RdsException;
 @Slf4j
 public class RdsParameterGroupCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID = "aws";
-    public  static final String ENTITY_TYPE = "RdsParameterGroup";
+    public static final String ENTITY_TYPE = "RdsParameterGroup";
 
     private RdsClient rdsClient;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of())
-            .tags(Set.of("database", "rds", "configuration", "aws"))
-            .build();
-
     public RdsParameterGroupCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("database", "rds", "configuration", "aws")).build());
         log.debug("RdsParameterGroupCollector created");
-    }
-
-    @Override
-    public CollectorInfo getCollectorInfo()
-    {
-        return this.collectorInfo;
     }
 
     @Override

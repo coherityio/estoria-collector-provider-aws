@@ -36,28 +36,14 @@ import software.amazon.awssdk.services.cloudfront.model.ListCachePoliciesRespons
 @Slf4j
 public class CloudFrontCachePolicyCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID = "aws";
-    public  static final String ENTITY_TYPE = "CloudFrontCachePolicy";
+    public static final String ENTITY_TYPE = "CloudFrontCachePolicy";
 
     private CloudFrontClient cloudFrontClient;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of())
-            .tags(Set.of("storage", "cdn", "cloudfront", "cache-policy", "aws"))
-            .build();
-
     public CloudFrontCachePolicyCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("storage", "cdn", "cloudfront", "cache-policy", "aws")).build());
         log.debug("CloudFrontCachePolicyCollector created");
-    }
-
-    @Override
-    public CollectorInfo getCollectorInfo()
-    {
-        return this.collectorInfo;
     }
 
     @Override

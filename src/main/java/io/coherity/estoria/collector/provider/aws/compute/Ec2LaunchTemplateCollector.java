@@ -39,28 +39,14 @@ import software.amazon.awssdk.services.ec2.model.Tag;
 @Slf4j
 public class Ec2LaunchTemplateCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID = "aws";
-    public  static final String ENTITY_TYPE = "Ec2LaunchTemplate";
+    public static final String ENTITY_TYPE = "Ec2LaunchTemplate";
 
     private Ec2Client ec2Client;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of())
-            .tags(Set.of("compute", "ec2", "launch-template", "aws"))
-            .build();
-
     public Ec2LaunchTemplateCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("compute", "ec2", "launch-template", "aws")).build());
         log.debug("Ec2LaunchTemplateCollector created");
-    }
-
-    @Override
-    public CollectorInfo getCollectorInfo()
-    {
-        return this.collectorInfo;
     }
 
     @Override

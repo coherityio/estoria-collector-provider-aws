@@ -36,29 +36,15 @@ import software.amazon.awssdk.services.kms.model.ListAliasesResponse;
 @Slf4j
 public class KmsAliasCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID = "aws";
-    public  static final String ENTITY_TYPE = "KmsAlias";
+    public static final String ENTITY_TYPE = "KmsAlias";
     private static final int PAGE_SIZE = 100;
 
     private KmsClient kmsClient;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of())
-            .tags(Set.of("security", "kms", "aws"))
-            .build();
-
     public KmsAliasCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("security", "kms", "aws")).build());
         log.debug("KmsAliasCollector created");
-    }
-
-    @Override
-    public CollectorInfo getCollectorInfo()
-    {
-        return this.collectorInfo;
     }
 
     @Override

@@ -40,29 +40,15 @@ import software.amazon.awssdk.services.ssm.model.SsmException;
 @Slf4j
 public class SsmParameterPolicyCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID = "aws";
-    public  static final String ENTITY_TYPE = "SsmParameterPolicy";
+    public static final String ENTITY_TYPE = "SsmParameterPolicy";
     private static final int PAGE_SIZE = 50;
 
     private SsmClient ssmClient;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of())
-            .tags(Set.of("security", "ssm", "aws"))
-            .build();
-
     public SsmParameterPolicyCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("security", "ssm", "aws")).build());
         log.debug("SsmParameterPolicyCollector created");
-    }
-
-    @Override
-    public CollectorInfo getCollectorInfo()
-    {
-        return this.collectorInfo;
     }
 
     @Override

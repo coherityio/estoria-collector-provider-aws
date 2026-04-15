@@ -24,32 +24,14 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class TestCollector extends AbstractAwsContextAwareCollector
 {
-	private static final String PROVIDER_ID = "aws";
 	public static final String ENTITY_TYPE = "AwsTestEntity";
-	
-	private final CollectorInfo collectorInfo = 
-			CollectorInfo
-				.builder()
-				.providerId(PROVIDER_ID)
-				.entityType(ENTITY_TYPE)
-				.requiredEntityTypes(Set.of(VpcCollector.ENTITY_TYPE))
-				.tags(Set.of("test", "aws"))
-				.build();
 
-	
 	public TestCollector()
 	{
+		super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(VpcCollector.ENTITY_TYPE), Set.of("test", "aws")).build());
 		log.debug("TestCollector.TestCollector creating test collector");
 	}
-	
-	
-	@Override
-	public CollectorInfo getCollectorInfo()
-	{
-		log.debug("TestCollector.getCollectorInfo called - returning {}", this.collectorInfo);
-		return this.collectorInfo;
-	}
-	
+
 	@Override
 	public AccountScope getRequiredAccountScope() { return AccountScope.MEMBER_ACCOUNT; }
 

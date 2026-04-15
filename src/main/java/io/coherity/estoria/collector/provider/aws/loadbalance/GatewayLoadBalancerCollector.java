@@ -39,28 +39,14 @@ import software.amazon.awssdk.services.elasticloadbalancingv2.model.LoadBalancer
 @Slf4j
 public class GatewayLoadBalancerCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID  = "aws";
-    public  static final String ENTITY_TYPE  = "GatewayLoadBalancer";
+    public static final String ENTITY_TYPE = "GatewayLoadBalancer";
 
     private ElasticLoadBalancingV2Client elbV2Client;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of())
-            .tags(Set.of("loadbalance", "gwlb", "gateway", "aws"))
-            .build();
-
     public GatewayLoadBalancerCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("loadbalance", "gwlb", "gateway", "aws")).build());
         log.debug("GatewayLoadBalancerCollector created");
-    }
-
-    @Override
-    public CollectorInfo getCollectorInfo()
-    {
-        return this.collectorInfo;
     }
 
     @Override

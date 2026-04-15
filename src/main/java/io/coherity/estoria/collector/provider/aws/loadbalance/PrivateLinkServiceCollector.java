@@ -38,28 +38,14 @@ import software.amazon.awssdk.services.ec2.model.ServiceConfiguration;
 @Slf4j
 public class PrivateLinkServiceCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID  = "aws";
-    public  static final String ENTITY_TYPE  = "PrivateLinkService";
+    public static final String ENTITY_TYPE = "PrivateLinkService";
 
     private Ec2Client ec2Client;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of())
-            .tags(Set.of("loadbalance", "privatelink", "endpoint-service", "aws"))
-            .build();
-
     public PrivateLinkServiceCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("loadbalance", "privatelink", "endpoint-service", "aws")).build());
         log.debug("PrivateLinkServiceCollector created");
-    }
-
-    @Override
-    public CollectorInfo getCollectorInfo()
-    {
-        return this.collectorInfo;
     }
 
     @Override

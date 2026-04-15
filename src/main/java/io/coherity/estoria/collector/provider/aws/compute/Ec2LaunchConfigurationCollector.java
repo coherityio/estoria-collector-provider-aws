@@ -37,28 +37,14 @@ import software.amazon.awssdk.services.autoscaling.model.LaunchConfiguration;
 @Slf4j
 public class Ec2LaunchConfigurationCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID = "aws";
-    public  static final String ENTITY_TYPE = "Ec2LaunchConfiguration";
+    public static final String ENTITY_TYPE = "Ec2LaunchConfiguration";
 
     private AutoScalingClient autoScalingClient;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of())
-            .tags(Set.of("compute", "autoscaling", "launch-configuration", "aws"))
-            .build();
-
     public Ec2LaunchConfigurationCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("compute", "autoscaling", "launch-configuration", "aws")).build());
         log.debug("Ec2LaunchConfigurationCollector created");
-    }
-
-    @Override
-    public CollectorInfo getCollectorInfo()
-    {
-        return this.collectorInfo;
     }
 
     @Override

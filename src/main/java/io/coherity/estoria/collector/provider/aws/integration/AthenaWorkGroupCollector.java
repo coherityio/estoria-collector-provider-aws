@@ -36,26 +36,15 @@ import software.amazon.awssdk.services.athena.model.WorkGroupSummary;
 @Slf4j
 public class AthenaWorkGroupCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID = "aws";
-    public  static final String ENTITY_TYPE = "AthenaWorkGroup";
+    public static final String ENTITY_TYPE = "AthenaWorkGroup";
 
     private AthenaClient athenaClient;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of())
-            .tags(Set.of("integration", "athena", "analytics", "aws"))
-            .build();
-
     public AthenaWorkGroupCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("integration", "athena", "analytics", "aws")).build());
         log.debug("AthenaWorkGroupCollector created");
     }
-
-    @Override
-    public CollectorInfo getCollectorInfo() { return this.collectorInfo; }
 
     @Override
     public AccountScope getRequiredAccountScope() { return AccountScope.MEMBER_ACCOUNT; }

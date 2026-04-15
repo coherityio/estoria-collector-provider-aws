@@ -40,26 +40,15 @@ import software.amazon.awssdk.services.backup.model.ListBackupSelectionsResponse
 @Slf4j
 public class BackupSelectionCollector extends AbstractAwsContextAwareCollector
 {
-	private static final String PROVIDER_ID = "aws";
-	public  static final String ENTITY_TYPE = "BackupSelection";
+	public static final String ENTITY_TYPE = "BackupSelection";
 
 	private BackupClient backupClient;
 
-	private final CollectorInfo collectorInfo =
-		CollectorInfo.builder()
-			.providerId(PROVIDER_ID)
-			.entityType(ENTITY_TYPE)
-			.requiredEntityTypes(Set.of(BackupPlanCollector.ENTITY_TYPE))
-			.tags(Set.of("governance", "backup", "aws"))
-			.build();
-
 	public BackupSelectionCollector()
 	{
+		super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(BackupPlanCollector.ENTITY_TYPE), Set.of("governance", "backup", "aws")).build());
 		log.debug("BackupSelectionCollector created");
 	}
-
-	@Override
-	public CollectorInfo getCollectorInfo() { return this.collectorInfo; }
 
 	@Override
 	public AccountScope getRequiredAccountScope() { return AccountScope.MEMBER_ACCOUNT; }

@@ -40,28 +40,14 @@ import software.amazon.awssdk.services.s3.model.S3Exception;
 @Slf4j
 public class S3BucketLifecycleCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID = "aws";
-    public  static final String ENTITY_TYPE = "S3BucketLifecycle";
+    public static final String ENTITY_TYPE = "S3BucketLifecycle";
 
     private S3Client s3Client;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of("S3Bucket"))
-            .tags(Set.of("storage", "s3", "lifecycle", "aws"))
-            .build();
-
     public S3BucketLifecycleCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of("S3Bucket"), Set.of("storage", "s3", "lifecycle", "aws")).build());
         log.debug("S3BucketLifecycleCollector created");
-    }
-
-    @Override
-    public CollectorInfo getCollectorInfo()
-    {
-        return this.collectorInfo;
     }
 
     @Override

@@ -38,28 +38,14 @@ import software.amazon.awssdk.services.rds.model.Tag;
 @Slf4j
 public class RdsInstanceCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID = "aws";
-    public  static final String ENTITY_TYPE = "RdsInstance";
+    public static final String ENTITY_TYPE = "RdsInstance";
 
     private RdsClient rdsClient;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of())
-            .tags(Set.of("database", "rds", "aws"))
-            .build();
-
     public RdsInstanceCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("database", "rds", "aws")).build());
         log.debug("RdsInstanceCollector created");
-    }
-
-    @Override
-    public CollectorInfo getCollectorInfo()
-    {
-        return this.collectorInfo;
     }
 
     @Override

@@ -39,26 +39,15 @@ import software.amazon.awssdk.services.glue.model.Table;
 @Slf4j
 public class GlueTableCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID = "aws";
-    public  static final String ENTITY_TYPE = "GlueTable";
+    public static final String ENTITY_TYPE = "GlueTable";
 
     private GlueClient glueClient;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of(GlueDatabaseCollector.ENTITY_TYPE))
-            .tags(Set.of("integration", "glue", "data-catalog", "aws"))
-            .build();
-
     public GlueTableCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(GlueDatabaseCollector.ENTITY_TYPE), Set.of("integration", "glue", "data-catalog", "aws")).build());
         log.debug("GlueTableCollector created");
     }
-
-    @Override
-    public CollectorInfo getCollectorInfo() { return this.collectorInfo; }
 
     @Override
     public AccountScope getRequiredAccountScope() { return AccountScope.MEMBER_ACCOUNT; }

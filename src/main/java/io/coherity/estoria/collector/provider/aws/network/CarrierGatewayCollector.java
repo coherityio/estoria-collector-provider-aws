@@ -40,30 +40,14 @@ import software.amazon.awssdk.services.ec2.model.Tag;
 @Slf4j
 public class CarrierGatewayCollector extends AbstractAwsContextAwareCollector
 {
-	private static final String PROVIDER_ID = "aws";
 	public static final String ENTITY_TYPE = "CarrierGateway";
 
 	private Ec2Client ec2Client;
 
-	private final CollectorInfo collectorInfo =
-			CollectorInfo
-				.builder()
-				.providerId(PROVIDER_ID)
-				.entityType(ENTITY_TYPE)
-				.requiredEntityTypes(Set.of("Vpc"))
-				.tags(Set.of("networking", "vpc", "aws", "wavelength"))
-				.build();
-
 	public CarrierGatewayCollector()
 	{
+		super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of("Vpc"), Set.of("networking", "vpc", "aws", "wavelength")).build());
 		log.debug("CarrierGatewayCollector.CarrierGatewayCollector creating CarrierGatewayCollector");
-	}
-
-	@Override
-	public CollectorInfo getCollectorInfo()
-	{
-		log.debug("CarrierGatewayCollector.getCollectorInfo called - returning {}", this.collectorInfo);
-		return this.collectorInfo;
 	}
 
 	@Override

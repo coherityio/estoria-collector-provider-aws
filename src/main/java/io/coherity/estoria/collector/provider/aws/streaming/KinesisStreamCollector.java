@@ -38,26 +38,15 @@ import software.amazon.awssdk.services.kinesis.model.StreamSummary;
 @Slf4j
 public class KinesisStreamCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID = "aws";
-    public  static final String ENTITY_TYPE = "KinesisStream";
+    public static final String ENTITY_TYPE = "KinesisStream";
 
     private KinesisClient kinesisClient;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of())
-            .tags(Set.of("streaming", "kinesis", "aws"))
-            .build();
-
     public KinesisStreamCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("streaming", "kinesis", "aws")).build());
         log.debug("KinesisStreamCollector created");
     }
-
-    @Override
-    public CollectorInfo getCollectorInfo() { return this.collectorInfo; }
 
     @Override
     public AccountScope getRequiredAccountScope() { return AccountScope.MEMBER_ACCOUNT; }

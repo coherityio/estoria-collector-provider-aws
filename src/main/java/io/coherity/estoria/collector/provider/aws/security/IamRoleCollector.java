@@ -36,28 +36,14 @@ import software.amazon.awssdk.services.iam.model.Role;
 @Slf4j
 public class IamRoleCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID = "aws";
-    public  static final String ENTITY_TYPE = "IamRole";
+    public static final String ENTITY_TYPE = "IamRole";
 
     private IamClient iamClient;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of())
-            .tags(Set.of("security", "iam", "identity", "aws"))
-            .build();
-
     public IamRoleCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("security", "iam", "identity", "aws")).build());
         log.debug("IamRoleCollector created");
-    }
-
-    @Override
-    public CollectorInfo getCollectorInfo()
-    {
-        return this.collectorInfo;
     }
 
     @Override

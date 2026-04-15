@@ -36,28 +36,14 @@ import software.amazon.awssdk.services.cloudfront.model.ListCloudFrontOriginAcce
 @Slf4j
 public class CloudFrontOriginAccessIdentityCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID = "aws";
-    public  static final String ENTITY_TYPE = "CloudFrontOriginAccessIdentity";
+    public static final String ENTITY_TYPE = "CloudFrontOriginAccessIdentity";
 
     private CloudFrontClient cloudFrontClient;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of())
-            .tags(Set.of("storage", "cdn", "cloudfront", "oai", "aws"))
-            .build();
-
     public CloudFrontOriginAccessIdentityCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("storage", "cdn", "cloudfront", "oai", "aws")).build());
         log.debug("CloudFrontOriginAccessIdentityCollector created");
-    }
-
-    @Override
-    public CollectorInfo getCollectorInfo()
-    {
-        return this.collectorInfo;
     }
 
     @Override

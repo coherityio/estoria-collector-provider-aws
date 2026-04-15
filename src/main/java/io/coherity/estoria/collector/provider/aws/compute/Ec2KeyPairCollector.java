@@ -41,28 +41,14 @@ import java.util.stream.Collectors;
 @Slf4j
 public class Ec2KeyPairCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID = "aws";
-    public  static final String ENTITY_TYPE = "Ec2KeyPair";
+    public static final String ENTITY_TYPE = "Ec2KeyPair";
 
     private Ec2Client ec2Client;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of())
-            .tags(Set.of("compute", "ec2", "key-pair", "aws"))
-            .build();
-
     public Ec2KeyPairCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("compute", "ec2", "key-pair", "aws")).build());
         log.debug("Ec2KeyPairCollector created");
-    }
-
-    @Override
-    public CollectorInfo getCollectorInfo()
-    {
-        return this.collectorInfo;
     }
 
     @Override

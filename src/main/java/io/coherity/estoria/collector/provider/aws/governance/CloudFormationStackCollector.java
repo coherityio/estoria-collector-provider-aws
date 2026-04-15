@@ -38,26 +38,15 @@ import software.amazon.awssdk.services.cloudformation.model.Tag;
 @Slf4j
 public class CloudFormationStackCollector extends AbstractAwsContextAwareCollector
 {
-	private static final String PROVIDER_ID = "aws";
-	public  static final String ENTITY_TYPE = "CloudFormationStack";
+	public static final String ENTITY_TYPE = "CloudFormationStack";
 
 	private CloudFormationClient cloudFormationClient;
 
-	private final CollectorInfo collectorInfo =
-		CollectorInfo.builder()
-			.providerId(PROVIDER_ID)
-			.entityType(ENTITY_TYPE)
-			.requiredEntityTypes(Set.of())
-			.tags(Set.of("governance", "cloudformation", "iac", "aws"))
-			.build();
-
 	public CloudFormationStackCollector()
 	{
+		super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("governance", "cloudformation", "iac", "aws")).build());
 		log.debug("CloudFormationStackCollector created");
 	}
-
-	@Override
-	public CollectorInfo getCollectorInfo() { return this.collectorInfo; }
 
 	@Override
 	public AccountScope getRequiredAccountScope() { return AccountScope.MEMBER_ACCOUNT; }

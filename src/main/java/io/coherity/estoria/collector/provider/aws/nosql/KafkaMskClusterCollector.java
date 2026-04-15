@@ -36,26 +36,15 @@ import software.amazon.awssdk.services.kafka.model.ListClustersResponse;
 @Slf4j
 public class KafkaMskClusterCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID = "aws";
-    public  static final String ENTITY_TYPE = "KafkaMskCluster";
+    public static final String ENTITY_TYPE = "KafkaMskCluster";
 
     private KafkaClient kafkaClient;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of())
-            .tags(Set.of("kafka", "msk", "streaming", "messaging", "aws"))
-            .build();
-
     public KafkaMskClusterCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("kafka", "msk", "streaming", "messaging", "aws")).build());
         log.debug("KafkaMskClusterCollector created");
     }
-
-    @Override
-    public CollectorInfo getCollectorInfo() { return this.collectorInfo; }
 
     @Override
     public AccountScope getRequiredAccountScope() { return AccountScope.MEMBER_ACCOUNT; }

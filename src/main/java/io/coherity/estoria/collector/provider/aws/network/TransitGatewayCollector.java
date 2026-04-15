@@ -40,30 +40,14 @@ import software.amazon.awssdk.services.ec2.model.TransitGateway;
 @Slf4j
 public class TransitGatewayCollector extends AbstractAwsContextAwareCollector
 {
-	private static final String PROVIDER_ID = "aws";
 	public static final String ENTITY_TYPE = "TransitGateway";
 
 	private Ec2Client ec2Client;
 
-	private final CollectorInfo collectorInfo =
-			CollectorInfo
-				.builder()
-				.providerId(PROVIDER_ID)
-				.entityType(ENTITY_TYPE)
-				.requiredEntityTypes(Set.of())
-				.tags(Set.of("networking", "transit-gateway", "aws"))
-				.build();
-
 	public TransitGatewayCollector()
 	{
+		super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("networking", "transit-gateway", "aws")).build());
 		log.debug("TransitGatewayCollector.TransitGatewayCollector creating TransitGatewayCollector");
-	}
-
-	@Override
-	public CollectorInfo getCollectorInfo()
-	{
-		log.debug("TransitGatewayCollector.getCollectorInfo called - returning {}", this.collectorInfo);
-		return this.collectorInfo;
 	}
 
 	@Override

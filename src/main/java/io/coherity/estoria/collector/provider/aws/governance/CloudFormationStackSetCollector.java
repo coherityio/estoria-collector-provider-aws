@@ -38,26 +38,15 @@ import software.amazon.awssdk.services.cloudformation.model.StackSetSummary;
 @Slf4j
 public class CloudFormationStackSetCollector extends AbstractAwsContextAwareCollector
 {
-	private static final String PROVIDER_ID = "aws";
-	public  static final String ENTITY_TYPE = "CloudFormationStackSet";
+	public static final String ENTITY_TYPE = "CloudFormationStackSet";
 
 	private CloudFormationClient cloudFormationClient;
 
-	private final CollectorInfo collectorInfo =
-		CollectorInfo.builder()
-			.providerId(PROVIDER_ID)
-			.entityType(ENTITY_TYPE)
-			.requiredEntityTypes(Set.of())
-			.tags(Set.of("governance", "cloudformation", "iac", "aws"))
-			.build();
-
 	public CloudFormationStackSetCollector()
 	{
+		super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("governance", "cloudformation", "iac", "aws")).build());
 		log.debug("CloudFormationStackSetCollector created");
 	}
-
-	@Override
-	public CollectorInfo getCollectorInfo() { return this.collectorInfo; }
 
 	@Override
 	public AccountScope getRequiredAccountScope() { return AccountScope.MEMBER_ACCOUNT; }
@@ -122,7 +111,7 @@ public class CloudFormationStackSetCollector extends AbstractAwsContextAwareColl
 					    accountId,
 					    stackSetName,
 					    stackSetId);					
-					
+
 					Map<String, Object> attributes = new HashMap<>();
 					attributes.put("stackSetId",          stackSetId);
 					attributes.put("stackSetName",        stackSetName);

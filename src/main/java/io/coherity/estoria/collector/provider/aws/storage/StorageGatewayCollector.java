@@ -37,28 +37,14 @@ import software.amazon.awssdk.services.storagegateway.model.StorageGatewayExcept
 @Slf4j
 public class StorageGatewayCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID = "aws";
-    public  static final String ENTITY_TYPE = "StorageGateway";
+    public static final String ENTITY_TYPE = "StorageGateway";
 
     private StorageGatewayClient storageGatewayClient;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of())
-            .tags(Set.of("storage", "storage-gateway", "aws"))
-            .build();
-
     public StorageGatewayCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("storage", "storage-gateway", "aws")).build());
         log.debug("StorageGatewayCollector created");
-    }
-
-    @Override
-    public CollectorInfo getCollectorInfo()
-    {
-        return this.collectorInfo;
     }
 
     @Override

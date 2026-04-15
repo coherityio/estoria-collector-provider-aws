@@ -41,30 +41,16 @@ import software.amazon.awssdk.services.macie2.model.SortCriteria;
 @Slf4j
 public class MacieFindingCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID = "aws";
-    public  static final String ENTITY_TYPE = "MacieFinding";
+    public static final String ENTITY_TYPE = "MacieFinding";
     private static final int PAGE_SIZE = 50;
     private static final int BATCH_SIZE = 25; // getFindings max
 
     private Macie2Client macie2Client;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of())
-            .tags(Set.of("security", "macie", "aws"))
-            .build();
-
     public MacieFindingCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("security", "macie", "aws")).build());
         log.debug("MacieFindingCollector created");
-    }
-
-    @Override
-    public CollectorInfo getCollectorInfo()
-    {
-        return this.collectorInfo;
     }
 
     @Override

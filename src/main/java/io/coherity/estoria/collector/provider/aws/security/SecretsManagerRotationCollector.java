@@ -37,29 +37,15 @@ import software.amazon.awssdk.services.secretsmanager.model.SecretsManagerExcept
 @Slf4j
 public class SecretsManagerRotationCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID = "aws";
-    public  static final String ENTITY_TYPE = "SecretsManagerRotation";
+    public static final String ENTITY_TYPE = "SecretsManagerRotation";
     private static final int PAGE_SIZE = 100;
 
     private SecretsManagerClient secretsManagerClient;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of())
-            .tags(Set.of("security", "secretsmanager", "aws"))
-            .build();
-
     public SecretsManagerRotationCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("security", "secretsmanager", "aws")).build());
         log.debug("SecretsManagerRotationCollector created");
-    }
-
-    @Override
-    public CollectorInfo getCollectorInfo()
-    {
-        return this.collectorInfo;
     }
 
     @Override

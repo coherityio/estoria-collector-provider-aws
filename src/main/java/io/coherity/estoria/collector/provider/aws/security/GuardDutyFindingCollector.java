@@ -41,30 +41,16 @@ import software.amazon.awssdk.services.guardduty.model.ListFindingsResponse;
 @Slf4j
 public class GuardDutyFindingCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID = "aws";
-    public  static final String ENTITY_TYPE = "GuardDutyFinding";
+    public static final String ENTITY_TYPE = "GuardDutyFinding";
     private static final int PAGE_SIZE = 50;
     private static final int BATCH_SIZE = 50; // getFindings max
 
     private GuardDutyClient guardDutyClient;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of())
-            .tags(Set.of("security", "guardduty", "aws"))
-            .build();
-
     public GuardDutyFindingCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("security", "guardduty", "aws")).build());
         log.debug("GuardDutyFindingCollector created");
-    }
-
-    @Override
-    public CollectorInfo getCollectorInfo()
-    {
-        return this.collectorInfo;
     }
 
     @Override

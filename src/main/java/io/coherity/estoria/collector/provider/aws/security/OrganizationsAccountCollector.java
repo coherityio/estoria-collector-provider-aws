@@ -36,28 +36,14 @@ import software.amazon.awssdk.services.organizations.model.OrganizationsExceptio
 @Slf4j
 public class OrganizationsAccountCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID = "aws";
-    public  static final String ENTITY_TYPE = "OrganizationsAccount";
+    public static final String ENTITY_TYPE = "OrganizationsAccount";
 
     private OrganizationsClient organizationsClient;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of())
-            .tags(Set.of("security", "organizations", "account", "aws"))
-            .build();
-
     public OrganizationsAccountCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("security", "organizations", "account", "aws")).build());
         log.debug("OrganizationsAccountCollector created");
-    }
-
-    @Override
-    public CollectorInfo getCollectorInfo()
-    {
-        return this.collectorInfo;
     }
 
     @Override

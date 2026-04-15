@@ -39,28 +39,14 @@ import software.amazon.awssdk.services.s3.model.S3Exception;
 @Slf4j
 public class S3BucketWebsiteCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID = "aws";
-    public  static final String ENTITY_TYPE = "S3BucketWebsite";
+    public static final String ENTITY_TYPE = "S3BucketWebsite";
 
     private S3Client s3Client;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of("S3Bucket"))
-            .tags(Set.of("storage", "s3", "website", "aws"))
-            .build();
-
     public S3BucketWebsiteCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of("S3Bucket"), Set.of("storage", "s3", "website", "aws")).build());
         log.debug("S3BucketWebsiteCollector created");
-    }
-
-    @Override
-    public CollectorInfo getCollectorInfo()
-    {
-        return this.collectorInfo;
     }
 
     @Override

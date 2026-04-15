@@ -36,28 +36,14 @@ import software.amazon.awssdk.services.elasticloadbalancingv2.model.TargetGroup;
 @Slf4j
 public class TargetGroupCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID  = "aws";
-    public  static final String ENTITY_TYPE  = "TargetGroup";
+    public static final String ENTITY_TYPE = "TargetGroup";
 
     private ElasticLoadBalancingV2Client elbV2Client;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of())
-            .tags(Set.of("loadbalance", "target-group", "aws"))
-            .build();
-
     public TargetGroupCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("loadbalance", "target-group", "aws")).build());
         log.debug("TargetGroupCollector created");
-    }
-
-    @Override
-    public CollectorInfo getCollectorInfo()
-    {
-        return this.collectorInfo;
     }
 
     @Override

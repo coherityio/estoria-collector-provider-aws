@@ -37,26 +37,15 @@ import software.amazon.awssdk.services.kinesisanalyticsv2.model.ListApplications
 @Slf4j
 public class KinesisAnalyticsAppCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID = "aws";
-    public  static final String ENTITY_TYPE = "KinesisAnalyticsApp";
+    public static final String ENTITY_TYPE = "KinesisAnalyticsApp";
 
     private KinesisAnalyticsV2Client analyticsClient;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of())
-            .tags(Set.of("streaming", "kinesis", "analytics", "aws"))
-            .build();
-
     public KinesisAnalyticsAppCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("streaming", "kinesis", "analytics", "aws")).build());
         log.debug("KinesisAnalyticsAppCollector created");
     }
-
-    @Override
-    public CollectorInfo getCollectorInfo() { return this.collectorInfo; }
 
     @Override
     public AccountScope getRequiredAccountScope() { return AccountScope.MEMBER_ACCOUNT; }

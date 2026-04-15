@@ -39,28 +39,14 @@ import software.amazon.awssdk.services.elasticloadbalancingv2.model.LoadBalancer
 @Slf4j
 public class ApplicationLoadBalancerCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID  = "aws";
-    public  static final String ENTITY_TYPE  = "ApplicationLoadBalancer";
+    public static final String ENTITY_TYPE = "ApplicationLoadBalancer";
 
     private ElasticLoadBalancingV2Client elbV2Client;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of())
-            .tags(Set.of("loadbalance", "alb", "application", "aws"))
-            .build();
-
     public ApplicationLoadBalancerCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("loadbalance", "alb", "application", "aws")).build());
         log.debug("ApplicationLoadBalancerCollector created");
-    }
-
-    @Override
-    public CollectorInfo getCollectorInfo()
-    {
-        return this.collectorInfo;
     }
 
     @Override

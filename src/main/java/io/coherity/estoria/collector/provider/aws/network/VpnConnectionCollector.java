@@ -41,30 +41,14 @@ import software.amazon.awssdk.services.ec2.model.VpnConnection;
 @Slf4j
 public class VpnConnectionCollector extends AbstractAwsContextAwareCollector
 {
-	private static final String PROVIDER_ID = "aws";
 	public static final String ENTITY_TYPE = "VpnConnection";
 
 	private Ec2Client ec2Client;
 
-	private final CollectorInfo collectorInfo =
-			CollectorInfo
-				.builder()
-				.providerId(PROVIDER_ID)
-				.entityType(ENTITY_TYPE)
-				.requiredEntityTypes(Set.of("CustomerGateway"))
-				.tags(Set.of("networking", "vpn", "aws"))
-				.build();
-
 	public VpnConnectionCollector()
 	{
+		super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of("CustomerGateway"), Set.of("networking", "vpn", "aws")).build());
 		log.debug("VpnConnectionCollector.VpnConnectionCollector creating VpnConnectionCollector");
-	}
-
-	@Override
-	public CollectorInfo getCollectorInfo()
-	{
-		log.debug("VpnConnectionCollector.getCollectorInfo called - returning {}", this.collectorInfo);
-		return this.collectorInfo;
 	}
 
 	@Override

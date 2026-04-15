@@ -41,28 +41,14 @@ import software.amazon.awssdk.services.iam.model.User;
 @Slf4j
 public class IamAccessKeyCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID = "aws";
-    public  static final String ENTITY_TYPE = "IamAccessKey";
+    public static final String ENTITY_TYPE = "IamAccessKey";
 
     private IamClient iamClient;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of("IamUser"))
-            .tags(Set.of("security", "iam", "access-key", "aws"))
-            .build();
-
     public IamAccessKeyCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of("IamUser"), Set.of("security", "iam", "access-key", "aws")).build());
         log.debug("IamAccessKeyCollector created");
-    }
-
-    @Override
-    public CollectorInfo getCollectorInfo()
-    {
-        return this.collectorInfo;
     }
 
     @Override

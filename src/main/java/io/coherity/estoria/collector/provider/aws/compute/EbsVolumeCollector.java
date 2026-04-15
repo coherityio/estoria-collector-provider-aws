@@ -39,28 +39,14 @@ import software.amazon.awssdk.services.ec2.model.Volume;
 @Slf4j
 public class EbsVolumeCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID = "aws";
-    public  static final String ENTITY_TYPE = "EbsVolume";
+    public static final String ENTITY_TYPE = "EbsVolume";
 
     private Ec2Client ec2Client;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of())
-            .tags(Set.of("compute", "ebs", "volume", "storage", "aws"))
-            .build();
-
     public EbsVolumeCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("compute", "ebs", "volume", "storage", "aws")).build());
         log.debug("EbsVolumeCollector created");
-    }
-
-    @Override
-    public CollectorInfo getCollectorInfo()
-    {
-        return this.collectorInfo;
     }
 
     @Override

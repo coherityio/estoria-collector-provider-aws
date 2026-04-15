@@ -36,26 +36,15 @@ import software.amazon.awssdk.services.licensemanager.model.ListLicenseConfigura
 @Slf4j
 public class LicenseManagerLicenseConfigurationCollector extends AbstractAwsContextAwareCollector
 {
-	private static final String PROVIDER_ID = "aws";
-	public  static final String ENTITY_TYPE = "LicenseManagerLicenseConfiguration";
+	public static final String ENTITY_TYPE = "LicenseManagerLicenseConfiguration";
 
 	private LicenseManagerClient licenseManagerClient;
 
-	private final CollectorInfo collectorInfo =
-		CollectorInfo.builder()
-			.providerId(PROVIDER_ID)
-			.entityType(ENTITY_TYPE)
-			.requiredEntityTypes(Set.of())
-			.tags(Set.of("governance", "license-manager", "compliance", "aws"))
-			.build();
-
 	public LicenseManagerLicenseConfigurationCollector()
 	{
+		super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("governance", "license-manager", "compliance", "aws")).build());
 		log.debug("LicenseManagerLicenseConfigurationCollector created");
 	}
-
-	@Override
-	public CollectorInfo getCollectorInfo() { return this.collectorInfo; }
 
 	@Override
 	public AccountScope getRequiredAccountScope() { return AccountScope.MEMBER_ACCOUNT; }

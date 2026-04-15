@@ -39,26 +39,15 @@ import software.amazon.awssdk.services.appconfig.model.ListConfigurationProfiles
 @Slf4j
 public class AppConfigConfigurationProfileCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID = "aws";
-    public  static final String ENTITY_TYPE = "AppConfigConfigurationProfile";
+    public static final String ENTITY_TYPE = "AppConfigConfigurationProfile";
 
     private AppConfigClient appConfigClient;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of())
-            .tags(Set.of("appconfig", "configuration", "profile", "aws"))
-            .build();
-
     public AppConfigConfigurationProfileCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("appconfig", "configuration", "profile", "aws")).build());
         log.debug("AppConfigConfigurationProfileCollector created");
     }
-
-    @Override
-    public CollectorInfo getCollectorInfo() { return this.collectorInfo; }
 
     @Override
     public AccountScope getRequiredAccountScope() { return AccountScope.MEMBER_ACCOUNT; }

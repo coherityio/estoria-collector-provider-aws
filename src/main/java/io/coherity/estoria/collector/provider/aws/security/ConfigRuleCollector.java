@@ -36,29 +36,15 @@ import software.amazon.awssdk.services.config.model.DescribeConfigRulesResponse;
 @Slf4j
 public class ConfigRuleCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID = "aws";
-    public  static final String ENTITY_TYPE = "ConfigRule";
+    public static final String ENTITY_TYPE = "ConfigRule";
     private static final int PAGE_SIZE = 50;
 
     private ConfigClient configClient;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of())
-            .tags(Set.of("security", "config", "aws"))
-            .build();
-
     public ConfigRuleCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("security", "config", "aws")).build());
         log.debug("ConfigRuleCollector created");
-    }
-
-    @Override
-    public CollectorInfo getCollectorInfo()
-    {
-        return this.collectorInfo;
     }
 
     @Override

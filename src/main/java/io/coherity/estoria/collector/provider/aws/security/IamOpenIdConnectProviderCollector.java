@@ -38,28 +38,14 @@ import software.amazon.awssdk.services.iam.model.OpenIDConnectProviderListEntry;
 @Slf4j
 public class IamOpenIdConnectProviderCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID = "aws";
-    public  static final String ENTITY_TYPE = "IamOpenIdConnectProvider";
+    public static final String ENTITY_TYPE = "IamOpenIdConnectProvider";
 
     private IamClient iamClient;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of())
-            .tags(Set.of("security", "iam", "oidc", "federation", "aws"))
-            .build();
-
     public IamOpenIdConnectProviderCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("security", "iam", "oidc", "federation", "aws")).build());
         log.debug("IamOpenIdConnectProviderCollector created");
-    }
-
-    @Override
-    public CollectorInfo getCollectorInfo()
-    {
-        return this.collectorInfo;
     }
 
     @Override

@@ -37,26 +37,15 @@ import software.amazon.awssdk.services.servicecatalog.model.ServiceCatalogExcept
 @Slf4j
 public class ServiceCatalogProvisionedProductCollector extends AbstractAwsContextAwareCollector
 {
-	private static final String PROVIDER_ID = "aws";
-	public  static final String ENTITY_TYPE = "ServiceCatalogProvisionedProduct";
+	public static final String ENTITY_TYPE = "ServiceCatalogProvisionedProduct";
 
 	private ServiceCatalogClient serviceCatalogClient;
 
-	private final CollectorInfo collectorInfo =
-		CollectorInfo.builder()
-			.providerId(PROVIDER_ID)
-			.entityType(ENTITY_TYPE)
-			.requiredEntityTypes(Set.of(ServiceCatalogProductCollector.ENTITY_TYPE))
-			.tags(Set.of("governance", "service-catalog", "aws"))
-			.build();
-
 	public ServiceCatalogProvisionedProductCollector()
 	{
+		super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(ServiceCatalogProductCollector.ENTITY_TYPE), Set.of("governance", "service-catalog", "aws")).build());
 		log.debug("ServiceCatalogProvisionedProductCollector created");
 	}
-
-	@Override
-	public CollectorInfo getCollectorInfo() { return this.collectorInfo; }
 
 	@Override
 	public AccountScope getRequiredAccountScope() { return AccountScope.MEMBER_ACCOUNT; }
@@ -99,10 +88,9 @@ public class ServiceCatalogProvisionedProductCollector extends AbstractAwsContex
 			ScanProvisionedProductsResponse response =
 				this.serviceCatalogClient.scanProvisionedProducts(requestBuilder.build());
 			//List<ProvisionedProductAttribute> products  = response.provisionedProducts();
-			
+
 			List<ProvisionedProductDetail> products = response.provisionedProducts();			
-			
-			
+
 			String                            nextToken = response.nextPageToken();
 
 			log.debug("ServiceCatalogProvisionedProductCollector received {} provisioned products, nextToken={}",

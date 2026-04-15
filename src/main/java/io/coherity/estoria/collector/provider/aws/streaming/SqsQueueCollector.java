@@ -37,26 +37,15 @@ import software.amazon.awssdk.services.sqs.model.SqsException;
 @Slf4j
 public class SqsQueueCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID = "aws";
-    public  static final String ENTITY_TYPE = "SqsQueue";
+    public static final String ENTITY_TYPE = "SqsQueue";
 
     private SqsClient sqsClient;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of())
-            .tags(Set.of("streaming", "messaging", "sqs", "queue", "aws"))
-            .build();
-
     public SqsQueueCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("streaming", "messaging", "sqs", "queue", "aws")).build());
         log.debug("SqsQueueCollector created");
     }
-
-    @Override
-    public CollectorInfo getCollectorInfo() { return this.collectorInfo; }
 
     @Override
     public AccountScope getRequiredAccountScope() { return AccountScope.MEMBER_ACCOUNT; }

@@ -38,28 +38,14 @@ import software.amazon.awssdk.services.storagegateway.model.VolumeInfo;
 @Slf4j
 public class StorageGatewayVolumeCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID = "aws";
-    public  static final String ENTITY_TYPE = "StorageGatewayVolume";
+    public static final String ENTITY_TYPE = "StorageGatewayVolume";
 
     private StorageGatewayClient storageGatewayClient;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of("StorageGateway"))
-            .tags(Set.of("storage", "storage-gateway", "volume", "aws"))
-            .build();
-
     public StorageGatewayVolumeCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of("StorageGateway"), Set.of("storage", "storage-gateway", "volume", "aws")).build());
         log.debug("StorageGatewayVolumeCollector created");
-    }
-
-    @Override
-    public CollectorInfo getCollectorInfo()
-    {
-        return this.collectorInfo;
     }
 
     @Override

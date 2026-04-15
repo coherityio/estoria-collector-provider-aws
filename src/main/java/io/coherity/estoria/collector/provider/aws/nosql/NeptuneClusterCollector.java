@@ -39,26 +39,15 @@ import software.amazon.awssdk.services.neptune.model.Tag;
 @Slf4j
 public class NeptuneClusterCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID = "aws";
-    public  static final String ENTITY_TYPE = "NeptuneCluster";
+    public static final String ENTITY_TYPE = "NeptuneCluster";
 
     private NeptuneClient neptuneClient;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of())
-            .tags(Set.of("database", "neptune", "graph", "aws"))
-            .build();
-
     public NeptuneClusterCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("database", "neptune", "graph", "aws")).build());
         log.debug("NeptuneClusterCollector created");
     }
-
-    @Override
-    public CollectorInfo getCollectorInfo() { return this.collectorInfo; }
 
     @Override
     public AccountScope getRequiredAccountScope() { return AccountScope.MEMBER_ACCOUNT; }

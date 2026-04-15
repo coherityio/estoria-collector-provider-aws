@@ -41,29 +41,15 @@ import software.amazon.awssdk.services.organizations.model.PolicyType;
 @Slf4j
 public class OrganizationsPolicyAttachmentCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID = "aws";
-    public  static final String ENTITY_TYPE = "OrganizationsPolicyAttachment";
+    public static final String ENTITY_TYPE = "OrganizationsPolicyAttachment";
     private static final int PAGE_SIZE = 20;
 
     private OrganizationsClient organizationsClient;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of())
-            .tags(Set.of("security", "organizations", "aws"))
-            .build();
-
     public OrganizationsPolicyAttachmentCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("security", "organizations", "aws")).build());
         log.debug("OrganizationsPolicyAttachmentCollector created");
-    }
-
-    @Override
-    public CollectorInfo getCollectorInfo()
-    {
-        return this.collectorInfo;
     }
 
     @Override

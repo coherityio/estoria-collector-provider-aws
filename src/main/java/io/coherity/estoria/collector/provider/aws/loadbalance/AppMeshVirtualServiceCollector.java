@@ -39,28 +39,14 @@ import software.amazon.awssdk.services.appmesh.model.VirtualServiceRef;
 @Slf4j
 public class AppMeshVirtualServiceCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID  = "aws";
-    public  static final String ENTITY_TYPE  = "AppMeshVirtualService";
+    public static final String ENTITY_TYPE = "AppMeshVirtualService";
 
     private AppMeshClient appMeshClient;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of())
-            .tags(Set.of("loadbalance", "appmesh", "virtual-service", "aws"))
-            .build();
-
     public AppMeshVirtualServiceCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("loadbalance", "appmesh", "virtual-service", "aws")).build());
         log.debug("AppMeshVirtualServiceCollector created");
-    }
-
-    @Override
-    public CollectorInfo getCollectorInfo()
-    {
-        return this.collectorInfo;
     }
 
     @Override

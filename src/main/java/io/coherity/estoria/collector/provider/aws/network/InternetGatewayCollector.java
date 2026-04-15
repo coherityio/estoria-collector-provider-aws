@@ -40,30 +40,14 @@ import software.amazon.awssdk.services.ec2.model.Tag;
 @Slf4j
 public class InternetGatewayCollector extends AbstractAwsContextAwareCollector
 {
-	private static final String PROVIDER_ID = "aws";
 	public static final String ENTITY_TYPE = "InternetGateway";
 
 	private Ec2Client ec2Client;
 
-	private final CollectorInfo collectorInfo =
-			CollectorInfo
-				.builder()
-				.providerId(PROVIDER_ID)
-				.entityType(ENTITY_TYPE)
-				.requiredEntityTypes(Set.of("Vpc"))
-				.tags(Set.of("networking", "vpc", "aws"))
-				.build();
-
 	public InternetGatewayCollector()
 	{
+		super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of("Vpc"), Set.of("networking", "vpc", "aws")).build());
 		log.debug("InternetGatewayCollector.InternetGatewayCollector creating InternetGatewayCollector");
-	}
-
-	@Override
-	public CollectorInfo getCollectorInfo()
-	{
-		log.debug("InternetGatewayCollector.getCollectorInfo called - returning {}", this.collectorInfo);
-		return this.collectorInfo;
 	}
 
 	@Override

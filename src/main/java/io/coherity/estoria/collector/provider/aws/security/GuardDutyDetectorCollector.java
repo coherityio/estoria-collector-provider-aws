@@ -37,28 +37,14 @@ import software.amazon.awssdk.services.guardduty.model.ListDetectorsResponse;
 @Slf4j
 public class GuardDutyDetectorCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID = "aws";
-    public  static final String ENTITY_TYPE = "GuardDutyDetector";
+    public static final String ENTITY_TYPE = "GuardDutyDetector";
 
     private GuardDutyClient guardDutyClient;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of())
-            .tags(Set.of("security", "guardduty", "aws"))
-            .build();
-
     public GuardDutyDetectorCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("security", "guardduty", "aws")).build());
         log.debug("GuardDutyDetectorCollector created");
-    }
-
-    @Override
-    public CollectorInfo getCollectorInfo()
-    {
-        return this.collectorInfo;
     }
 
     @Override

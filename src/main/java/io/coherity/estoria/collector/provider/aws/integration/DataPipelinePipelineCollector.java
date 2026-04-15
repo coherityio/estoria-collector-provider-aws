@@ -41,27 +41,16 @@ import software.amazon.awssdk.services.datapipeline.model.PipelineIdName;
 @Slf4j
 public class DataPipelinePipelineCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID  = "aws";
-    public  static final String ENTITY_TYPE  = "DataPipelinePipeline";
+    public static final String ENTITY_TYPE = "DataPipelinePipeline";
     private static final int    DESCRIBE_MAX = 25; // DescribePipelines supports up to 25 IDs per call
 
     private DataPipelineClient dataPipelineClient;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of())
-            .tags(Set.of("integration", "data-pipeline", "legacy", "aws"))
-            .build();
-
     public DataPipelinePipelineCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("integration", "data-pipeline", "legacy", "aws")).build());
         log.debug("DataPipelinePipelineCollector created");
     }
-
-    @Override
-    public CollectorInfo getCollectorInfo() { return this.collectorInfo; }
 
     @Override
     public AccountScope getRequiredAccountScope() { return AccountScope.MEMBER_ACCOUNT; }

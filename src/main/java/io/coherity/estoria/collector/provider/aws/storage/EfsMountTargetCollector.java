@@ -36,28 +36,14 @@ import software.amazon.awssdk.services.efs.model.MountTargetDescription;
 @Slf4j
 public class EfsMountTargetCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID = "aws";
-    public  static final String ENTITY_TYPE = "EfsMountTarget";
+    public static final String ENTITY_TYPE = "EfsMountTarget";
 
     private EfsClient efsClient;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of("EfsFileSystem"))
-            .tags(Set.of("storage", "efs", "mount-target", "aws"))
-            .build();
-
     public EfsMountTargetCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of("EfsFileSystem"), Set.of("storage", "efs", "mount-target", "aws")).build());
         log.debug("EfsMountTargetCollector created");
-    }
-
-    @Override
-    public CollectorInfo getCollectorInfo()
-    {
-        return this.collectorInfo;
     }
 
     @Override

@@ -44,7 +44,7 @@ public class AwsSessionContextResolver
 
     private AwsSessionContextResolver() {}
 
-    public AwsSessionContext resolveSessionContext(ProviderContext providerContext, CollectorContext collectorContext)
+    public AwsSessionContext resolveSessionContext(ProviderContext providerContext)
     {
         Validate.notNull(providerContext, "required: providerContext");
 
@@ -56,7 +56,7 @@ public class AwsSessionContextResolver
 
     public AccountScope resolveAccountScope(ProviderContext providerContext)
     {
-        return this.resolveSessionContext(providerContext, null).getAccountScope();
+        return this.resolveSessionContext(providerContext).getAccountScope();
     }
 
     public void evict(ProviderContext providerContext)
@@ -126,7 +126,7 @@ public class AwsSessionContextResolver
     {
         if (collectorContext != null && collectorContext.getAttributes() != null)
         {
-            Object found = collectorContext.getAttributes().get(COLLECTOR_CONTEXT_ATTRIBUTE_CONTAINMENT_SCOPE);
+            Object found = collectorContext.getAttributes().get(CollectorContextAttributeKey.CONTAINMENT_SCOPE.toString());
             if (found != null)
             {
                 String value = found.toString().trim().toUpperCase();
@@ -136,7 +136,28 @@ public class AwsSessionContextResolver
                 }
                 catch (IllegalArgumentException e)
                 {
-                    // unrecognised value — fall through to null
+                	log.warn("could not resolve containment scope.", e);
+                }
+            }
+        }
+        return null;
+    }
+
+    protected static EntityCategory resolveEntityCategory(CollectorContext collectorContext)
+    {
+        if (collectorContext != null && collectorContext.getAttributes() != null)
+        {
+            Object found = collectorContext.getAttributes().get(CollectorContextAttributeKey.ENTITY_CATEGORY.toString());
+            if (found != null)
+            {
+                String value = found.toString().trim().toUpperCase();
+                try
+                {
+                    return EntityCategory.valueOf(value);
+                }
+                catch (IllegalArgumentException e)
+                {
+                	log.warn("could not resolve entity category.", e);
                 }
             }
         }
@@ -147,7 +168,7 @@ public class AwsSessionContextResolver
     {
         if (collectorContext != null && collectorContext.getAttributes() != null)
         {
-            Object found = collectorContext.getAttributes().get(COLLECTOR_CONTEXT_ATTRIBUTE_INCLUDE_REFERENCE);
+            Object found = collectorContext.getAttributes().get(CollectorContextAttributeKey.INCLUDE_REFERENCE.toString());
             if (found != null)
             {
                 if (found instanceof Boolean)

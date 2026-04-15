@@ -40,30 +40,14 @@ import software.amazon.awssdk.services.ec2.model.Tag;
 @Slf4j
 public class NatGatewayCollector extends AbstractAwsContextAwareCollector
 {
-	private static final String PROVIDER_ID = "aws";
 	public static final String ENTITY_TYPE = "NatGateway";
 
 	private Ec2Client ec2Client;
 
-	private final CollectorInfo collectorInfo =
-			CollectorInfo
-				.builder()
-				.providerId(PROVIDER_ID)
-				.entityType(ENTITY_TYPE)
-				.requiredEntityTypes(Set.of("Vpc", "Subnet"))
-				.tags(Set.of("networking", "vpc", "aws"))
-				.build();
-
 	public NatGatewayCollector()
 	{
+		super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of("Vpc", "Subnet"), Set.of("networking", "vpc", "aws")).build());
 		log.debug("NatGatewayCollector.NatGatewayCollector creating NatGatewayCollector");
-	}
-
-	@Override
-	public CollectorInfo getCollectorInfo()
-	{
-		log.debug("NatGatewayCollector.getCollectorInfo called - returning {}", this.collectorInfo);
-		return this.collectorInfo;
 	}
 
 	@Override

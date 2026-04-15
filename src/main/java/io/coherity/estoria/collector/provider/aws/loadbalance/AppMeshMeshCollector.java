@@ -36,28 +36,14 @@ import software.amazon.awssdk.services.appmesh.model.MeshRef;
 @Slf4j
 public class AppMeshMeshCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID  = "aws";
-    public  static final String ENTITY_TYPE  = "AppMeshMesh";
+    public static final String ENTITY_TYPE = "AppMeshMesh";
 
     private AppMeshClient appMeshClient;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of())
-            .tags(Set.of("loadbalance", "appmesh", "mesh", "aws"))
-            .build();
-
     public AppMeshMeshCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("loadbalance", "appmesh", "mesh", "aws")).build());
         log.debug("AppMeshMeshCollector created");
-    }
-
-    @Override
-    public CollectorInfo getCollectorInfo()
-    {
-        return this.collectorInfo;
     }
 
     @Override

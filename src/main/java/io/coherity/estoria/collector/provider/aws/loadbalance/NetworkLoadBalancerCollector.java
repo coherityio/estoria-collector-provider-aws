@@ -39,28 +39,14 @@ import software.amazon.awssdk.services.elasticloadbalancingv2.model.LoadBalancer
 @Slf4j
 public class NetworkLoadBalancerCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID  = "aws";
-    public  static final String ENTITY_TYPE  = "NetworkLoadBalancer";
+    public static final String ENTITY_TYPE = "NetworkLoadBalancer";
 
     private ElasticLoadBalancingV2Client elbV2Client;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of())
-            .tags(Set.of("loadbalance", "nlb", "network", "aws"))
-            .build();
-
     public NetworkLoadBalancerCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("loadbalance", "nlb", "network", "aws")).build());
         log.debug("NetworkLoadBalancerCollector created");
-    }
-
-    @Override
-    public CollectorInfo getCollectorInfo()
-    {
-        return this.collectorInfo;
     }
 
     @Override

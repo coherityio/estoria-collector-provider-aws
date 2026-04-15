@@ -38,28 +38,14 @@ import software.amazon.awssdk.services.fsx.model.Tag;
 @Slf4j
 public class FsxBackupCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID = "aws";
-    public  static final String ENTITY_TYPE = "FsxBackup";
+    public static final String ENTITY_TYPE = "FsxBackup";
 
     private FSxClient fsxClient;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of("FsxFileSystem"))
-            .tags(Set.of("storage", "fsx", "backup", "aws"))
-            .build();
-
     public FsxBackupCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of("FsxFileSystem"), Set.of("storage", "fsx", "backup", "aws")).build());
         log.debug("FsxBackupCollector created");
-    }
-
-    @Override
-    public CollectorInfo getCollectorInfo()
-    {
-        return this.collectorInfo;
     }
 
     @Override

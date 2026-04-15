@@ -35,28 +35,14 @@ import software.amazon.awssdk.services.securityhub.model.SecurityHubException;
 @Slf4j
 public class SecurityHubHubCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID = "aws";
-    public  static final String ENTITY_TYPE = "SecurityHubHub";
+    public static final String ENTITY_TYPE = "SecurityHubHub";
 
     private SecurityHubClient securityHubClient;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of())
-            .tags(Set.of("security", "securityhub", "aws"))
-            .build();
-
     public SecurityHubHubCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("security", "securityhub", "aws")).build());
         log.debug("SecurityHubHubCollector created");
-    }
-
-    @Override
-    public CollectorInfo getCollectorInfo()
-    {
-        return this.collectorInfo;
     }
 
     @Override

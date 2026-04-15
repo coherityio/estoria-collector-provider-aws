@@ -40,30 +40,14 @@ import software.amazon.awssdk.services.ec2.model.Tag;
 @Slf4j
 public class LocalGatewayCollector extends AbstractAwsContextAwareCollector
 {
-	private static final String PROVIDER_ID = "aws";
 	public static final String ENTITY_TYPE = "LocalGateway";
 
 	private Ec2Client ec2Client;
 
-	private final CollectorInfo collectorInfo =
-			CollectorInfo
-				.builder()
-				.providerId(PROVIDER_ID)
-				.entityType(ENTITY_TYPE)
-				.requiredEntityTypes(Set.of())
-				.tags(Set.of("networking", "outpost", "aws"))
-				.build();
-
 	public LocalGatewayCollector()
 	{
+		super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("networking", "outpost", "aws")).build());
 		log.debug("LocalGatewayCollector.LocalGatewayCollector creating LocalGatewayCollector");
-	}
-
-	@Override
-	public CollectorInfo getCollectorInfo()
-	{
-		log.debug("LocalGatewayCollector.getCollectorInfo called - returning {}", this.collectorInfo);
-		return this.collectorInfo;
 	}
 
 	@Override

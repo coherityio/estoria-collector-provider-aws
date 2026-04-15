@@ -37,28 +37,14 @@ import software.amazon.awssdk.services.iam.model.ListInstanceProfilesResponse;
 @Slf4j
 public class IamInstanceProfileCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID = "aws";
-    public  static final String ENTITY_TYPE = "IamInstanceProfile";
+    public static final String ENTITY_TYPE = "IamInstanceProfile";
 
     private IamClient iamClient;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of())
-            .tags(Set.of("security", "iam", "instance-profile", "aws"))
-            .build();
-
     public IamInstanceProfileCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("security", "iam", "instance-profile", "aws")).build());
         log.debug("IamInstanceProfileCollector created");
-    }
-
-    @Override
-    public CollectorInfo getCollectorInfo()
-    {
-        return this.collectorInfo;
     }
 
     @Override

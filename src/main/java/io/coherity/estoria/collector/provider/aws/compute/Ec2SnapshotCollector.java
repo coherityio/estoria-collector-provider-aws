@@ -39,28 +39,14 @@ import software.amazon.awssdk.services.ec2.model.Tag;
 @Slf4j
 public class Ec2SnapshotCollector extends AbstractAwsContextAwareCollector
 {
-    private static final String PROVIDER_ID = "aws";
-    public  static final String ENTITY_TYPE = "Ec2Snapshot";
+    public static final String ENTITY_TYPE = "Ec2Snapshot";
 
     private Ec2Client ec2Client;
 
-    private final CollectorInfo collectorInfo =
-        CollectorInfo.builder()
-            .providerId(PROVIDER_ID)
-            .entityType(ENTITY_TYPE)
-            .requiredEntityTypes(Set.of())
-            .tags(Set.of("compute", "ec2", "ebs", "snapshot", "aws"))
-            .build();
-
     public Ec2SnapshotCollector()
     {
+        super(awsCollectorInfoBuilder(ENTITY_TYPE, Set.of(), Set.of("compute", "ec2", "ebs", "snapshot", "aws")).build());
         log.debug("Ec2SnapshotCollector created");
-    }
-
-    @Override
-    public CollectorInfo getCollectorInfo()
-    {
-        return this.collectorInfo;
     }
 
     @Override
