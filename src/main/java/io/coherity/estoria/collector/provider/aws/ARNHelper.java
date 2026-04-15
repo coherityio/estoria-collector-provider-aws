@@ -29,6 +29,21 @@ public final class ARNHelper
     public static final String SERVICE_GLOBAL_ACCELERATOR = "globalaccelerator";
     public static final String SERVICE_APP_MESH = "appmesh";
     public static final String SERVICE_EXECUTE_API = "execute-api";
+    public static final String SERVICE_API_GATEWAY = "apigateway";
+    public static final String SERVICE_CLOUDFORMATION = "cloudformation";
+    public static final String SERVICE_GLUE = "glue";
+    public static final String SERVICE_BACKUP = "backup";
+    public static final String SERVICE_APPCONFIG = "appconfig";
+    public static final String SERVICE_NEPTUNE = "neptune";
+    public static final String SERVICE_SERVICE_CATALOG = "catalog";
+    public static final String SERVICE_SES             = "ses";
+    public static final String SERVICE_SES_V2          = "ses";
+
+    // ===== SES Resource Types =====
+    public static final String RESOURCE_CONFIGURATION_SET    = "configuration-set";
+    public static final String RESOURCE_IDENTITY             = "identity";
+    public static final String RESOURCE_RECEIPT_RULE_SET     = "receipt-rule-set";
+    public static final String RESOURCE_TEMPLATE             = "template";
 
     // ===== EC2 Resource Types =====
     public static final String RESOURCE_VPC = "vpc";
@@ -53,7 +68,7 @@ public final class ARNHelper
     public static final String RESOURCE_VPC_ENDPOINT_SERVICE = "vpc-endpoint-service";
     public static final String RESOURCE_ACCELERATOR = "accelerator";
     public static final String RESOURCE_MESH = "mesh";
-    public static final String RESOURCE_VPCLINK = "vpclink";
+    public static final String RESOURCE_VPCLINKS = "vpclinks";
 
     // ===== EC2 Compute Resources =====
     public static final String RESOURCE_IMAGE = "image";
@@ -80,6 +95,26 @@ public final class ARNHelper
 
     // ===== CloudTrail =====
     public static final String RESOURCE_TRAIL = "trail";
+
+    // ===== CloudFormation =====
+    public static final String RESOURCE_STACKSET = "stackset";
+
+    // ===== Glue =====
+    public static final String RESOURCE_JOB = "job";
+
+    // ===== Backup =====
+    public static final String RESOURCE_BACKUP_VAULT = "backup-vault";
+    public static final String RESOURCE_RECOVERY_POINT = "recovery-point";
+
+    // ===== AppConfig =====
+    public static final String RESOURCE_APPLICATION = "application";
+    public static final String RESOURCE_CONFIGURATION_PROFILE = "configurationprofile";
+
+    // ===== Neptune =====
+    public static final String RESOURCE_CLUSTER_LOWER = "cluster";
+
+    // ===== Service Catalog =====
+    public static final String RESOURCE_PROVISIONED_PRODUCT = "stack";
 
     // ===== Regex =====
     public static final String ARN_REGEX = "^arn:([^:]*):([^:]*):([^:]*):([^:]*):(.*)$";
@@ -389,7 +424,8 @@ public final class ARNHelper
     public static String s3BucketArn(String bucketName)
     {
         requireNonBlank(bucketName, "bucketName");
-        return ARN_PREFIX + SEPARATOR + PARTITION_AWS + SEPARATOR + SERVICE_S3 + SEPARATOR + SEPARATOR + SEPARATOR + bucketName;
+        return ARN_PREFIX + SEPARATOR + PARTITION_AWS + SEPARATOR + SERVICE_S3
+            + SEPARATOR + SEPARATOR + SEPARATOR + bucketName;
     }
 
     public static String s3ObjectArn(String bucketName, String objectKey)
@@ -404,9 +440,9 @@ public final class ARNHelper
 
     public static String s3MultiRegionAccessPointArn(String accountId, String name)
     {
-        // arn:aws:s3::accountId:accesspoint/name
         requireNonBlank(accountId, "accountId");
         requireNonBlank(name, "name");
+
         return ARN_PREFIX + SEPARATOR + PARTITION_AWS + SEPARATOR + SERVICE_S3
             + SEPARATOR + SEPARATOR + accountId + SEPARATOR
             + "accesspoint" + RESOURCE_SEPARATOR_SLASH + name;
@@ -432,7 +468,6 @@ public final class ARNHelper
 
     public static String globalAcceleratorArn(String accountId, String acceleratorId)
     {
-        // Global Accelerator ARNs have no region: arn:aws:globalaccelerator::accountId:accelerator/id
         return buildArn(PARTITION_AWS, SERVICE_GLOBAL_ACCELERATOR, "", accountId,
             RESOURCE_ACCELERATOR, acceleratorId, ResourceSeparator.SLASH);
     }
@@ -446,12 +481,136 @@ public final class ARNHelper
     }
 
     // ===== API Gateway =====
+    // Management ARN style: arn:partition:apigateway:region::/vpclinks/{id}
 
-    public static String apiGatewayVpcLinkArn(String region, String accountId, String vpcLinkId)
+    public static String apiGatewayVpcLinkArn(String region, String vpcLinkId)
     {
-        // arn:aws:apigateway:region::/vpclinks/id  (account is empty for API GW)
-        return buildArn(partitionForRegion(region), SERVICE_EXECUTE_API, region, "",
-            RESOURCE_VPCLINK, vpcLinkId, ResourceSeparator.SLASH);
+        requireNonBlank(region, "region");
+        requireNonBlank(vpcLinkId, "vpcLinkId");
+
+        return buildArn(partitionForRegion(region), SERVICE_API_GATEWAY, region, "",
+            RESOURCE_SEPARATOR_SLASH + RESOURCE_VPCLINKS + RESOURCE_SEPARATOR_SLASH + vpcLinkId);
+    }
+
+    // ===== CloudFormation =====
+
+    public static String cloudFormationStackSetArn(String region, String accountId, String stackSetName)
+    {
+        return buildArn(partitionForRegion(region), SERVICE_CLOUDFORMATION, region, accountId,
+            RESOURCE_STACKSET, stackSetName, ResourceSeparator.SLASH);
+    }
+
+    public static String cloudFormationStackSetArn(String region, String accountId, String stackSetName, String stackSetId)
+    {
+        requireNonBlank(stackSetName, "stackSetName");
+
+        if (stackSetId == null || stackSetId.isBlank())
+        {
+            return cloudFormationStackSetArn(region, accountId, stackSetName);
+        }
+
+        return buildArn(partitionForRegion(region), SERVICE_CLOUDFORMATION, region, accountId,
+            RESOURCE_STACKSET + RESOURCE_SEPARATOR_SLASH + stackSetName + RESOURCE_SEPARATOR_COLON + stackSetId);
+    }
+
+    // ===== Glue =====
+
+    public static String glueJobArn(String region, String accountId, String jobName)
+    {
+        return buildArn(partitionForRegion(region), SERVICE_GLUE, region, accountId,
+            RESOURCE_JOB, jobName, ResourceSeparator.SLASH);
+    }
+
+    // ===== Backup =====
+
+    public static String backupVaultArn(String region, String accountId, String vaultName)
+    {
+        return buildArn(partitionForRegion(region), SERVICE_BACKUP, region, accountId,
+            RESOURCE_BACKUP_VAULT, vaultName, ResourceSeparator.COLON);
+    }
+
+    public static String backupRecoveryPointArn(String region, String accountId, String backupVaultName, String recoveryPointId)
+    {
+        requireNonBlank(backupVaultName, "backupVaultName");
+        requireNonBlank(recoveryPointId, "recoveryPointId");
+
+        return buildArn(partitionForRegion(region), SERVICE_BACKUP, region, accountId,
+            RESOURCE_BACKUP_VAULT + RESOURCE_SEPARATOR_COLON + backupVaultName
+                + RESOURCE_SEPARATOR_COLON + RESOURCE_RECOVERY_POINT + RESOURCE_SEPARATOR_COLON + recoveryPointId);
+    }
+
+    // ===== AppConfig =====
+
+    public static String appConfigApplicationArn(String region, String accountId, String applicationId)
+    {
+        return buildArn(partitionForRegion(region), SERVICE_APPCONFIG, region, accountId,
+            RESOURCE_APPLICATION, applicationId, ResourceSeparator.SLASH);
+    }
+
+    public static String appConfigConfigurationProfileArn(String region, String accountId, String applicationId, String configurationProfileId)
+    {
+        requireNonBlank(applicationId, "applicationId");
+        requireNonBlank(configurationProfileId, "configurationProfileId");
+
+        return buildArn(partitionForRegion(region), SERVICE_APPCONFIG, region, accountId,
+            RESOURCE_APPLICATION + RESOURCE_SEPARATOR_SLASH + applicationId
+                + RESOURCE_SEPARATOR_SLASH + RESOURCE_CONFIGURATION_PROFILE
+                + RESOURCE_SEPARATOR_SLASH + configurationProfileId);
+    }
+
+    // ===== Neptune =====
+
+    public static String neptuneClusterArn(String region, String accountId, String clusterId)
+    {
+        return buildArn(partitionForRegion(region), SERVICE_NEPTUNE, region, accountId,
+            RESOURCE_CLUSTER_LOWER, clusterId, ResourceSeparator.COLON);
+    }
+
+    // ===== Service Catalog =====
+
+    public static String serviceCatalogProvisionedProductArn(
+        String region,
+        String accountId,
+        String provisionedProductId)
+    {
+        requireNonBlank(region, "region");
+        requireNonBlank(accountId, "accountId");
+        requireNonBlank(provisionedProductId, "provisionedProductId");
+
+        return buildArn(
+            partitionForRegion(region),
+            SERVICE_SERVICE_CATALOG,
+            region,
+            accountId,
+            RESOURCE_PROVISIONED_PRODUCT,
+            provisionedProductId,
+            ResourceSeparator.SLASH);
+    }
+
+    // ===== SES =====
+
+    public static String sesConfigurationSetArn(String region, String accountId, String configSetName)
+    {
+        return buildArn(partitionForRegion(region), SERVICE_SES_V2, region, accountId,
+            RESOURCE_CONFIGURATION_SET, configSetName, ResourceSeparator.SLASH);
+    }
+
+    public static String sesIdentityArn(String region, String accountId, String identityName)
+    {
+        return buildArn(partitionForRegion(region), SERVICE_SES_V2, region, accountId,
+            RESOURCE_IDENTITY, identityName, ResourceSeparator.SLASH);
+    }
+
+    public static String sesReceiptRuleSetArn(String region, String accountId, String ruleSetName)
+    {
+        return buildArn(partitionForRegion(region), SERVICE_SES, region, accountId,
+            RESOURCE_RECEIPT_RULE_SET, ruleSetName, ResourceSeparator.SLASH);
+    }
+
+    public static String sesTemplateArn(String region, String accountId, String templateName)
+    {
+        return buildArn(partitionForRegion(region), SERVICE_SES_V2, region, accountId,
+            RESOURCE_TEMPLATE, templateName, ResourceSeparator.SLASH);
     }
 
     // ===== Helpers =====

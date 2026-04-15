@@ -1,0 +1,35 @@
+{
+  "typesetId": "aws-account",
+  "description": "AWS Account management entity types",
+  "version": "1.0.0",
+  "entityTypes": [
+    {
+      "entityType": "AccountAlternateContact",
+      "displayName": "Account Alternate Contact",
+      "description": "An AWS account alternate contact (BILLING, OPERATIONS, or SECURITY)",
+      "category": "RESOURCE",
+      "tags": ["account", "contact", "aws"]
+    },
+    {
+      "entityType": "AccountContactInformation",
+      "displayName": "Account Contact Information",
+      "description": "The primary contact information registered for an AWS account",
+      "category": "RESOURCE",
+      "tags": ["account", "contact", "aws"]
+    },
+    {
+      "entityType": "BudgetsBudget",
+      "displayName": "Budgets Budget",
+      "description": "An AWS Budgets budget definition for cost and usage tracking",
+      "category": "RESOURCE",
+      "tags": ["account", "budgets", "cost", "aws"]
+    },
+    {
+      "entityType": "CostCategory",
+      "displayName": "Cost Category",
+      "description": "An AWS Cost Explorer cost category definition for organizing costs",
+      "category": "RESOURCE",
+      "tags": ["account", "cost", "billing", "aws"]
+    }
+  ]
+}

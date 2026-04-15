@@ -1,0 +1,111 @@
+{
+  "typesetId": "aws-governance",
+  "displayName": "AWS Governance, Compliance & Operations",
+  "description": "Entity types representing AWS governance, compliance, and operations resources including CloudFormation, Service Catalog, Backup, License Manager, Resource Groups, and Tag Editor.",
+  "entityTypes": [
+    {
+      "entityType": "CloudFormationStack",
+      "displayName": "CloudFormation Stack",
+      "description": "An AWS CloudFormation stack — a collection of AWS resources provisioned and managed as a single unit from a template.",
+      "entityCategory": "RESOURCE",
+      "containmentScope": "ACCOUNT_REGIONAL",
+      "tags": ["governance", "cloudformation", "infrastructure-as-code", "aws"]
+    },
+    {
+      "entityType": "CloudFormationStackSet",
+      "displayName": "CloudFormation StackSet",
+      "description": "An AWS CloudFormation StackSet that enables creating, updating, or deleting stacks across multiple accounts and regions with a single operation.",
+      "entityCategory": "RESOURCE",
+      "containmentScope": "ACCOUNT_REGIONAL",
+      "tags": ["governance", "cloudformation", "infrastructure-as-code", "multi-account", "aws"]
+    },
+    {
+      "entityType": "CloudFormationChangeSet",
+      "displayName": "CloudFormation Change Set",
+      "description": "A summary of proposed changes to an AWS CloudFormation stack, allowing review before execution.",
+      "entityCategory": "RESOURCE",
+      "containmentScope": "ACCOUNT_REGIONAL",
+      "tags": ["governance", "cloudformation", "change-management", "aws"]
+    },
+    {
+      "entityType": "ServiceCatalogPortfolio",
+      "displayName": "Service Catalog Portfolio",
+      "description": "An AWS Service Catalog portfolio — a collection of products (CloudFormation templates) with access control and configuration.",
+      "entityCategory": "RESOURCE",
+      "containmentScope": "ACCOUNT_REGIONAL",
+      "tags": ["governance", "service-catalog", "portfolio", "aws"]
+    },
+    {
+      "entityType": "ServiceCatalogProduct",
+      "displayName": "Service Catalog Product",
+      "description": "An AWS Service Catalog product — a CloudFormation template with versioning and metadata that can be shared across portfolios.",
+      "entityCategory": "RESOURCE",
+      "containmentScope": "ACCOUNT_REGIONAL",
+      "tags": ["governance", "service-catalog", "product", "aws"]
+    },
+    {
+      "entityType": "ServiceCatalogProvisionedProduct",
+      "displayName": "Service Catalog Provisioned Product",
+      "description": "An instance of an AWS Service Catalog product that has been provisioned into an account (a running CloudFormation stack).",
+      "entityCategory": "RESOURCE",
+      "containmentScope": "ACCOUNT_REGIONAL",
+      "tags": ["governance", "service-catalog", "provisioned-product", "aws"]
+    },
+    {
+      "entityType": "BackupVault",
+      "displayName": "AWS Backup Vault",
+      "description": "An AWS Backup vault — a container for recovery points (backups) that is encrypted and access-controlled.",
+      "entityCategory": "RESOURCE",
+      "containmentScope": "ACCOUNT_REGIONAL",
+      "tags": ["governance", "backup", "disaster-recovery", "aws"]
+    },
+    {
+      "entityType": "BackupPlan",
+      "displayName": "AWS Backup Plan",
+      "description": "An AWS Backup plan — a policy that defines when and how AWS resources are backed up, including schedules, retention, and lifecycle rules.",
+      "entityCategory": "RESOURCE",
+      "containmentScope": "ACCOUNT_REGIONAL",
+      "tags": ["governance", "backup", "disaster-recovery", "aws"]
+    },
+    {
+      "entityType": "BackupSelection",
+      "displayName": "AWS Backup Selection",
+      "description": "An AWS Backup selection — a mapping of AWS resources (by ARN, tag, or resource type) to a backup plan.",
+      "entityCategory": "RESOURCE",
+      "containmentScope": "ACCOUNT_REGIONAL",
+      "tags": ["governance", "backup", "disaster-recovery", "aws"]
+    },
+    {
+      "entityType": "BackupRecoveryPoint",
+      "displayName": "AWS Backup Recovery Point",
+      "description": "An AWS Backup recovery point (backup) stored in a backup vault, representing a point-in-time snapshot of a resource.",
+      "entityCategory": "RESOURCE",
+      "containmentScope": "ACCOUNT_REGIONAL",
+      "tags": ["governance", "backup", "disaster-recovery", "recovery-point", "aws"]
+    },
+    {
+      "entityType": "LicenseManagerLicenseConfiguration",
+      "displayName": "License Manager License Configuration",
+      "description": "An AWS License Manager license configuration — a set of rules encoding the terms of a software license (e.g., per-core or per-instance limits).",
+      "entityCategory": "RESOURCE",
+      "containmentScope": "ACCOUNT_REGIONAL",
+      "tags": ["governance", "license-manager", "compliance", "software-licensing", "aws"]
+    },
+    {
+      "entityType": "ResourceGroupsGroup",
+      "displayName": "Resource Groups Group",
+      "description": "An AWS Resource Groups group — a logical container for AWS resources defined by a tag-based or CloudFormation stack-based query.",
+      "entityCategory": "RESOURCE",
+      "containmentScope": "ACCOUNT_REGIONAL",
+      "tags": ["governance", "resource-groups", "aws"]
+    },
+    {
+      "entityType": "TagEditorResource",
+      "displayName": "Tag Editor Resource",
+      "description": "A tagged AWS resource discovered via the Resource Groups Tagging API, providing a cross-service view of all resources and their tags in a region.",
+      "entityCategory": "RESOURCE",
+      "containmentScope": "ACCOUNT_REGIONAL",
+      "tags": ["governance", "tagging", "resource-groups", "tag-editor", "aws"]
+    }
+  ]
+}

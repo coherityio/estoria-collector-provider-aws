@@ -2,6 +2,7 @@ package io.coherity.estoria.collector.provider.aws;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.apache.commons.lang3.Validate;
 
@@ -18,6 +19,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public abstract class AbstractAwsContextAwareCollector implements Collector
 {
+	private final Set<String> supportedContextAttributes = CollectorContextAttributeKey.keysLowercase();
+	
     @Override
     public final CollectorCursor collect(
         ProviderContext providerContext,

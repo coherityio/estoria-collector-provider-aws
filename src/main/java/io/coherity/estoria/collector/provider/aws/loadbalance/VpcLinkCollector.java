@@ -129,7 +129,7 @@ public class VpcLinkCollector extends AbstractAwsContextAwareCollector
                     if (link == null) continue;
 
                     String id  = link.id();
-                    String arn = ARNHelper.apiGatewayVpcLinkArn(region, accountId, id);
+                    String arn = ARNHelper.apiGatewayVpcLinkArn(region, id);
 
                     Map<String, Object> attributes = new HashMap<>();
                     attributes.put("id", id);

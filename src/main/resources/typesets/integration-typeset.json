@@ -1,0 +1,104 @@
+{
+  "typesetId": "aws-integration",
+  "displayName": "AWS Data Integration & Analytics",
+  "description": "Entity types for AWS data integration and analytics services: Glue, Lake Formation, Athena, EMR, and Data Pipeline.",
+  "version": "1.0.0",
+  "entityTypes": [
+    {
+      "entityType": "GlueDatabase",
+      "displayName": "Glue Database",
+      "description": "An AWS Glue Data Catalog database, which is a container for tables and metadata.",
+      "category": "RESOURCE",
+      "containmentScope": "ACCOUNT_REGIONAL",
+      "tags": ["integration", "glue", "data-catalog", "aws"]
+    },
+    {
+      "entityType": "GlueTable",
+      "displayName": "Glue Table",
+      "description": "An AWS Glue Data Catalog table, containing schema and metadata for a data store.",
+      "category": "RESOURCE",
+      "containmentScope": "ACCOUNT_REGIONAL",
+      "tags": ["integration", "glue", "data-catalog", "aws"]
+    },
+    {
+      "entityType": "GlueCrawler",
+      "displayName": "Glue Crawler",
+      "description": "An AWS Glue crawler that connects to data sources and populates the Data Catalog with metadata.",
+      "category": "RESOURCE",
+      "containmentScope": "ACCOUNT_REGIONAL",
+      "tags": ["integration", "glue", "crawler", "aws"]
+    },
+    {
+      "entityType": "GlueJob",
+      "displayName": "Glue ETL Job",
+      "description": "An AWS Glue ETL job that extracts, transforms, and loads data between data stores.",
+      "category": "RESOURCE",
+      "containmentScope": "ACCOUNT_REGIONAL",
+      "tags": ["integration", "glue", "etl", "aws"]
+    },
+    {
+      "entityType": "GlueDataCatalogResourcePolicy",
+      "displayName": "Glue Data Catalog Resource Policy",
+      "description": "The resource-based policy attached to the AWS Glue Data Catalog for cross-account access control.",
+      "category": "POLICY",
+      "containmentScope": "ACCOUNT_REGIONAL",
+      "tags": ["integration", "glue", "data-catalog", "policy", "aws"]
+    },
+    {
+      "entityType": "LakeFormationDataLakeSettings",
+      "displayName": "Lake Formation Data Lake Settings",
+      "description": "The AWS Lake Formation data lake settings for an account, including data lake administrators and default permissions.",
+      "category": "CONFIGURATION",
+      "containmentScope": "ACCOUNT_REGIONAL",
+      "tags": ["integration", "lake-formation", "governance", "aws"]
+    },
+    {
+      "entityType": "LakeFormationResource",
+      "displayName": "Lake Formation Resource",
+      "description": "A data lake resource (S3 path or Glue database/table) registered with AWS Lake Formation for access control.",
+      "category": "RESOURCE",
+      "containmentScope": "ACCOUNT_REGIONAL",
+      "tags": ["integration", "lake-formation", "governance", "aws"]
+    },
+    {
+      "entityType": "AthenaWorkGroup",
+      "displayName": "Athena WorkGroup",
+      "description": "An Amazon Athena workgroup that separates users, teams, and applications and controls query costs.",
+      "category": "RESOURCE",
+      "containmentScope": "ACCOUNT_REGIONAL",
+      "tags": ["integration", "athena", "analytics", "aws"]
+    },
+    {
+      "entityType": "AthenaNamedQuery",
+      "displayName": "Athena Named Query",
+      "description": "A saved Amazon Athena SQL query that can be reused across sessions.",
+      "category": "RESOURCE",
+      "containmentScope": "ACCOUNT_REGIONAL",
+      "tags": ["integration", "athena", "analytics", "aws"]
+    },
+    {
+      "entityType": "EmrCluster",
+      "displayName": "EMR Cluster",
+      "description": "An Amazon EMR cluster, a managed Hadoop framework for processing large datasets.",
+      "category": "RESOURCE",
+      "containmentScope": "ACCOUNT_REGIONAL",
+      "tags": ["integration", "emr", "analytics", "aws"]
+    },
+    {
+      "entityType": "EmrInstanceGroup",
+      "displayName": "EMR Instance Group",
+      "description": "An Amazon EMR instance group (master, core, or task nodes) within an EMR cluster.",
+      "category": "RESOURCE",
+      "containmentScope": "ACCOUNT_REGIONAL",
+      "tags": ["integration", "emr", "analytics", "aws"]
+    },
+    {
+      "entityType": "DataPipelinePipeline",
+      "displayName": "Data Pipeline Pipeline",
+      "description": "An AWS Data Pipeline definition that orchestrates data movement and transformation between AWS services. Note: AWS Data Pipeline is a legacy service.",
+      "category": "RESOURCE",
+      "containmentScope": "ACCOUNT_REGIONAL",
+      "tags": ["integration", "data-pipeline", "legacy", "aws"]
+    }
+  ]
+}

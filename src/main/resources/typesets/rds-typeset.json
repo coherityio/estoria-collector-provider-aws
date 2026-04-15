@@ -1,0 +1,14 @@
+{
+    "entityTypes": [
+        "RdsInstance",
+        "RdsCluster",
+        "RdsSnapshot",
+        "RdsClusterSnapshot",
+        "RdsSubnetGroup",
+        "RdsParameterGroup",
+        "RdsOptionGroup",
+        "RdsProxy",
+        "RdsEventSubscription",
+        "RdsGlobalCluster"
+    ]
+}

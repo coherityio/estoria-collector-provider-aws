@@ -54,6 +54,34 @@ import software.amazon.awssdk.services.ssoadmin.SsoAdminClient;
 import software.amazon.awssdk.services.storagegateway.StorageGatewayClient;
 import software.amazon.awssdk.services.sts.StsClient;
 import software.amazon.awssdk.services.wafv2.Wafv2Client;
+import software.amazon.awssdk.services.opensearch.OpenSearchClient;
+import software.amazon.awssdk.services.redshift.RedshiftClient;
+import software.amazon.awssdk.services.elasticache.ElastiCacheClient;
+import software.amazon.awssdk.services.neptune.NeptuneClient;
+import software.amazon.awssdk.services.timestreamwrite.TimestreamWriteClient;
+import software.amazon.awssdk.services.kafka.KafkaClient;
+import software.amazon.awssdk.services.kinesis.KinesisClient;
+import software.amazon.awssdk.services.firehose.FirehoseClient;
+import software.amazon.awssdk.services.kinesisanalyticsv2.KinesisAnalyticsV2Client;
+import software.amazon.awssdk.services.eventbridge.EventBridgeClient;
+import software.amazon.awssdk.services.sfn.SfnClient;
+import software.amazon.awssdk.services.appconfig.AppConfigClient;
+import software.amazon.awssdk.services.account.AccountClient;
+import software.amazon.awssdk.services.budgets.BudgetsClient;
+import software.amazon.awssdk.services.costexplorer.CostExplorerClient;
+import software.amazon.awssdk.services.glue.GlueClient;
+import software.amazon.awssdk.services.lakeformation.LakeFormationClient;
+import software.amazon.awssdk.services.athena.AthenaClient;
+import software.amazon.awssdk.services.emr.EmrClient;
+import software.amazon.awssdk.services.datapipeline.DataPipelineClient;
+import software.amazon.awssdk.services.cloudformation.CloudFormationClient;
+import software.amazon.awssdk.services.servicecatalog.ServiceCatalogClient;
+import software.amazon.awssdk.services.backup.BackupClient;
+import software.amazon.awssdk.services.licensemanager.LicenseManagerClient;
+import software.amazon.awssdk.services.resourcegroups.ResourceGroupsClient;
+import software.amazon.awssdk.services.resourcegroupstaggingapi.ResourceGroupsTaggingApiClient;
+import software.amazon.awssdk.services.ses.SesClient;
+import software.amazon.awssdk.services.sesv2.SesV2Client;
 
 @Slf4j
 public class AwsClientFactory
@@ -105,6 +133,34 @@ public class AwsClientFactory
     private static final String CLIENT_NAME_GUARDDUTY            = "GuardDuty";
     private static final String CLIENT_NAME_SECURITYHUB          = "SecurityHub";
     private static final String CLIENT_NAME_CONFIG               = "Config";
+    private static final String CLIENT_NAME_OPENSEARCH            = "OpenSearch";
+    private static final String CLIENT_NAME_REDSHIFT              = "Redshift";
+    private static final String CLIENT_NAME_ELASTICACHE           = "ElastiCache";
+    private static final String CLIENT_NAME_NEPTUNE               = "Neptune";
+    private static final String CLIENT_NAME_TIMESTREAM_WRITE      = "TimestreamWrite";
+    private static final String CLIENT_NAME_MSK                   = "MSK";
+    private static final String CLIENT_NAME_KINESIS                = "Kinesis";
+    private static final String CLIENT_NAME_FIREHOSE               = "Firehose";
+    private static final String CLIENT_NAME_KINESIS_ANALYTICS_V2  = "KinesisAnalyticsV2";
+    private static final String CLIENT_NAME_EVENTBRIDGE            = "EventBridge";
+    private static final String CLIENT_NAME_SFN                    = "SFN";
+    private static final String CLIENT_NAME_APPCONFIG              = "AppConfig";
+    private static final String CLIENT_NAME_ACCOUNT               = "Account";
+    private static final String CLIENT_NAME_BUDGETS               = "Budgets";
+    private static final String CLIENT_NAME_COST_EXPLORER         = "CostExplorer";
+    private static final String CLIENT_NAME_GLUE                  = "Glue";
+    private static final String CLIENT_NAME_LAKE_FORMATION        = "LakeFormation";
+    private static final String CLIENT_NAME_ATHENA                = "Athena";
+    private static final String CLIENT_NAME_EMR                   = "EMR";
+    private static final String CLIENT_NAME_DATA_PIPELINE             = "DataPipeline";
+    private static final String CLIENT_NAME_CLOUDFORMATION            = "CloudFormation";
+    private static final String CLIENT_NAME_SERVICE_CATALOG           = "ServiceCatalog";
+    private static final String CLIENT_NAME_BACKUP                    = "Backup";
+    private static final String CLIENT_NAME_LICENSE_MANAGER           = "LicenseManager";
+    private static final String CLIENT_NAME_RESOURCE_GROUPS           = "ResourceGroups";
+    private static final String CLIENT_NAME_RESOURCE_GROUPS_TAGGING   = "ResourceGroupsTaggingApi";
+    private static final String CLIENT_NAME_SES                       = "SES";
+    private static final String CLIENT_NAME_SES_V2                    = "SESv2";
 
     private static final int    SHUTDOWN_TIMEOUT_SECONDS    = 30;
     private static final String CACHE_KEY_SEPARATOR         = ":";
@@ -163,6 +219,34 @@ public class AwsClientFactory
     private final Map<String, GuardDutyClient>              guardDutyClients          = new ConcurrentHashMap<>();
     private final Map<String, SecurityHubClient>            securityHubClients        = new ConcurrentHashMap<>();
     private final Map<String, ConfigClient>                 configClients             = new ConcurrentHashMap<>();
+    private final Map<String, OpenSearchClient>              openSearchClients          = new ConcurrentHashMap<>();
+    private final Map<String, RedshiftClient>                redshiftClients            = new ConcurrentHashMap<>();
+    private final Map<String, ElastiCacheClient>             elastiCacheClients         = new ConcurrentHashMap<>();
+    private final Map<String, NeptuneClient>                 neptuneClients             = new ConcurrentHashMap<>();
+    private final Map<String, TimestreamWriteClient>         timestreamWriteClients     = new ConcurrentHashMap<>();
+    private final Map<String, KafkaClient>                   kafkaClients               = new ConcurrentHashMap<>();
+    private final Map<String, KinesisClient>                 kinesisClients             = new ConcurrentHashMap<>();
+    private final Map<String, FirehoseClient>                firehoseClients            = new ConcurrentHashMap<>();
+    private final Map<String, KinesisAnalyticsV2Client>      kinesisAnalyticsV2Clients  = new ConcurrentHashMap<>();
+    private final Map<String, EventBridgeClient>             eventBridgeClients         = new ConcurrentHashMap<>();
+    private final Map<String, SfnClient>                     sfnClients                 = new ConcurrentHashMap<>();
+    private final Map<String, AppConfigClient>               appConfigClients           = new ConcurrentHashMap<>();
+    private final Map<String, AccountClient>                 accountClients             = new ConcurrentHashMap<>();
+    private final Map<String, BudgetsClient>                 budgetsClients             = new ConcurrentHashMap<>();
+    private final Map<String, CostExplorerClient>            costExplorerClients        = new ConcurrentHashMap<>();
+    private final Map<String, GlueClient>                    glueClients                = new ConcurrentHashMap<>();
+    private final Map<String, LakeFormationClient>           lakeFormationClients       = new ConcurrentHashMap<>();
+    private final Map<String, AthenaClient>                  athenaClients              = new ConcurrentHashMap<>();
+    private final Map<String, EmrClient>                     emrClients                 = new ConcurrentHashMap<>();
+    private final Map<String, DataPipelineClient>            dataPipelineClients        = new ConcurrentHashMap<>();
+    private final Map<String, CloudFormationClient>           cloudFormationClients       = new ConcurrentHashMap<>();
+    private final Map<String, ServiceCatalogClient>           serviceCatalogClients       = new ConcurrentHashMap<>();
+    private final Map<String, BackupClient>                   backupClients               = new ConcurrentHashMap<>();
+    private final Map<String, LicenseManagerClient>           licenseManagerClients       = new ConcurrentHashMap<>();
+    private final Map<String, ResourceGroupsClient>           resourceGroupsClients       = new ConcurrentHashMap<>();
+    private final Map<String, ResourceGroupsTaggingApiClient> resourceGroupsTaggingClients = new ConcurrentHashMap<>();
+    private final Map<String, SesClient>                      sesClients                   = new ConcurrentHashMap<>();
+    private final Map<String, SesV2Client>                    sesV2Clients                 = new ConcurrentHashMap<>();
 
     // =========================================================================
     // Public accessors
@@ -395,6 +479,174 @@ public class AwsClientFactory
             (profile, region) -> buildClient(ConfigClient.builder(), profile, region, CLIENT_NAME_CONFIG));
     }
 
+    public OpenSearchClient getOpenSearchClient(ProviderContext providerContext)
+    {
+        return getClient(openSearchClients, providerContext,
+            (profile, region) -> buildClient(OpenSearchClient.builder(), profile, region, CLIENT_NAME_OPENSEARCH));
+    }
+
+    public RedshiftClient getRedshiftClient(ProviderContext providerContext)
+    {
+        return getClient(redshiftClients, providerContext,
+            (profile, region) -> buildClient(RedshiftClient.builder(), profile, region, CLIENT_NAME_REDSHIFT));
+    }
+
+    public ElastiCacheClient getElastiCacheClient(ProviderContext providerContext)
+    {
+        return getClient(elastiCacheClients, providerContext,
+            (profile, region) -> buildClient(ElastiCacheClient.builder(), profile, region, CLIENT_NAME_ELASTICACHE));
+    }
+
+    public NeptuneClient getNeptuneClient(ProviderContext providerContext)
+    {
+        return getClient(neptuneClients, providerContext,
+            (profile, region) -> buildClient(NeptuneClient.builder(), profile, region, CLIENT_NAME_NEPTUNE));
+    }
+
+    public TimestreamWriteClient getTimestreamWriteClient(ProviderContext providerContext)
+    {
+        return getClient(timestreamWriteClients, providerContext,
+            (profile, region) -> buildClient(TimestreamWriteClient.builder(), profile, region, CLIENT_NAME_TIMESTREAM_WRITE));
+    }
+
+    public KafkaClient getKafkaClient(ProviderContext providerContext)
+    {
+        return getClient(kafkaClients, providerContext,
+            (profile, region) -> buildClient(KafkaClient.builder(), profile, region, CLIENT_NAME_MSK));
+    }
+
+    public KinesisClient getKinesisClient(ProviderContext providerContext)
+    {
+        return getClient(kinesisClients, providerContext,
+            (profile, region) -> buildClient(KinesisClient.builder(), profile, region, CLIENT_NAME_KINESIS));
+    }
+
+    public FirehoseClient getFirehoseClient(ProviderContext providerContext)
+    {
+        return getClient(firehoseClients, providerContext,
+            (profile, region) -> buildClient(FirehoseClient.builder(), profile, region, CLIENT_NAME_FIREHOSE));
+    }
+
+    public KinesisAnalyticsV2Client getKinesisAnalyticsV2Client(ProviderContext providerContext)
+    {
+        return getClient(kinesisAnalyticsV2Clients, providerContext,
+            (profile, region) -> buildClient(KinesisAnalyticsV2Client.builder(), profile, region, CLIENT_NAME_KINESIS_ANALYTICS_V2));
+    }
+
+    public EventBridgeClient getEventBridgeClient(ProviderContext providerContext)
+    {
+        return getClient(eventBridgeClients, providerContext,
+            (profile, region) -> buildClient(EventBridgeClient.builder(), profile, region, CLIENT_NAME_EVENTBRIDGE));
+    }
+
+    public SfnClient getSfnClient(ProviderContext providerContext)
+    {
+        return getClient(sfnClients, providerContext,
+            (profile, region) -> buildClient(SfnClient.builder(), profile, region, CLIENT_NAME_SFN));
+    }
+
+    public AppConfigClient getAppConfigClient(ProviderContext providerContext)
+    {
+        return getClient(appConfigClients, providerContext,
+            (profile, region) -> buildClient(AppConfigClient.builder(), profile, region, CLIENT_NAME_APPCONFIG));
+    }
+
+    public AccountClient getAccountClient(ProviderContext providerContext)
+    {
+        return getClient(accountClients, providerContext,
+            (profile, region) -> buildClient(AccountClient.builder(), profile, region, CLIENT_NAME_ACCOUNT));
+    }
+
+    public BudgetsClient getBudgetsClient(ProviderContext providerContext)
+    {
+        return getClient(budgetsClients, providerContext,
+            (profile, region) -> buildClient(BudgetsClient.builder(), profile, region, CLIENT_NAME_BUDGETS));
+    }
+
+    public CostExplorerClient getCostExplorerClient(ProviderContext providerContext)
+    {
+        return getClient(costExplorerClients, providerContext,
+            (profile, region) -> buildClient(CostExplorerClient.builder(), profile, region, CLIENT_NAME_COST_EXPLORER));
+    }
+
+    public GlueClient getGlueClient(ProviderContext providerContext)
+    {
+        return getClient(glueClients, providerContext,
+            (profile, region) -> buildClient(GlueClient.builder(), profile, region, CLIENT_NAME_GLUE));
+    }
+
+    public LakeFormationClient getLakeFormationClient(ProviderContext providerContext)
+    {
+        return getClient(lakeFormationClients, providerContext,
+            (profile, region) -> buildClient(LakeFormationClient.builder(), profile, region, CLIENT_NAME_LAKE_FORMATION));
+    }
+
+    public AthenaClient getAthenaClient(ProviderContext providerContext)
+    {
+        return getClient(athenaClients, providerContext,
+            (profile, region) -> buildClient(AthenaClient.builder(), profile, region, CLIENT_NAME_ATHENA));
+    }
+
+    public EmrClient getEmrClient(ProviderContext providerContext)
+    {
+        return getClient(emrClients, providerContext,
+            (profile, region) -> buildClient(EmrClient.builder(), profile, region, CLIENT_NAME_EMR));
+    }
+
+    public DataPipelineClient getDataPipelineClient(ProviderContext providerContext)
+    {
+        return getClient(dataPipelineClients, providerContext,
+            (profile, region) -> buildClient(DataPipelineClient.builder(), profile, region, CLIENT_NAME_DATA_PIPELINE));
+    }
+
+    public CloudFormationClient getCloudFormationClient(ProviderContext providerContext)
+    {
+        return getClient(cloudFormationClients, providerContext,
+            (profile, region) -> buildClient(CloudFormationClient.builder(), profile, region, CLIENT_NAME_CLOUDFORMATION));
+    }
+
+    public ServiceCatalogClient getServiceCatalogClient(ProviderContext providerContext)
+    {
+        return getClient(serviceCatalogClients, providerContext,
+            (profile, region) -> buildClient(ServiceCatalogClient.builder(), profile, region, CLIENT_NAME_SERVICE_CATALOG));
+    }
+
+    public BackupClient getBackupClient(ProviderContext providerContext)
+    {
+        return getClient(backupClients, providerContext,
+            (profile, region) -> buildClient(BackupClient.builder(), profile, region, CLIENT_NAME_BACKUP));
+    }
+
+    public LicenseManagerClient getLicenseManagerClient(ProviderContext providerContext)
+    {
+        return getClient(licenseManagerClients, providerContext,
+            (profile, region) -> buildClient(LicenseManagerClient.builder(), profile, region, CLIENT_NAME_LICENSE_MANAGER));
+    }
+
+    public ResourceGroupsClient getResourceGroupsClient(ProviderContext providerContext)
+    {
+        return getClient(resourceGroupsClients, providerContext,
+            (profile, region) -> buildClient(ResourceGroupsClient.builder(), profile, region, CLIENT_NAME_RESOURCE_GROUPS));
+    }
+
+    public ResourceGroupsTaggingApiClient getResourceGroupsTaggingApiClient(ProviderContext providerContext)
+    {
+        return getClient(resourceGroupsTaggingClients, providerContext,
+            (profile, region) -> buildClient(ResourceGroupsTaggingApiClient.builder(), profile, region, CLIENT_NAME_RESOURCE_GROUPS_TAGGING));
+    }
+
+    public SesClient getSesClient(ProviderContext providerContext)
+    {
+        return getClient(sesClients, providerContext,
+            (profile, region) -> buildClient(SesClient.builder(), profile, region, CLIENT_NAME_SES));
+    }
+
+    public SesV2Client getSesV2Client(ProviderContext providerContext)
+    {
+        return getClient(sesV2Clients, providerContext,
+            (profile, region) -> buildClient(SesV2Client.builder(), profile, region, CLIENT_NAME_SES_V2));
+    }
+
     // =========================================================================
     // Generic cache core
     // =========================================================================
@@ -496,7 +748,7 @@ public class AwsClientFactory
 
     public void shutdown()
     {
-        int clientTypeCount = 34;
+        int clientTypeCount = 60;
         ExecutorService executor = Executors.newFixedThreadPool(clientTypeCount);
 
         List<java.util.concurrent.Future<?>> futures = new ArrayList<>();
@@ -535,6 +787,34 @@ public class AwsClientFactory
         futures.add(executor.submit(() -> closeAll(guardDutyClients,       CLIENT_NAME_GUARDDUTY)));
         futures.add(executor.submit(() -> closeAll(securityHubClients,     CLIENT_NAME_SECURITYHUB)));
         futures.add(executor.submit(() -> closeAll(configClients,          CLIENT_NAME_CONFIG)));
+        futures.add(executor.submit(() -> closeAll(openSearchClients,      CLIENT_NAME_OPENSEARCH)));
+        futures.add(executor.submit(() -> closeAll(redshiftClients,        CLIENT_NAME_REDSHIFT)));
+        futures.add(executor.submit(() -> closeAll(elastiCacheClients,     CLIENT_NAME_ELASTICACHE)));
+        futures.add(executor.submit(() -> closeAll(neptuneClients,         CLIENT_NAME_NEPTUNE)));
+        futures.add(executor.submit(() -> closeAll(timestreamWriteClients, CLIENT_NAME_TIMESTREAM_WRITE)));
+        futures.add(executor.submit(() -> closeAll(kafkaClients,           CLIENT_NAME_MSK)));
+        futures.add(executor.submit(() -> closeAll(kinesisClients,          CLIENT_NAME_KINESIS)));
+        futures.add(executor.submit(() -> closeAll(firehoseClients,         CLIENT_NAME_FIREHOSE)));
+        futures.add(executor.submit(() -> closeAll(kinesisAnalyticsV2Clients, CLIENT_NAME_KINESIS_ANALYTICS_V2)));
+        futures.add(executor.submit(() -> closeAll(eventBridgeClients,      CLIENT_NAME_EVENTBRIDGE)));
+        futures.add(executor.submit(() -> closeAll(sfnClients,              CLIENT_NAME_SFN)));
+        futures.add(executor.submit(() -> closeAll(appConfigClients,        CLIENT_NAME_APPCONFIG)));
+        futures.add(executor.submit(() -> closeAll(accountClients,         CLIENT_NAME_ACCOUNT)));
+        futures.add(executor.submit(() -> closeAll(budgetsClients,         CLIENT_NAME_BUDGETS)));
+        futures.add(executor.submit(() -> closeAll(costExplorerClients,    CLIENT_NAME_COST_EXPLORER)));
+        futures.add(executor.submit(() -> closeAll(glueClients,            CLIENT_NAME_GLUE)));
+        futures.add(executor.submit(() -> closeAll(lakeFormationClients,   CLIENT_NAME_LAKE_FORMATION)));
+        futures.add(executor.submit(() -> closeAll(athenaClients,          CLIENT_NAME_ATHENA)));
+        futures.add(executor.submit(() -> closeAll(emrClients,             CLIENT_NAME_EMR)));
+        futures.add(executor.submit(() -> closeAll(dataPipelineClients,         CLIENT_NAME_DATA_PIPELINE)));
+        futures.add(executor.submit(() -> closeAll(cloudFormationClients,         CLIENT_NAME_CLOUDFORMATION)));
+        futures.add(executor.submit(() -> closeAll(serviceCatalogClients,         CLIENT_NAME_SERVICE_CATALOG)));
+        futures.add(executor.submit(() -> closeAll(backupClients,                 CLIENT_NAME_BACKUP)));
+        futures.add(executor.submit(() -> closeAll(licenseManagerClients,         CLIENT_NAME_LICENSE_MANAGER)));
+        futures.add(executor.submit(() -> closeAll(resourceGroupsClients,         CLIENT_NAME_RESOURCE_GROUPS)));
+        futures.add(executor.submit(() -> closeAll(resourceGroupsTaggingClients,  CLIENT_NAME_RESOURCE_GROUPS_TAGGING)));
+        futures.add(executor.submit(() -> closeAll(sesClients,                     CLIENT_NAME_SES)));
+        futures.add(executor.submit(() -> closeAll(sesV2Clients,                   CLIENT_NAME_SES_V2)));
 
         executor.shutdown();
 

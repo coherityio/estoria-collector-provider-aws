@@ -1,0 +1,154 @@
+{
+  "typesetId": "aws-nosql",
+  "description": "AWS NoSQL and data store entity types",
+  "version": "1.0.0",
+  "entityTypes": [
+    {
+      "entityType": "DynamoDbTable",
+      "displayName": "DynamoDB Table",
+      "description": "An Amazon DynamoDB table",
+      "category": "RESOURCE",
+      "tags": ["database", "dynamodb", "nosql", "aws"]
+    },
+    {
+      "entityType": "DynamoDbGlobalTable",
+      "displayName": "DynamoDB Global Table",
+      "description": "An Amazon DynamoDB global table replicated across multiple AWS regions",
+      "category": "RESOURCE",
+      "tags": ["database", "dynamodb", "nosql", "global", "aws"]
+    },
+    {
+      "entityType": "DynamoDbBackup",
+      "displayName": "DynamoDB Backup",
+      "description": "A backup of an Amazon DynamoDB table",
+      "category": "RESOURCE",
+      "tags": ["database", "dynamodb", "backup", "aws"]
+    },
+    {
+      "entityType": "DynamoDbStream",
+      "displayName": "DynamoDB Stream",
+      "description": "An Amazon DynamoDB table stream capturing item-level modifications",
+      "category": "RESOURCE",
+      "tags": ["database", "dynamodb", "stream", "aws"]
+    },
+    {
+      "entityType": "DynamoDbIndex",
+      "displayName": "DynamoDB Index",
+      "description": "A global secondary index (GSI) or local secondary index (LSI) on an Amazon DynamoDB table",
+      "category": "RESOURCE",
+      "tags": ["database", "dynamodb", "index", "aws"]
+    },
+    {
+      "entityType": "OpenSearchDomain",
+      "displayName": "OpenSearch Domain",
+      "description": "An Amazon OpenSearch Service (or legacy Elasticsearch Service) domain",
+      "category": "RESOURCE",
+      "tags": ["database", "opensearch", "elasticsearch", "search", "aws"]
+    },
+    {
+      "entityType": "OpenSearchVpcEndpoint",
+      "displayName": "OpenSearch VPC Endpoint",
+      "description": "A VPC endpoint for an Amazon OpenSearch Service domain",
+      "category": "RESOURCE",
+      "tags": ["database", "opensearch", "networking", "vpc", "aws"]
+    },
+    {
+      "entityType": "RedshiftCluster",
+      "displayName": "Redshift Cluster",
+      "description": "An Amazon Redshift data warehouse cluster",
+      "category": "RESOURCE",
+      "tags": ["database", "redshift", "datawarehouse", "aws"]
+    },
+    {
+      "entityType": "RedshiftSnapshot",
+      "displayName": "Redshift Snapshot",
+      "description": "A snapshot of an Amazon Redshift cluster",
+      "category": "RESOURCE",
+      "tags": ["database", "redshift", "snapshot", "aws"]
+    },
+    {
+      "entityType": "RedshiftSubnetGroup",
+      "displayName": "Redshift Subnet Group",
+      "description": "A subnet group for an Amazon Redshift cluster defining VPC subnets",
+      "category": "RESOURCE",
+      "tags": ["database", "redshift", "networking", "aws"]
+    },
+    {
+      "entityType": "RedshiftParameterGroup",
+      "displayName": "Redshift Parameter Group",
+      "description": "A parameter group for Amazon Redshift clusters",
+      "category": "RESOURCE",
+      "tags": ["database", "redshift", "configuration", "aws"]
+    },
+    {
+      "entityType": "ElastiCacheCluster",
+      "displayName": "ElastiCache Cluster",
+      "description": "An Amazon ElastiCache cluster (Redis or Memcached)",
+      "category": "RESOURCE",
+      "tags": ["database", "elasticache", "cache", "aws"]
+    },
+    {
+      "entityType": "ElastiCacheReplicationGroup",
+      "displayName": "ElastiCache Replication Group",
+      "description": "An Amazon ElastiCache Redis replication group with primary and replica nodes",
+      "category": "RESOURCE",
+      "tags": ["database", "elasticache", "cache", "redis", "aws"]
+    },
+    {
+      "entityType": "ElastiCacheSubnetGroup",
+      "displayName": "ElastiCache Subnet Group",
+      "description": "A subnet group for Amazon ElastiCache defining VPC subnets",
+      "category": "RESOURCE",
+      "tags": ["database", "elasticache", "networking", "aws"]
+    },
+    {
+      "entityType": "ElastiCacheParameterGroup",
+      "displayName": "ElastiCache Parameter Group",
+      "description": "A parameter group for Amazon ElastiCache clusters",
+      "category": "RESOURCE",
+      "tags": ["database", "elasticache", "configuration", "aws"]
+    },
+    {
+      "entityType": "NeptuneCluster",
+      "displayName": "Neptune Cluster",
+      "description": "An Amazon Neptune graph database cluster",
+      "category": "RESOURCE",
+      "tags": ["database", "neptune", "graph", "aws"]
+    },
+    {
+      "entityType": "NeptuneInstance",
+      "displayName": "Neptune Instance",
+      "description": "An Amazon Neptune graph database instance within a cluster",
+      "category": "RESOURCE",
+      "tags": ["database", "neptune", "graph", "aws"]
+    },
+    {
+      "entityType": "NeptuneSubnetGroup",
+      "displayName": "Neptune Subnet Group",
+      "description": "A subnet group for an Amazon Neptune cluster defining VPC subnets",
+      "category": "RESOURCE",
+      "tags": ["database", "neptune", "networking", "aws"]
+    },
+    {
+      "entityType": "TimestreamDatabase",
+      "displayName": "Timestream Database",
+      "description": "An Amazon Timestream database for time-series data",
+      "category": "RESOURCE",
+      "tags": ["database", "timestream", "timeseries", "aws"]
+    },
+    {
+      "entityType": "TimestreamTable",
+      "displayName": "Timestream Table",
+      "description": "An Amazon Timestream table within a Timestream database",
+      "category": "RESOURCE",
+      "tags": ["database", "timestream", "timeseries", "aws"]
+    },
+    {
+      "entityType": "KafkaMskCluster",
+      "displayName": "MSK Cluster",
+      "description": "An Amazon Managed Streaming for Apache Kafka (MSK) cluster",
+      "category": "RESOURCE",
+      "tags": ["kafka", "msk", "streaming", "messaging", "aws"]
+    }
+  ]
+}

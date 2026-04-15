@@ -1,0 +1,105 @@
+{
+  "typesetId": "aws-streaming",
+  "description": "AWS streaming, messaging, workflow, and configuration entity types",
+  "version": "1.0.0",
+  "entityTypes": [
+    {
+      "entityType": "KinesisStream",
+      "displayName": "Kinesis Data Stream",
+      "description": "An Amazon Kinesis Data Stream for real-time data ingestion and processing",
+      "category": "RESOURCE",
+      "tags": ["streaming", "kinesis", "aws"]
+    },
+    {
+      "entityType": "KinesisFirehose",
+      "displayName": "Kinesis Data Firehose",
+      "description": "An Amazon Kinesis Data Firehose delivery stream for loading streaming data into destinations",
+      "category": "RESOURCE",
+      "tags": ["streaming", "firehose", "kinesis", "aws"]
+    },
+    {
+      "entityType": "KinesisAnalyticsApp",
+      "displayName": "Kinesis Data Analytics Application",
+      "description": "An Amazon Kinesis Data Analytics (v2) application for real-time stream processing",
+      "category": "RESOURCE",
+      "tags": ["streaming", "kinesis", "analytics", "aws"]
+    },
+    {
+      "entityType": "SqsQueue",
+      "displayName": "SQS Queue",
+      "description": "An Amazon SQS queue (standard or FIFO) for message queuing",
+      "category": "RESOURCE",
+      "tags": ["streaming", "messaging", "sqs", "queue", "aws"]
+    },
+    {
+      "entityType": "SqsQueuePolicy",
+      "displayName": "SQS Queue Policy",
+      "description": "The resource-based policy and dead-letter queue (DLQ) configuration attached to an Amazon SQS queue",
+      "category": "RESOURCE",
+      "tags": ["streaming", "messaging", "sqs", "policy", "aws"]
+    },
+    {
+      "entityType": "SnsTopic",
+      "displayName": "SNS Topic",
+      "description": "An Amazon SNS topic for pub/sub messaging",
+      "category": "RESOURCE",
+      "tags": ["streaming", "messaging", "sns", "topic", "aws"]
+    },
+    {
+      "entityType": "SnsSubscription",
+      "displayName": "SNS Subscription",
+      "description": "An Amazon SNS subscription linking a topic to an endpoint",
+      "category": "RESOURCE",
+      "tags": ["streaming", "messaging", "sns", "subscription", "aws"]
+    },
+    {
+      "entityType": "EventBridgeBus",
+      "displayName": "EventBridge Event Bus",
+      "description": "An Amazon EventBridge event bus for routing events between services",
+      "category": "RESOURCE",
+      "tags": ["streaming", "eventbridge", "events", "aws"]
+    },
+    {
+      "entityType": "EventBridgeRule",
+      "displayName": "EventBridge Rule",
+      "description": "An Amazon EventBridge rule that routes events to one or more targets",
+      "category": "RESOURCE",
+      "tags": ["streaming", "eventbridge", "events", "rule", "aws"]
+    },
+    {
+      "entityType": "StepFunctionsStateMachine",
+      "displayName": "Step Functions State Machine",
+      "description": "An AWS Step Functions state machine defining a workflow",
+      "category": "RESOURCE",
+      "tags": ["streaming", "stepfunctions", "workflow", "aws"]
+    },
+    {
+      "entityType": "StepFunctionsExecution",
+      "displayName": "Step Functions Execution",
+      "description": "A summary of an AWS Step Functions state machine execution",
+      "category": "RESOURCE",
+      "tags": ["streaming", "stepfunctions", "execution", "workflow", "aws"]
+    },
+    {
+      "entityType": "AppConfigApplication",
+      "displayName": "AppConfig Application",
+      "description": "An AWS AppConfig application serving as a logical grouping for environments and configurations",
+      "category": "RESOURCE",
+      "tags": ["appconfig", "configuration", "aws"]
+    },
+    {
+      "entityType": "AppConfigEnvironment",
+      "displayName": "AppConfig Environment",
+      "description": "An AWS AppConfig environment (e.g., development, staging, production) within an application",
+      "category": "RESOURCE",
+      "tags": ["appconfig", "configuration", "environment", "aws"]
+    },
+    {
+      "entityType": "AppConfigConfigurationProfile",
+      "displayName": "AppConfig Configuration Profile",
+      "description": "An AWS AppConfig configuration profile defining a configuration source and validators",
+      "category": "RESOURCE",
+      "tags": ["appconfig", "configuration", "profile", "aws"]
+    }
+  ]
+}

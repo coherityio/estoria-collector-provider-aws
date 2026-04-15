@@ -1,0 +1,40 @@
+{
+  "typesetId": "aws-message",
+  "displayName": "AWS Messaging & Email",
+  "description": "Entity types for Amazon SES (Simple Email Service) resources including configuration sets, verified identities, receipt rule sets, and email templates.",
+  "version": "1.0.0",
+  "entityTypes": [
+    {
+      "entityType": "SesConfigurationSet",
+      "displayName": "SES Configuration Set",
+      "description": "An Amazon SES configuration set — a group of rules applied to sent emails for tracking, filtering, and event publishing.",
+      "category": "RESOURCE",
+      "containmentScope": "ACCOUNT_REGIONAL",
+      "tags": ["messaging", "ses", "email", "aws"]
+    },
+    {
+      "entityType": "SesIdentity",
+      "displayName": "SES Identity",
+      "description": "A verified Amazon SES identity — an email address or domain that has been verified for sending email.",
+      "category": "RESOURCE",
+      "containmentScope": "ACCOUNT_REGIONAL",
+      "tags": ["messaging", "ses", "email", "identity", "aws"]
+    },
+    {
+      "entityType": "SesReceiptRuleSet",
+      "displayName": "SES Receipt Rule Set",
+      "description": "An Amazon SES receipt rule set — an ordered collection of receipt rules that define how to handle incoming email for verified domains.",
+      "category": "RESOURCE",
+      "containmentScope": "ACCOUNT_REGIONAL",
+      "tags": ["messaging", "ses", "email", "receipt", "aws"]
+    },
+    {
+      "entityType": "SesTemplate",
+      "displayName": "SES Email Template",
+      "description": "An Amazon SES email template used for sending personalized bulk email with dynamic substitution variables.",
+      "category": "RESOURCE",
+      "containmentScope": "ACCOUNT_REGIONAL",
+      "tags": ["messaging", "ses", "email", "template", "aws"]
+    }
+  ]
+}
