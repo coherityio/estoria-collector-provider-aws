@@ -33,18 +33,21 @@ jobs:
         path: ~/.m2
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
         restore-keys: ${{ runner.os }}-m2
+
+    - name: Remove cached estoria-collector-spi snapshot
+      run: rm -rf ~/.m2/repository/io/coherity/estoria/estoria-collector-spi
         
     - name: Make Maven wrapper executable
       run: chmod +x ./mvnw
         
     - name: Run tests
-      run: ./mvnw -s .github/workflows/ci-settings.xml test
+      run: ./mvnw -U -s .github/workflows/ci-settings.xml test
       env:
         MAVEN_USERNAME: ${{ github.actor }}
         MAVEN_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
       
     - name: Build application
-      run: ./mvnw -s .github/workflows/ci-settings.xml clean package -DskipTests
+      run: ./mvnw -U -s .github/workflows/ci-settings.xml clean package -DskipTests
       env:
         MAVEN_USERNAME: ${{ github.actor }}
         MAVEN_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
@@ -82,6 +85,9 @@ jobs:
         path: ~/.m2
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
         restore-keys: ${{ runner.os }}-m2
+
+    - name: Remove cached estoria-collector-spi snapshot
+      run: rm -rf ~/.m2/repository/io/coherity/estoria/estoria-collector-spi
         
     - name: Make Maven wrapper executable
       run: chmod +x ./mvnw
@@ -93,7 +99,7 @@ jobs:
         path: target/
         
     - name: Publish JAR to GitHub Packages
-      run: ./mvnw -s .github/workflows/ci-settings.xml deploy -DskipTests
+      run: ./mvnw -U -s .github/workflows/ci-settings.xml deploy -DskipTests
       env:
         MAVEN_USERNAME: ${{ github.actor }}
         MAVEN_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
