@@ -43,7 +43,6 @@ public class OrganizationsOrganizationalUnitCollector extends AbstractAwsContext
     public static final String ENTITY_TYPE = "OrganizationsOrganizationalUnit";
     private static final int PAGE_SIZE = 20;
 
-    private OrganizationsClient organizationsClient;
 
     public OrganizationsOrganizationalUnitCollector()
     {
@@ -69,10 +68,7 @@ public class OrganizationsOrganizationalUnitCollector extends AbstractAwsContext
     {
         log.debug("OrganizationsOrganizationalUnitCollector.collect called");
 
-        if (this.organizationsClient == null)
-        {
-            this.organizationsClient = AwsClientFactory.getInstance().getOrganizationsClient(providerContext);
-        }
+        OrganizationsClient organizationsClient = AwsClientFactory.getInstance().getOrganizationsClient(providerContext);
 
         try
         {
@@ -83,7 +79,7 @@ public class OrganizationsOrganizationalUnitCollector extends AbstractAwsContext
             String rootNextToken = null;
             do
             {
-                ListRootsResponse rootResponse = this.organizationsClient.listRoots(
+                ListRootsResponse rootResponse = organizationsClient.listRoots(
                     ListRootsRequest.builder()
                         .maxResults(PAGE_SIZE)
                         .nextToken(rootNextToken)
@@ -105,7 +101,7 @@ public class OrganizationsOrganizationalUnitCollector extends AbstractAwsContext
                 do
                 {
                     ListOrganizationalUnitsForParentResponse ouResponse =
-                        this.organizationsClient.listOrganizationalUnitsForParent(
+                        organizationsClient.listOrganizationalUnitsForParent(
                             ListOrganizationalUnitsForParentRequest.builder()
                                 .parentId(parentId)
                                 .maxResults(PAGE_SIZE)

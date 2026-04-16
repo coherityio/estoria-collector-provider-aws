@@ -41,7 +41,6 @@ public class EbsVolumeCollector extends AbstractAwsContextAwareCollector
 {
     public static final String ENTITY_TYPE = "EbsVolume";
 
-    private Ec2Client ec2Client;
 
     public EbsVolumeCollector()
     {
@@ -76,10 +75,7 @@ public class EbsVolumeCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("EbsVolumeCollector.collect called");
 
-        if (this.ec2Client == null)
-        {
-            this.ec2Client = AwsClientFactory.getInstance().getEc2Client(providerContext);
-        }
+        Ec2Client ec2Client = AwsClientFactory.getInstance().getEc2Client(providerContext);
 
         try
         {
@@ -99,7 +95,7 @@ public class EbsVolumeCollector extends AbstractAwsContextAwareCollector
                 requestBuilder.nextToken(token);
             });
 
-            DescribeVolumesResponse response = this.ec2Client.describeVolumes(requestBuilder.build());
+            DescribeVolumesResponse response = ec2Client.describeVolumes(requestBuilder.build());
             List<Volume> volumes = response.volumes();
             String nextToken = response.nextToken();
 

@@ -45,7 +45,6 @@ public class ConfigRecorderCollector extends AbstractAwsContextAwareCollector
 {
     public static final String ENTITY_TYPE = "ConfigRecorder";
 
-    private ConfigClient configClient;
 
     public ConfigRecorderCollector()
     {
@@ -71,21 +70,18 @@ public class ConfigRecorderCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("ConfigRecorderCollector.collect called");
 
-        if (this.configClient == null)
-        {
-            this.configClient = AwsClientFactory.getInstance().getConfigClient(providerContext);
-        }
+        ConfigClient configClient = AwsClientFactory.getInstance().getConfigClient(providerContext);
 
         try
         {
             List<CloudEntity> entities = new ArrayList<>();
 
             // Describe all configuration recorders
-            DescribeConfigurationRecordersResponse recordersResponse = this.configClient.describeConfigurationRecorders(
+            DescribeConfigurationRecordersResponse recordersResponse = configClient.describeConfigurationRecorders(
                 DescribeConfigurationRecordersRequest.builder().build());
 
             // Get status for all recorders
-            DescribeConfigurationRecorderStatusResponse statusResponse = this.configClient.describeConfigurationRecorderStatus(
+            DescribeConfigurationRecorderStatusResponse statusResponse = configClient.describeConfigurationRecorderStatus(
                 DescribeConfigurationRecorderStatusRequest.builder().build());
 
             Map<String, ConfigurationRecorderStatus> statusMap = new HashMap<>();
@@ -133,7 +129,7 @@ public class ConfigRecorderCollector extends AbstractAwsContextAwareCollector
             }
 
             // Describe delivery channels
-            DescribeDeliveryChannelsResponse channelsResponse = this.configClient.describeDeliveryChannels(
+            DescribeDeliveryChannelsResponse channelsResponse = configClient.describeDeliveryChannels(
                 DescribeDeliveryChannelsRequest.builder().build());
 
             for (DeliveryChannel channel : channelsResponse.deliveryChannels())

@@ -45,7 +45,6 @@ public class EventBridgeRuleCollector extends AbstractAwsContextAwareCollector
 {
     public static final String ENTITY_TYPE = "EventBridgeRule";
 
-    private EventBridgeClient eventBridgeClient;
 
     public EventBridgeRuleCollector()
     {
@@ -71,10 +70,7 @@ public class EventBridgeRuleCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("EventBridgeRuleCollector.collectEntities called");
 
-        if (this.eventBridgeClient == null)
-        {
-            this.eventBridgeClient = AwsClientFactory.getInstance().getEventBridgeClient(providerContext);
-        }
+        EventBridgeClient eventBridgeClient = AwsClientFactory.getInstance().getEventBridgeClient(providerContext);
 
         try
         {
@@ -88,7 +84,7 @@ public class EventBridgeRuleCollector extends AbstractAwsContextAwareCollector
             {
                 ListEventBusesRequest.Builder busReq = ListEventBusesRequest.builder();
                 if (busesCursor != null) busReq.nextToken(busesCursor);
-                ListEventBusesResponse busRes = this.eventBridgeClient.listEventBuses(busReq.build());
+                ListEventBusesResponse busRes = eventBridgeClient.listEventBuses(busReq.build());
                 if (busRes.eventBuses() != null)
                 {
                     busRes.eventBuses().forEach(b -> { if (b.name() != null) busNames.add(b.name()); });
@@ -108,7 +104,7 @@ public class EventBridgeRuleCollector extends AbstractAwsContextAwareCollector
                     ListRulesRequest.Builder rulesReq = ListRulesRequest.builder().eventBusName(busName);
                     if (rulesCursor != null) rulesReq.nextToken(rulesCursor);
 
-                    ListRulesResponse rulesRes = this.eventBridgeClient.listRules(rulesReq.build());
+                    ListRulesResponse rulesRes = eventBridgeClient.listRules(rulesReq.build());
                     List<Rule> rules = rulesRes.rules();
 
                     if (rules != null)
@@ -134,7 +130,7 @@ public class EventBridgeRuleCollector extends AbstractAwsContextAwareCollector
                                     if (targetsCursor != null) targetReq.nextToken(targetsCursor);
 
                                     ListTargetsByRuleResponse targetsRes =
-                                        this.eventBridgeClient.listTargetsByRule(targetReq.build());
+                                        eventBridgeClient.listTargetsByRule(targetReq.build());
 
                                     if (targetsRes.targets() != null)
                                     {

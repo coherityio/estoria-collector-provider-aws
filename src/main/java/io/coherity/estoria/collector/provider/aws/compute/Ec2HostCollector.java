@@ -41,7 +41,6 @@ public class Ec2HostCollector extends AbstractAwsContextAwareCollector
 {
     public static final String ENTITY_TYPE = "Ec2Host";
 
-    private Ec2Client ec2Client;
 
     public Ec2HostCollector()
     {
@@ -76,10 +75,7 @@ public class Ec2HostCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("Ec2HostCollector.collect called");
 
-        if (this.ec2Client == null)
-        {
-            this.ec2Client = AwsClientFactory.getInstance().getEc2Client(providerContext);
-        }
+        Ec2Client ec2Client = AwsClientFactory.getInstance().getEc2Client(providerContext);
 
         try
         {
@@ -99,7 +95,7 @@ public class Ec2HostCollector extends AbstractAwsContextAwareCollector
                 requestBuilder.nextToken(token);
             });
 
-            DescribeHostsResponse response = this.ec2Client.describeHosts(requestBuilder.build());
+            DescribeHostsResponse response = ec2Client.describeHosts(requestBuilder.build());
             List<Host> hosts = response.hosts();
             String nextToken = response.nextToken();
 

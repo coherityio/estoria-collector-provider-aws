@@ -43,7 +43,6 @@ public class CustomerGatewayCollector extends AbstractAwsContextAwareCollector
 {
 	public static final String ENTITY_TYPE = "CustomerGateway";
 
-	private Ec2Client ec2Client;
 
 	public CustomerGatewayCollector()
 	{
@@ -74,10 +73,7 @@ public class CustomerGatewayCollector extends AbstractAwsContextAwareCollector
 	{
 		log.debug("CustomerGatewayCollector.collectEntities called with request: {}", collectorRequestParams);
 
-		if (this.ec2Client == null)
-		{
-			this.ec2Client = AwsClientFactory.getInstance().getEc2Client(providerContext);
-		}
+		Ec2Client ec2Client = AwsClientFactory.getInstance().getEc2Client(providerContext);
 
 		try
 		{
@@ -88,7 +84,7 @@ public class CustomerGatewayCollector extends AbstractAwsContextAwareCollector
 			// DescribeCustomerGateways does not support pagination
 			DescribeCustomerGatewaysRequest describeRequest = DescribeCustomerGatewaysRequest.builder().build();
 			log.debug("CustomerGatewayCollector.collect calling DescribeCustomerGateways");
-			DescribeCustomerGatewaysResponse response = this.ec2Client.describeCustomerGateways(describeRequest);
+			DescribeCustomerGatewaysResponse response = ec2Client.describeCustomerGateways(describeRequest);
 			List<CustomerGateway> customerGateways = response.customerGateways();
 
 			log.debug("CustomerGatewayCollector.collect received {} customer gateways",

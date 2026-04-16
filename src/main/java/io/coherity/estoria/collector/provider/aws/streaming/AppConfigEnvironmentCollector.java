@@ -42,7 +42,6 @@ public class AppConfigEnvironmentCollector extends AbstractAwsContextAwareCollec
 {
     public static final String ENTITY_TYPE = "AppConfigEnvironment";
 
-    private AppConfigClient appConfigClient;
 
     public AppConfigEnvironmentCollector()
     {
@@ -68,10 +67,7 @@ public class AppConfigEnvironmentCollector extends AbstractAwsContextAwareCollec
     {
         log.debug("AppConfigEnvironmentCollector.collectEntities called");
 
-        if (this.appConfigClient == null)
-        {
-            this.appConfigClient = AwsClientFactory.getInstance().getAppConfigClient(providerContext);
-        }
+        AppConfigClient appConfigClient = AwsClientFactory.getInstance().getAppConfigClient(providerContext);
 
         try
         {
@@ -85,7 +81,7 @@ public class AppConfigEnvironmentCollector extends AbstractAwsContextAwareCollec
             {
                 ListApplicationsRequest.Builder appReq = ListApplicationsRequest.builder().maxResults(50);
                 if (appCursor != null) appReq.nextToken(appCursor);
-                ListApplicationsResponse appRes = this.appConfigClient.listApplications(appReq.build());
+                ListApplicationsResponse appRes = appConfigClient.listApplications(appReq.build());
                 if (appRes.items() != null)
                 {
                     appRes.items().forEach(a -> { if (a.id() != null) applicationIds.add(a.id()); });
@@ -107,7 +103,7 @@ public class AppConfigEnvironmentCollector extends AbstractAwsContextAwareCollec
                         .maxResults(50);
                     if (envCursor != null) envReq.nextToken(envCursor);
 
-                    ListEnvironmentsResponse envRes = this.appConfigClient.listEnvironments(envReq.build());
+                    ListEnvironmentsResponse envRes = appConfigClient.listEnvironments(envReq.build());
                     List<Environment> environments = envRes.items();
 
                     if (environments != null)

@@ -39,7 +39,6 @@ public class ClassicLoadBalancerCollector extends AbstractAwsContextAwareCollect
 {
     public static final String ENTITY_TYPE = "ClassicLoadBalancer";
 
-    private ElasticLoadBalancingClient elbClient;
 
     public ClassicLoadBalancerCollector()
     {
@@ -74,10 +73,7 @@ public class ClassicLoadBalancerCollector extends AbstractAwsContextAwareCollect
     {
         log.debug("ClassicLoadBalancerCollector.collect called");
 
-        if (this.elbClient == null)
-        {
-            this.elbClient = AwsClientFactory.getInstance().getElbClient(providerContext);
-        }
+        ElasticLoadBalancingClient elbClient = AwsClientFactory.getInstance().getElbClient(providerContext);
 
         try
         {
@@ -97,7 +93,7 @@ public class ClassicLoadBalancerCollector extends AbstractAwsContextAwareCollect
                 requestBuilder.marker(token);
             });
 
-            DescribeLoadBalancersResponse response = this.elbClient.describeLoadBalancers(requestBuilder.build());
+            DescribeLoadBalancersResponse response = elbClient.describeLoadBalancers(requestBuilder.build());
             List<LoadBalancerDescription> lbs = response.loadBalancerDescriptions();
             String nextMarker = response.nextMarker();
 

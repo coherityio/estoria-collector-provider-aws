@@ -38,7 +38,6 @@ public class AutoScalingPolicyCollector extends AbstractAwsContextAwareCollector
 {
     public static final String ENTITY_TYPE = "AutoScalingPolicy";
 
-    private AutoScalingClient autoScalingClient;
 
     public AutoScalingPolicyCollector()
     {
@@ -73,10 +72,7 @@ public class AutoScalingPolicyCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("AutoScalingPolicyCollector.collect called");
 
-        if (this.autoScalingClient == null)
-        {
-            this.autoScalingClient = AwsClientFactory.getInstance().getAutoScalingClient(providerContext);
-        }
+        AutoScalingClient autoScalingClient = AwsClientFactory.getInstance().getAutoScalingClient(providerContext);
 
         try
         {
@@ -93,7 +89,7 @@ public class AutoScalingPolicyCollector extends AbstractAwsContextAwareCollector
                 requestBuilder.nextToken(token);
             });
 
-            DescribePoliciesResponse response = this.autoScalingClient.describePolicies(requestBuilder.build());
+            DescribePoliciesResponse response = autoScalingClient.describePolicies(requestBuilder.build());
             List<ScalingPolicy> policies = response.scalingPolicies();
             String nextToken = response.nextToken();
 

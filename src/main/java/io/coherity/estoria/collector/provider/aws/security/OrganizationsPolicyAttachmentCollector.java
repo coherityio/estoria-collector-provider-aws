@@ -44,7 +44,6 @@ public class OrganizationsPolicyAttachmentCollector extends AbstractAwsContextAw
     public static final String ENTITY_TYPE = "OrganizationsPolicyAttachment";
     private static final int PAGE_SIZE = 20;
 
-    private OrganizationsClient organizationsClient;
 
     public OrganizationsPolicyAttachmentCollector()
     {
@@ -70,10 +69,7 @@ public class OrganizationsPolicyAttachmentCollector extends AbstractAwsContextAw
     {
         log.debug("OrganizationsPolicyAttachmentCollector.collect called");
 
-        if (this.organizationsClient == null)
-        {
-            this.organizationsClient = AwsClientFactory.getInstance().getOrganizationsClient(providerContext);
-        }
+        OrganizationsClient organizationsClient = AwsClientFactory.getInstance().getOrganizationsClient(providerContext);
 
         try
         {
@@ -94,7 +90,7 @@ public class OrganizationsPolicyAttachmentCollector extends AbstractAwsContextAw
                 {
                     try
                     {
-                        ListPoliciesResponse listResponse = this.organizationsClient.listPolicies(
+                        ListPoliciesResponse listResponse = organizationsClient.listPolicies(
                             ListPoliciesRequest.builder()
                                 .filter(policyType)
                                 .maxResults(PAGE_SIZE)
@@ -122,7 +118,7 @@ public class OrganizationsPolicyAttachmentCollector extends AbstractAwsContextAw
                 String targetsNextToken = null;
                 do
                 {
-                    ListTargetsForPolicyResponse targetsResponse = this.organizationsClient.listTargetsForPolicy(
+                    ListTargetsForPolicyResponse targetsResponse = organizationsClient.listTargetsForPolicy(
                         ListTargetsForPolicyRequest.builder()
                             .policyId(policy.id())
                             .maxResults(PAGE_SIZE)

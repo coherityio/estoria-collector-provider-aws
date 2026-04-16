@@ -40,7 +40,6 @@ public class RedshiftSubnetGroupCollector extends AbstractAwsContextAwareCollect
 {
     public static final String ENTITY_TYPE = "RedshiftSubnetGroup";
 
-    private RedshiftClient redshiftClient;
 
     public RedshiftSubnetGroupCollector()
     {
@@ -66,10 +65,7 @@ public class RedshiftSubnetGroupCollector extends AbstractAwsContextAwareCollect
     {
         log.debug("RedshiftSubnetGroupCollector.collectEntities called");
 
-        if (this.redshiftClient == null)
-        {
-            this.redshiftClient = AwsClientFactory.getInstance().getRedshiftClient(providerContext);
-        }
+        RedshiftClient redshiftClient = AwsClientFactory.getInstance().getRedshiftClient(providerContext);
 
         try
         {
@@ -88,7 +84,7 @@ public class RedshiftSubnetGroupCollector extends AbstractAwsContextAwareCollect
             });
 
             DescribeClusterSubnetGroupsResponse response =
-                this.redshiftClient.describeClusterSubnetGroups(requestBuilder.build());
+                redshiftClient.describeClusterSubnetGroups(requestBuilder.build());
             List<ClusterSubnetGroup> subnetGroups = response.clusterSubnetGroups();
             String nextMarker = response.marker();
 

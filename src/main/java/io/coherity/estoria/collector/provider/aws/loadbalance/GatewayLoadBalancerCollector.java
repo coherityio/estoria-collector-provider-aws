@@ -41,7 +41,6 @@ public class GatewayLoadBalancerCollector extends AbstractAwsContextAwareCollect
 {
     public static final String ENTITY_TYPE = "GatewayLoadBalancer";
 
-    private ElasticLoadBalancingV2Client elbV2Client;
 
     public GatewayLoadBalancerCollector()
     {
@@ -76,10 +75,7 @@ public class GatewayLoadBalancerCollector extends AbstractAwsContextAwareCollect
     {
         log.debug("GatewayLoadBalancerCollector.collect called");
 
-        if (this.elbV2Client == null)
-        {
-            this.elbV2Client = AwsClientFactory.getInstance().getElbV2Client(providerContext);
-        }
+        ElasticLoadBalancingV2Client elbV2Client = AwsClientFactory.getInstance().getElbV2Client(providerContext);
 
         try
         {
@@ -96,7 +92,7 @@ public class GatewayLoadBalancerCollector extends AbstractAwsContextAwareCollect
                 requestBuilder.marker(token);
             });
 
-            DescribeLoadBalancersResponse response = this.elbV2Client.describeLoadBalancers(requestBuilder.build());
+            DescribeLoadBalancersResponse response = elbV2Client.describeLoadBalancers(requestBuilder.build());
             String nextMarker = response.nextMarker();
 
             List<LoadBalancer> lbs = response.loadBalancers().stream()

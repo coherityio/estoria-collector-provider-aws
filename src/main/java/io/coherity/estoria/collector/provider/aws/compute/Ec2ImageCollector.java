@@ -41,7 +41,6 @@ public class Ec2ImageCollector extends AbstractAwsContextAwareCollector
 {
     public static final String ENTITY_TYPE = "Ec2Image";
 
-    private Ec2Client ec2Client;
 
     public Ec2ImageCollector()
     {
@@ -76,10 +75,7 @@ public class Ec2ImageCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("Ec2ImageCollector.collect called");
 
-        if (this.ec2Client == null)
-        {
-            this.ec2Client = AwsClientFactory.getInstance().getEc2Client(providerContext);
-        }
+        Ec2Client ec2Client = AwsClientFactory.getInstance().getEc2Client(providerContext);
 
         try
         {
@@ -101,7 +97,7 @@ public class Ec2ImageCollector extends AbstractAwsContextAwareCollector
                 requestBuilder.maxResults(pageSize);
             }
 
-            DescribeImagesResponse response = this.ec2Client.describeImages(requestBuilder.build());
+            DescribeImagesResponse response = ec2Client.describeImages(requestBuilder.build());
             List<Image> images = response.images();
             String nextToken = response.nextToken();
 

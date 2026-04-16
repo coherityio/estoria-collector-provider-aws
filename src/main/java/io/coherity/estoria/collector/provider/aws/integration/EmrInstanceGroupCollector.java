@@ -43,7 +43,6 @@ public class EmrInstanceGroupCollector extends AbstractAwsContextAwareCollector
 {
     public static final String ENTITY_TYPE = "EmrInstanceGroup";
 
-    private EmrClient emrClient;
 
     public EmrInstanceGroupCollector()
     {
@@ -69,10 +68,7 @@ public class EmrInstanceGroupCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("EmrInstanceGroupCollector.collectEntities called");
 
-        if (this.emrClient == null)
-        {
-            this.emrClient = AwsClientFactory.getInstance().getEmrClient(providerContext);
-        }
+        EmrClient emrClient = AwsClientFactory.getInstance().getEmrClient(providerContext);
 
         try
         {
@@ -92,7 +88,7 @@ public class EmrInstanceGroupCollector extends AbstractAwsContextAwareCollector
                         ClusterState.WAITING,
                         ClusterState.TERMINATING);
                 if (clusterMarker != null) req.marker(clusterMarker);
-                ListClustersResponse resp = this.emrClient.listClusters(req.build());
+                ListClustersResponse resp = emrClient.listClusters(req.build());
                 if (resp.clusters() != null) allClusters.addAll(resp.clusters());
                 clusterMarker = resp.marker();
             }
@@ -120,7 +116,7 @@ public class EmrInstanceGroupCollector extends AbstractAwsContextAwareCollector
                         .clusterId(clusterId);
                     if (igMarker != null) igReq.marker(igMarker);
 
-                    ListInstanceGroupsResponse igResp = this.emrClient.listInstanceGroups(igReq.build());
+                    ListInstanceGroupsResponse igResp = emrClient.listInstanceGroups(igReq.build());
                     igMarker = igResp.marker();
 
                     List<InstanceGroup> groups = igResp.instanceGroups();

@@ -42,7 +42,6 @@ public class SecurityGroupCollector extends AbstractAwsContextAwareCollector
 {
 	public static final String ENTITY_TYPE = "SecurityGroup";
 
-	private Ec2Client ec2Client;
 
 	public SecurityGroupCollector()
 	{
@@ -73,10 +72,7 @@ public class SecurityGroupCollector extends AbstractAwsContextAwareCollector
 	{
 		log.debug("SecurityGroupCollector.collectEntities called with request: {}", collectorRequestParams);
 
-		if (this.ec2Client == null)
-		{
-			this.ec2Client = AwsClientFactory.getInstance().getEc2Client(providerContext);
-		}
+		Ec2Client ec2Client = AwsClientFactory.getInstance().getEc2Client(providerContext);
 
 		try
 		{
@@ -100,7 +96,7 @@ public class SecurityGroupCollector extends AbstractAwsContextAwareCollector
 			DescribeSecurityGroupsRequest describeRequest = requestBuilder.build();
 			log.debug("SecurityGroupCollector.collect calling DescribeSecurityGroups with maxResults={} nextToken={}",
 				describeRequest.maxResults(), describeRequest.nextToken());
-			DescribeSecurityGroupsResponse response = this.ec2Client.describeSecurityGroups(describeRequest);
+			DescribeSecurityGroupsResponse response = ec2Client.describeSecurityGroups(describeRequest);
 			List<SecurityGroup> securityGroups = response.securityGroups();
 			String nextToken = response.nextToken();
 

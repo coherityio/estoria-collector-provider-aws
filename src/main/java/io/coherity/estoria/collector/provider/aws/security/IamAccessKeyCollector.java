@@ -43,7 +43,6 @@ public class IamAccessKeyCollector extends AbstractAwsContextAwareCollector
 {
     public static final String ENTITY_TYPE = "IamAccessKey";
 
-    private IamClient iamClient;
 
     public IamAccessKeyCollector()
     {
@@ -69,10 +68,7 @@ public class IamAccessKeyCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("IamAccessKeyCollector.collect called — full scan across all users");
 
-        if (this.iamClient == null)
-        {
-            this.iamClient = AwsClientFactory.getInstance().getIamClient(providerContext);
-        }
+        IamClient iamClient = AwsClientFactory.getInstance().getIamClient(providerContext);
 
         try
         {
@@ -83,7 +79,7 @@ public class IamAccessKeyCollector extends AbstractAwsContextAwareCollector
             {
                 ListUsersRequest.Builder req = ListUsersRequest.builder().maxItems(100);
                 if (userMarker != null) req.marker(userMarker);
-                var userResponse = this.iamClient.listUsers(req.build());
+                var userResponse = iamClient.listUsers(req.build());
                 allUsers.addAll(userResponse.users());
                 userMarker = userResponse.isTruncated() ? userResponse.marker() : null;
             } while (userMarker != null);
@@ -100,7 +96,7 @@ public class IamAccessKeyCollector extends AbstractAwsContextAwareCollector
                     ListAccessKeysRequest.Builder req = ListAccessKeysRequest.builder()
                         .userName(userName).maxItems(100);
                     if (keyMarker != null) req.marker(keyMarker);
-                    ListAccessKeysResponse keyResponse = this.iamClient.listAccessKeys(req.build());
+                    ListAccessKeysResponse keyResponse = iamClient.listAccessKeys(req.build());
 
                     for (AccessKeyMetadata key : keyResponse.accessKeyMetadata())
                     {
@@ -110,7 +106,7 @@ public class IamAccessKeyCollector extends AbstractAwsContextAwareCollector
                         String lastUsedDate = null;
                         try
                         {
-                            GetAccessKeyLastUsedResponse lastUsed = this.iamClient.getAccessKeyLastUsed(
+                            GetAccessKeyLastUsedResponse lastUsed = iamClient.getAccessKeyLastUsed(
                                 GetAccessKeyLastUsedRequest.builder().accessKeyId(keyId).build());
                             if (lastUsed.accessKeyLastUsed() != null)
                             {

@@ -38,7 +38,6 @@ public class CloudFrontOriginAccessIdentityCollector extends AbstractAwsContextA
 {
     public static final String ENTITY_TYPE = "CloudFrontOriginAccessIdentity";
 
-    private CloudFrontClient cloudFrontClient;
 
     public CloudFrontOriginAccessIdentityCollector()
     {
@@ -64,10 +63,7 @@ public class CloudFrontOriginAccessIdentityCollector extends AbstractAwsContextA
     {
         log.debug("CloudFrontOriginAccessIdentityCollector.collect called");
 
-        if (this.cloudFrontClient == null)
-        {
-            this.cloudFrontClient = AwsClientFactory.getInstance().getCloudFrontClient(providerContext);
-        }
+        CloudFrontClient cloudFrontClient = AwsClientFactory.getInstance().getCloudFrontClient(providerContext);
 
         try
         {
@@ -86,7 +82,7 @@ public class CloudFrontOriginAccessIdentityCollector extends AbstractAwsContextA
             });
 
             ListCloudFrontOriginAccessIdentitiesResponse response =
-                this.cloudFrontClient.listCloudFrontOriginAccessIdentities(requestBuilder.build());
+                cloudFrontClient.listCloudFrontOriginAccessIdentities(requestBuilder.build());
             List<CloudFrontOriginAccessIdentitySummary> oais = response.cloudFrontOriginAccessIdentityList() != null
                 ? response.cloudFrontOriginAccessIdentityList().items() : null;
             String nextMarker = response.cloudFrontOriginAccessIdentityList() != null

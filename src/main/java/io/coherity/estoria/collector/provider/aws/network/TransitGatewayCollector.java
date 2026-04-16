@@ -42,7 +42,6 @@ public class TransitGatewayCollector extends AbstractAwsContextAwareCollector
 {
 	public static final String ENTITY_TYPE = "TransitGateway";
 
-	private Ec2Client ec2Client;
 
 	public TransitGatewayCollector()
 	{
@@ -73,10 +72,7 @@ public class TransitGatewayCollector extends AbstractAwsContextAwareCollector
 	{
 		log.debug("TransitGatewayCollector.collectEntities called with request: {}", collectorRequestParams);
 
-		if (this.ec2Client == null)
-		{
-			this.ec2Client = AwsClientFactory.getInstance().getEc2Client(providerContext);
-		}
+		Ec2Client ec2Client = AwsClientFactory.getInstance().getEc2Client(providerContext);
 
 		try
 		{
@@ -100,7 +96,7 @@ public class TransitGatewayCollector extends AbstractAwsContextAwareCollector
 			DescribeTransitGatewaysRequest describeRequest = requestBuilder.build();
 			log.debug("TransitGatewayCollector.collect calling DescribeTransitGateways with maxResults={} nextToken={}",
 				describeRequest.maxResults(), describeRequest.nextToken());
-			DescribeTransitGatewaysResponse response = this.ec2Client.describeTransitGateways(describeRequest);
+			DescribeTransitGatewaysResponse response = ec2Client.describeTransitGateways(describeRequest);
 			List<TransitGateway> tgws = response.transitGateways();
 			String nextToken = response.nextToken();
 

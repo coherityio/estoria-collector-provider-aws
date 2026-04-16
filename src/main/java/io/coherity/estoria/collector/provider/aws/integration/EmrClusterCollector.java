@@ -40,7 +40,6 @@ public class EmrClusterCollector extends AbstractAwsContextAwareCollector
 {
     public static final String ENTITY_TYPE = "EmrCluster";
 
-    private EmrClient emrClient;
 
     public EmrClusterCollector()
     {
@@ -66,10 +65,7 @@ public class EmrClusterCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("EmrClusterCollector.collectEntities called");
 
-        if (this.emrClient == null)
-        {
-            this.emrClient = AwsClientFactory.getInstance().getEmrClient(providerContext);
-        }
+        EmrClient emrClient = AwsClientFactory.getInstance().getEmrClient(providerContext);
 
         try
         {
@@ -91,7 +87,7 @@ public class EmrClusterCollector extends AbstractAwsContextAwareCollector
                 requestBuilder.marker(token);
             });
 
-            ListClustersResponse response = this.emrClient.listClusters(requestBuilder.build());
+            ListClustersResponse response = emrClient.listClusters(requestBuilder.build());
             List<ClusterSummary> clusters  = response.clusters();
             String               marker    = response.marker();
 

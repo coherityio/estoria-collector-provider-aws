@@ -39,7 +39,6 @@ public class SnsTopicCollector extends AbstractAwsContextAwareCollector
 {
     public static final String ENTITY_TYPE = "SnsTopic";
 
-    private SnsClient snsClient;
 
     public SnsTopicCollector()
     {
@@ -65,10 +64,7 @@ public class SnsTopicCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("SnsTopicCollector.collectEntities called");
 
-        if (this.snsClient == null)
-        {
-            this.snsClient = AwsClientFactory.getInstance().getSnsClient(providerContext);
-        }
+        SnsClient snsClient = AwsClientFactory.getInstance().getSnsClient(providerContext);
 
         try
         {
@@ -82,7 +78,7 @@ public class SnsTopicCollector extends AbstractAwsContextAwareCollector
                 requestBuilder.nextToken(token);
             });
 
-            ListTopicsResponse response = this.snsClient.listTopics(requestBuilder.build());
+            ListTopicsResponse response = snsClient.listTopics(requestBuilder.build());
             List<Topic> topics    = response.topics();
             String      nextToken = response.nextToken();
 
@@ -104,7 +100,7 @@ public class SnsTopicCollector extends AbstractAwsContextAwareCollector
                     Map<String, String> topicAttrs = new HashMap<>();
                     try
                     {
-                        topicAttrs = this.snsClient
+                        topicAttrs = snsClient
                             .getTopicAttributes(GetTopicAttributesRequest.builder()
                                 .topicArn(topicArn)
                                 .build())

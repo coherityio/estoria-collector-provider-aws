@@ -41,7 +41,6 @@ public class CostCategoryCollector extends AbstractAwsContextAwareCollector
 {
     public static final String ENTITY_TYPE = "CostCategory";
 
-    private CostExplorerClient costExplorerClient;
 
     public CostCategoryCollector()
     {
@@ -67,10 +66,7 @@ public class CostCategoryCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("CostCategoryCollector.collectEntities called");
 
-        if (this.costExplorerClient == null)
-        {
-            this.costExplorerClient = AwsClientFactory.getInstance().getCostExplorerClient(providerContext);
-        }
+        CostExplorerClient costExplorerClient = AwsClientFactory.getInstance().getCostExplorerClient(providerContext);
 
         try
         {
@@ -89,7 +85,7 @@ public class CostCategoryCollector extends AbstractAwsContextAwareCollector
             });
 
             ListCostCategoryDefinitionsResponse response =
-                this.costExplorerClient.listCostCategoryDefinitions(requestBuilder.build());
+                costExplorerClient.listCostCategoryDefinitions(requestBuilder.build());
 
             List<CostCategoryReference> categories =
             	    response.costCategoryReferences() == null ? List.of()

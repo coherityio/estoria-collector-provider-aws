@@ -38,7 +38,6 @@ public class OpenSearchVpcEndpointCollector extends AbstractAwsContextAwareColle
 {
     public static final String ENTITY_TYPE = "OpenSearchVpcEndpoint";
 
-    private OpenSearchClient openSearchClient;
 
     public OpenSearchVpcEndpointCollector()
     {
@@ -64,10 +63,7 @@ public class OpenSearchVpcEndpointCollector extends AbstractAwsContextAwareColle
     {
         log.debug("OpenSearchVpcEndpointCollector.collectEntities called");
 
-        if (this.openSearchClient == null)
-        {
-            this.openSearchClient = AwsClientFactory.getInstance().getOpenSearchClient(providerContext);
-        }
+        OpenSearchClient openSearchClient = AwsClientFactory.getInstance().getOpenSearchClient(providerContext);
 
         try
         {
@@ -78,7 +74,7 @@ public class OpenSearchVpcEndpointCollector extends AbstractAwsContextAwareColle
                 requestBuilder.nextToken(token);
             });
 
-            ListVpcEndpointsResponse response = this.openSearchClient.listVpcEndpoints(requestBuilder.build());
+            ListVpcEndpointsResponse response = openSearchClient.listVpcEndpoints(requestBuilder.build());
             List<VpcEndpointSummary> endpoints = response.vpcEndpointSummaryList();
             String nextToken = response.nextToken();
 

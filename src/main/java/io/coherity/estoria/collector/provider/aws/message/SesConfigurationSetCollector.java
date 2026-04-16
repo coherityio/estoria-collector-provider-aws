@@ -38,7 +38,6 @@ public class SesConfigurationSetCollector extends AbstractAwsContextAwareCollect
 {
 	public static final String ENTITY_TYPE = "SesConfigurationSet";
 
-	private SesV2Client sesV2Client;
 
 	public SesConfigurationSetCollector()
 	{
@@ -64,10 +63,7 @@ public class SesConfigurationSetCollector extends AbstractAwsContextAwareCollect
 	{
 		log.debug("SesConfigurationSetCollector.collectEntities called");
 
-		if (this.sesV2Client == null)
-		{
-			this.sesV2Client = AwsClientFactory.getInstance().getSesV2Client(providerContext);
-		}
+		SesV2Client sesV2Client = AwsClientFactory.getInstance().getSesV2Client(providerContext);
 
 		try
 		{
@@ -84,7 +80,7 @@ public class SesConfigurationSetCollector extends AbstractAwsContextAwareCollect
 				requestBuilder.nextToken(token);
 			});
 
-			ListConfigurationSetsResponse response = this.sesV2Client.listConfigurationSets(requestBuilder.build());
+			ListConfigurationSetsResponse response = sesV2Client.listConfigurationSets(requestBuilder.build());
 			List<String> names     = response.configurationSets();
 			String       nextToken = response.nextToken();
 

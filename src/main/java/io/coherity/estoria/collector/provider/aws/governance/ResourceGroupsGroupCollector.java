@@ -39,7 +39,6 @@ public class ResourceGroupsGroupCollector extends AbstractAwsContextAwareCollect
 {
 	public static final String ENTITY_TYPE = "ResourceGroupsGroup";
 
-	private ResourceGroupsClient resourceGroupsClient;
 
 	public ResourceGroupsGroupCollector()
 	{
@@ -65,10 +64,7 @@ public class ResourceGroupsGroupCollector extends AbstractAwsContextAwareCollect
 	{
 		log.debug("ResourceGroupsGroupCollector.collectEntities called");
 
-		if (this.resourceGroupsClient == null)
-		{
-			this.resourceGroupsClient = AwsClientFactory.getInstance().getResourceGroupsClient(providerContext);
-		}
+		ResourceGroupsClient resourceGroupsClient = AwsClientFactory.getInstance().getResourceGroupsClient(providerContext);
 
 		try
 		{
@@ -85,7 +81,7 @@ public class ResourceGroupsGroupCollector extends AbstractAwsContextAwareCollect
 				requestBuilder.nextToken(token);
 			});
 
-			ListGroupsResponse response = this.resourceGroupsClient.listGroups(requestBuilder.build());
+			ListGroupsResponse response = resourceGroupsClient.listGroups(requestBuilder.build());
 			List<GroupIdentifier> groupIds  = response.groupIdentifiers();
 			String                nextToken = response.nextToken();
 

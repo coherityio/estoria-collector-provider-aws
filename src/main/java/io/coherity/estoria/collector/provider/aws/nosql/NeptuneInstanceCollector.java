@@ -41,7 +41,6 @@ public class NeptuneInstanceCollector extends AbstractAwsContextAwareCollector
 {
     public static final String ENTITY_TYPE = "NeptuneInstance";
 
-    private NeptuneClient neptuneClient;
 
     public NeptuneInstanceCollector()
     {
@@ -67,10 +66,7 @@ public class NeptuneInstanceCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("NeptuneInstanceCollector.collectEntities called");
 
-        if (this.neptuneClient == null)
-        {
-            this.neptuneClient = AwsClientFactory.getInstance().getNeptuneClient(providerContext);
-        }
+        NeptuneClient neptuneClient = AwsClientFactory.getInstance().getNeptuneClient(providerContext);
 
         try
         {
@@ -88,7 +84,7 @@ public class NeptuneInstanceCollector extends AbstractAwsContextAwareCollector
                 requestBuilder.marker(token);
             });
 
-            DescribeDbInstancesResponse response = this.neptuneClient.describeDBInstances(requestBuilder.build());
+            DescribeDbInstancesResponse response = neptuneClient.describeDBInstances(requestBuilder.build());
             List<DBInstance> instances = response.dbInstances();
             String nextMarker = response.marker();
 
@@ -111,7 +107,7 @@ public class NeptuneInstanceCollector extends AbstractAwsContextAwareCollector
 
                     if (arn != null && !arn.isBlank())
                     {
-                        tags = this.neptuneClient.listTagsForResource(r -> r.resourceName(arn))
+                        tags = neptuneClient.listTagsForResource(r -> r.resourceName(arn))
                             .tagList()
                             .stream()
                             .collect(Collectors.toMap(Tag::key, Tag::value, (a, b) -> b));

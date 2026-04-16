@@ -38,7 +38,6 @@ public class GlueJobCollector extends AbstractAwsContextAwareCollector
 {
     public static final String ENTITY_TYPE = "GlueJob";
 
-    private GlueClient glueClient;
 
     public GlueJobCollector()
     {
@@ -64,10 +63,7 @@ public class GlueJobCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("GlueJobCollector.collectEntities called");
 
-        if (this.glueClient == null)
-        {
-            this.glueClient = AwsClientFactory.getInstance().getGlueClient(providerContext);
-        }
+        GlueClient glueClient = AwsClientFactory.getInstance().getGlueClient(providerContext);
 
         try
         {
@@ -87,7 +83,7 @@ public class GlueJobCollector extends AbstractAwsContextAwareCollector
                 requestBuilder.nextToken(token);
             });
 
-            GetJobsResponse response = this.glueClient.getJobs(requestBuilder.build());
+            GetJobsResponse response = glueClient.getJobs(requestBuilder.build());
             List<Job> jobs    = response.jobs();
             String    nextToken = response.nextToken();
 

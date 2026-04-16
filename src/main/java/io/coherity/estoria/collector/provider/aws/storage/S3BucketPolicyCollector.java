@@ -40,7 +40,6 @@ public class S3BucketPolicyCollector extends AbstractAwsContextAwareCollector
 {
     public static final String ENTITY_TYPE = "S3BucketPolicy";
 
-    private S3Client s3Client;
 
     public S3BucketPolicyCollector()
     {
@@ -66,14 +65,11 @@ public class S3BucketPolicyCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("S3BucketPolicyCollector.collect called");
 
-        if (this.s3Client == null)
-        {
-            this.s3Client = AwsClientFactory.getInstance().getS3Client(providerContext);
-        }
+        S3Client s3Client = AwsClientFactory.getInstance().getS3Client(providerContext);
 
         try
         {
-            ListBucketsResponse listResponse = this.s3Client.listBuckets();
+            ListBucketsResponse listResponse = s3Client.listBuckets();
             List<Bucket> buckets = listResponse.buckets();
 
             List<CloudEntity> entities = new ArrayList<>();
@@ -90,7 +86,7 @@ public class S3BucketPolicyCollector extends AbstractAwsContextAwareCollector
 
                     try
                     {
-                        policyJson = this.s3Client.getBucketPolicy(
+                        policyJson = s3Client.getBucketPolicy(
                             GetBucketPolicyRequest.builder().bucket(bucketName).build()).policy();
                     }
                     catch (S3Exception ex)

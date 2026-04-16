@@ -49,8 +49,6 @@ public class SsoAssignmentCollector extends AbstractAwsContextAwareCollector
     public static final String ENTITY_TYPE = "SsoAssignment";
     private static final int PAGE_SIZE = 100;
 
-    private SsoAdminClient ssoAdminClient;
-    private OrganizationsClient organizationsClient;
 
     public SsoAssignmentCollector()
     {
@@ -76,14 +74,8 @@ public class SsoAssignmentCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("SsoAssignmentCollector.collect called");
 
-        if (this.ssoAdminClient == null)
-        {
-            this.ssoAdminClient = AwsClientFactory.getInstance().getSsoAdminClient(providerContext);
-        }
-        if (this.organizationsClient == null)
-        {
-            this.organizationsClient = AwsClientFactory.getInstance().getOrganizationsClient(providerContext);
-        }
+        SsoAdminClient ssoAdminClient = AwsClientFactory.getInstance().getSsoAdminClient(providerContext);
+        OrganizationsClient organizationsClient = AwsClientFactory.getInstance().getOrganizationsClient(providerContext);
 
         try
         {
@@ -94,7 +86,7 @@ public class SsoAssignmentCollector extends AbstractAwsContextAwareCollector
             String instancesNextToken = null;
             do
             {
-                ListInstancesResponse instancesResponse = this.ssoAdminClient.listInstances(
+                ListInstancesResponse instancesResponse = ssoAdminClient.listInstances(
                     ListInstancesRequest.builder()
                         .maxResults(PAGE_SIZE)
                         .nextToken(instancesNextToken)
@@ -109,7 +101,7 @@ public class SsoAssignmentCollector extends AbstractAwsContextAwareCollector
             String accountsNextToken = null;
             do
             {
-                ListAccountsResponse accountsResponse = this.organizationsClient.listAccounts(
+                ListAccountsResponse accountsResponse = organizationsClient.listAccounts(
                     ListAccountsRequest.builder()
                         .maxResults(PAGE_SIZE)
                         .nextToken(accountsNextToken)
@@ -131,7 +123,7 @@ public class SsoAssignmentCollector extends AbstractAwsContextAwareCollector
                 String psNextToken = null;
                 do
                 {
-                    ListPermissionSetsResponse psResponse = this.ssoAdminClient.listPermissionSets(
+                    ListPermissionSetsResponse psResponse = ssoAdminClient.listPermissionSets(
                         ListPermissionSetsRequest.builder()
                             .instanceArn(instanceArn)
                             .maxResults(PAGE_SIZE)
@@ -152,7 +144,7 @@ public class SsoAssignmentCollector extends AbstractAwsContextAwareCollector
                         {
                             try
                             {
-                                ListAccountAssignmentsResponse assignResponse = this.ssoAdminClient.listAccountAssignments(
+                                ListAccountAssignmentsResponse assignResponse = ssoAdminClient.listAccountAssignments(
                                     ListAccountAssignmentsRequest.builder()
                                         .instanceArn(instanceArn)
                                         .accountId(accountId)

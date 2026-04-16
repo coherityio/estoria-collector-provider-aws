@@ -38,7 +38,6 @@ public class TargetGroupCollector extends AbstractAwsContextAwareCollector
 {
     public static final String ENTITY_TYPE = "TargetGroup";
 
-    private ElasticLoadBalancingV2Client elbV2Client;
 
     public TargetGroupCollector()
     {
@@ -73,10 +72,7 @@ public class TargetGroupCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("TargetGroupCollector.collect called");
 
-        if (this.elbV2Client == null)
-        {
-            this.elbV2Client = AwsClientFactory.getInstance().getElbV2Client(providerContext);
-        }
+        ElasticLoadBalancingV2Client elbV2Client = AwsClientFactory.getInstance().getElbV2Client(providerContext);
 
         try
         {
@@ -93,7 +89,7 @@ public class TargetGroupCollector extends AbstractAwsContextAwareCollector
                 requestBuilder.marker(token);
             });
 
-            DescribeTargetGroupsResponse response = this.elbV2Client.describeTargetGroups(requestBuilder.build());
+            DescribeTargetGroupsResponse response = elbV2Client.describeTargetGroups(requestBuilder.build());
             List<TargetGroup> targetGroups = response.targetGroups();
             String nextMarker = response.nextMarker();
 

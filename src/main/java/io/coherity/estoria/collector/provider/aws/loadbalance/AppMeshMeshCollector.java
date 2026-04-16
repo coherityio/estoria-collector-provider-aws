@@ -38,7 +38,6 @@ public class AppMeshMeshCollector extends AbstractAwsContextAwareCollector
 {
     public static final String ENTITY_TYPE = "AppMeshMesh";
 
-    private AppMeshClient appMeshClient;
 
     public AppMeshMeshCollector()
     {
@@ -73,10 +72,7 @@ public class AppMeshMeshCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("AppMeshMeshCollector.collect called");
 
-        if (this.appMeshClient == null)
-        {
-            this.appMeshClient = AwsClientFactory.getInstance().getAppMeshClient(providerContext);
-        }
+        AppMeshClient appMeshClient = AwsClientFactory.getInstance().getAppMeshClient(providerContext);
 
         try
         {
@@ -93,7 +89,7 @@ public class AppMeshMeshCollector extends AbstractAwsContextAwareCollector
                 requestBuilder.nextToken(token);
             });
 
-            ListMeshesResponse response = this.appMeshClient.listMeshes(requestBuilder.build());
+            ListMeshesResponse response = appMeshClient.listMeshes(requestBuilder.build());
             List<MeshRef> meshes = response.meshes();
             String nextToken = response.nextToken();
 

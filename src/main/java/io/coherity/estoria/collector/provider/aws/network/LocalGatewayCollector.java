@@ -42,7 +42,6 @@ public class LocalGatewayCollector extends AbstractAwsContextAwareCollector
 {
 	public static final String ENTITY_TYPE = "LocalGateway";
 
-	private Ec2Client ec2Client;
 
 	public LocalGatewayCollector()
 	{
@@ -73,10 +72,7 @@ public class LocalGatewayCollector extends AbstractAwsContextAwareCollector
 	{
 		log.debug("LocalGatewayCollector.collectEntities called with request: {}", collectorRequestParams);
 
-		if (this.ec2Client == null)
-		{
-			this.ec2Client = AwsClientFactory.getInstance().getEc2Client(providerContext);
-		}
+		Ec2Client ec2Client = AwsClientFactory.getInstance().getEc2Client(providerContext);
 
 		try
 		{
@@ -100,7 +96,7 @@ public class LocalGatewayCollector extends AbstractAwsContextAwareCollector
 			DescribeLocalGatewaysRequest describeRequest = requestBuilder.build();
 			log.debug("LocalGatewayCollector.collect calling DescribeLocalGateways with maxResults={} nextToken={}",
 				describeRequest.maxResults(), describeRequest.nextToken());
-			DescribeLocalGatewaysResponse response = this.ec2Client.describeLocalGateways(describeRequest);
+			DescribeLocalGatewaysResponse response = ec2Client.describeLocalGateways(describeRequest);
 			List<LocalGateway> localGateways = response.localGateways();
 			String nextToken = response.nextToken();
 

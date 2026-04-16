@@ -39,7 +39,6 @@ public class ServiceCatalogProductCollector extends AbstractAwsContextAwareColle
 {
 	public static final String ENTITY_TYPE = "ServiceCatalogProduct";
 
-	private ServiceCatalogClient serviceCatalogClient;
 
 	public ServiceCatalogProductCollector()
 	{
@@ -65,10 +64,7 @@ public class ServiceCatalogProductCollector extends AbstractAwsContextAwareColle
 	{
 		log.debug("ServiceCatalogProductCollector.collectEntities called");
 
-		if (this.serviceCatalogClient == null)
-		{
-			this.serviceCatalogClient = AwsClientFactory.getInstance().getServiceCatalogClient(providerContext);
-		}
+		ServiceCatalogClient serviceCatalogClient = AwsClientFactory.getInstance().getServiceCatalogClient(providerContext);
 
 		try
 		{
@@ -86,7 +82,7 @@ public class ServiceCatalogProductCollector extends AbstractAwsContextAwareColle
 			});
 
 			SearchProductsAsAdminResponse response =
-				this.serviceCatalogClient.searchProductsAsAdmin(requestBuilder.build());
+				serviceCatalogClient.searchProductsAsAdmin(requestBuilder.build());
 			List<ProductViewDetail> products  = response.productViewDetails();
 			String                  nextToken = response.nextPageToken();
 

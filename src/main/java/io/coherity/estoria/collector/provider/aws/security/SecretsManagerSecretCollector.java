@@ -39,7 +39,6 @@ public class SecretsManagerSecretCollector extends AbstractAwsContextAwareCollec
     public static final String ENTITY_TYPE = "SecretsManagerSecret";
     private static final int PAGE_SIZE = 100;
 
-    private SecretsManagerClient secretsManagerClient;
 
     public SecretsManagerSecretCollector()
     {
@@ -65,10 +64,7 @@ public class SecretsManagerSecretCollector extends AbstractAwsContextAwareCollec
     {
         log.debug("SecretsManagerSecretCollector.collect called");
 
-        if (this.secretsManagerClient == null)
-        {
-            this.secretsManagerClient = AwsClientFactory.getInstance().getSecretsManagerClient(providerContext);
-        }
+        SecretsManagerClient secretsManagerClient = AwsClientFactory.getInstance().getSecretsManagerClient(providerContext);
 
         try
         {
@@ -77,7 +73,7 @@ public class SecretsManagerSecretCollector extends AbstractAwsContextAwareCollec
 
             do
             {
-                ListSecretsResponse response = this.secretsManagerClient.listSecrets(
+                ListSecretsResponse response = secretsManagerClient.listSecrets(
                     ListSecretsRequest.builder()
                         .maxResults(PAGE_SIZE)
                         .nextToken(nextToken)

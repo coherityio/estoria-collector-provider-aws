@@ -41,7 +41,6 @@ public class NeptuneClusterCollector extends AbstractAwsContextAwareCollector
 {
     public static final String ENTITY_TYPE = "NeptuneCluster";
 
-    private NeptuneClient neptuneClient;
 
     public NeptuneClusterCollector()
     {
@@ -67,10 +66,7 @@ public class NeptuneClusterCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("NeptuneClusterCollector.collectEntities called");
 
-        if (this.neptuneClient == null)
-        {
-            this.neptuneClient = AwsClientFactory.getInstance().getNeptuneClient(providerContext);
-        }
+        NeptuneClient neptuneClient = AwsClientFactory.getInstance().getNeptuneClient(providerContext);
 
         try
         {
@@ -88,7 +84,7 @@ public class NeptuneClusterCollector extends AbstractAwsContextAwareCollector
                 requestBuilder.marker(token);
             });
 
-            DescribeDbClustersResponse response = this.neptuneClient.describeDBClusters(requestBuilder.build());
+            DescribeDbClustersResponse response = neptuneClient.describeDBClusters(requestBuilder.build());
             List<DBCluster> clusters = response.dbClusters();
             String nextMarker = response.marker();
 
@@ -110,7 +106,7 @@ public class NeptuneClusterCollector extends AbstractAwsContextAwareCollector
                     Map<String, String> tags = new HashMap<>();
                     if (arn != null && !arn.isBlank())
                     {
-                        tags = this.neptuneClient.listTagsForResource(r -> r.resourceName(arn))
+                        tags = neptuneClient.listTagsForResource(r -> r.resourceName(arn))
                             .tagList()
                             .stream()
                             .collect(Collectors.toMap(Tag::key, Tag::value, (a, b) -> b));

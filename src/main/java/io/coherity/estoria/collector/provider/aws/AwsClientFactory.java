@@ -19,11 +19,20 @@ import software.amazon.awssdk.core.client.config.ClientOverrideConfiguration;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.apigateway.ApiGatewayClient;
 import software.amazon.awssdk.services.appmesh.AppMeshClient;
+import software.amazon.awssdk.services.appstream.AppStreamClient;
 import software.amazon.awssdk.services.autoscaling.AutoScalingClient;
 import software.amazon.awssdk.services.cloudfront.CloudFrontClient;
+import software.amazon.awssdk.services.cloud9.Cloud9Client;
 import software.amazon.awssdk.services.cloudtrail.CloudTrailClient;
 import software.amazon.awssdk.services.cloudwatch.CloudWatchClient;
 import software.amazon.awssdk.services.cloudwatchlogs.CloudWatchLogsClient;
+import software.amazon.awssdk.services.codeartifact.CodeartifactClient;
+import software.amazon.awssdk.services.codebuild.CodeBuildClient;
+import software.amazon.awssdk.services.codecommit.CodeCommitClient;
+import software.amazon.awssdk.services.codedeploy.CodeDeployClient;
+import software.amazon.awssdk.services.codeguruprofiler.CodeGuruProfilerClient;
+import software.amazon.awssdk.services.codegurureviewer.CodeGuruReviewerClient;
+import software.amazon.awssdk.services.codepipeline.CodePipelineClient;
 import software.amazon.awssdk.services.config.ConfigClient;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 import software.amazon.awssdk.services.ec2.Ec2Client;
@@ -54,6 +63,8 @@ import software.amazon.awssdk.services.ssoadmin.SsoAdminClient;
 import software.amazon.awssdk.services.storagegateway.StorageGatewayClient;
 import software.amazon.awssdk.services.sts.StsClient;
 import software.amazon.awssdk.services.wafv2.Wafv2Client;
+import software.amazon.awssdk.services.workspaces.WorkSpacesClient;
+import software.amazon.awssdk.services.xray.XRayClient;
 import software.amazon.awssdk.services.opensearch.OpenSearchClient;
 import software.amazon.awssdk.services.redshift.RedshiftClient;
 import software.amazon.awssdk.services.elasticache.ElastiCacheClient;
@@ -115,6 +126,17 @@ public class AwsClientFactory
     private static final String CLIENT_NAME_CLOUDWATCH      = "CloudWatch";
     private static final String CLIENT_NAME_CLOUDWATCH_LOGS = "CloudWatchLogs";
     private static final String CLIENT_NAME_CLOUDTRAIL           = "CloudTrail";
+    private static final String CLIENT_NAME_XRAY                = "XRay";
+    private static final String CLIENT_NAME_CODECOMMIT           = "CodeCommit";
+    private static final String CLIENT_NAME_CODEBUILD            = "CodeBuild";
+    private static final String CLIENT_NAME_CODEPIPELINE         = "CodePipeline";
+    private static final String CLIENT_NAME_CODEDEPLOY           = "CodeDeploy";
+    private static final String CLIENT_NAME_CODEARTIFACT         = "CodeArtifact";
+    private static final String CLIENT_NAME_CODEGURU_PROFILER    = "CodeGuruProfiler";
+    private static final String CLIENT_NAME_CODEGURU_REVIEWER    = "CodeGuruReviewer";
+    private static final String CLIENT_NAME_CLOUD9               = "Cloud9";
+    private static final String CLIENT_NAME_WORKSPACES           = "WorkSpaces";
+    private static final String CLIENT_NAME_APPSTREAM            = "AppStream";
     private static final String CLIENT_NAME_STS                  = "STS";
     private static final String CLIENT_NAME_GLOBAL_ACCELERATOR   = "GlobalAccelerator";
     private static final String CLIENT_NAME_APP_MESH             = "AppMesh";
@@ -201,6 +223,17 @@ public class AwsClientFactory
     private final Map<String, CloudWatchClient>             cloudWatchClients     = new ConcurrentHashMap<>();
     private final Map<String, CloudWatchLogsClient>         cloudWatchLogsClients = new ConcurrentHashMap<>();
     private final Map<String, CloudTrailClient>             cloudTrailClients         = new ConcurrentHashMap<>();
+    private final Map<String, XRayClient>                   xrayClients               = new ConcurrentHashMap<>();
+    private final Map<String, CodeCommitClient>             codeCommitClients         = new ConcurrentHashMap<>();
+    private final Map<String, CodeBuildClient>              codeBuildClients          = new ConcurrentHashMap<>();
+    private final Map<String, CodePipelineClient>           codePipelineClients       = new ConcurrentHashMap<>();
+    private final Map<String, CodeDeployClient>             codeDeployClients         = new ConcurrentHashMap<>();
+    private final Map<String, CodeartifactClient>           codeArtifactClients       = new ConcurrentHashMap<>();
+    private final Map<String, CodeGuruProfilerClient>       codeGuruProfilerClients   = new ConcurrentHashMap<>();
+    private final Map<String, CodeGuruReviewerClient>       codeGuruReviewerClients   = new ConcurrentHashMap<>();
+    private final Map<String, Cloud9Client>                 cloud9Clients             = new ConcurrentHashMap<>();
+    private final Map<String, WorkSpacesClient>             workspacesClients         = new ConcurrentHashMap<>();
+    private final Map<String, AppStreamClient>              appStreamClients          = new ConcurrentHashMap<>();
     private final Map<String, StsClient>                    stsClients                = new ConcurrentHashMap<>();
     private final Map<String, GlobalAcceleratorClient>      globalAcceleratorClients  = new ConcurrentHashMap<>();
     private final Map<String, AppMeshClient>                appMeshClients            = new ConcurrentHashMap<>();
@@ -365,6 +398,72 @@ public class AwsClientFactory
     {
         return getClient(cloudTrailClients, providerContext,
             (profile, region) -> buildClient(CloudTrailClient.builder(), profile, region, CLIENT_NAME_CLOUDTRAIL));
+    }
+
+    public XRayClient getXRayClient(ProviderContext providerContext)
+    {
+        return getClient(xrayClients, providerContext,
+            (profile, region) -> buildClient(XRayClient.builder(), profile, region, CLIENT_NAME_XRAY));
+    }
+
+    public CodeCommitClient getCodeCommitClient(ProviderContext providerContext)
+    {
+        return getClient(codeCommitClients, providerContext,
+            (profile, region) -> buildClient(CodeCommitClient.builder(), profile, region, CLIENT_NAME_CODECOMMIT));
+    }
+
+    public CodeBuildClient getCodeBuildClient(ProviderContext providerContext)
+    {
+        return getClient(codeBuildClients, providerContext,
+            (profile, region) -> buildClient(CodeBuildClient.builder(), profile, region, CLIENT_NAME_CODEBUILD));
+    }
+
+    public CodePipelineClient getCodePipelineClient(ProviderContext providerContext)
+    {
+        return getClient(codePipelineClients, providerContext,
+            (profile, region) -> buildClient(CodePipelineClient.builder(), profile, region, CLIENT_NAME_CODEPIPELINE));
+    }
+
+    public CodeDeployClient getCodeDeployClient(ProviderContext providerContext)
+    {
+        return getClient(codeDeployClients, providerContext,
+            (profile, region) -> buildClient(CodeDeployClient.builder(), profile, region, CLIENT_NAME_CODEDEPLOY));
+    }
+
+    public CodeartifactClient getCodeArtifactClient(ProviderContext providerContext)
+    {
+        return getClient(codeArtifactClients, providerContext,
+            (profile, region) -> buildClient(CodeartifactClient.builder(), profile, region, CLIENT_NAME_CODEARTIFACT));
+    }
+
+    public CodeGuruProfilerClient getCodeGuruProfilerClient(ProviderContext providerContext)
+    {
+        return getClient(codeGuruProfilerClients, providerContext,
+            (profile, region) -> buildClient(CodeGuruProfilerClient.builder(), profile, region, CLIENT_NAME_CODEGURU_PROFILER));
+    }
+
+    public CodeGuruReviewerClient getCodeGuruReviewerClient(ProviderContext providerContext)
+    {
+        return getClient(codeGuruReviewerClients, providerContext,
+            (profile, region) -> buildClient(CodeGuruReviewerClient.builder(), profile, region, CLIENT_NAME_CODEGURU_REVIEWER));
+    }
+
+    public Cloud9Client getCloud9Client(ProviderContext providerContext)
+    {
+        return getClient(cloud9Clients, providerContext,
+            (profile, region) -> buildClient(Cloud9Client.builder(), profile, region, CLIENT_NAME_CLOUD9));
+    }
+
+    public WorkSpacesClient getWorkspacesClient(ProviderContext providerContext)
+    {
+        return getClient(workspacesClients, providerContext,
+            (profile, region) -> buildClient(WorkSpacesClient.builder(), profile, region, CLIENT_NAME_WORKSPACES));
+    }
+
+    public AppStreamClient getAppStreamClient(ProviderContext providerContext)
+    {
+        return getClient(appStreamClients, providerContext,
+            (profile, region) -> buildClient(AppStreamClient.builder(), profile, region, CLIENT_NAME_APPSTREAM));
     }
 
     public StsClient getStsClient(ProviderContext providerContext)
@@ -748,7 +847,7 @@ public class AwsClientFactory
 
     public void shutdown()
     {
-        int clientTypeCount = 60;
+        int clientTypeCount = 71;
         ExecutorService executor = Executors.newFixedThreadPool(clientTypeCount);
 
         List<java.util.concurrent.Future<?>> futures = new ArrayList<>();
@@ -772,6 +871,17 @@ public class AwsClientFactory
         futures.add(executor.submit(() -> closeAll(cloudWatchClients,     CLIENT_NAME_CLOUDWATCH)));
         futures.add(executor.submit(() -> closeAll(cloudWatchLogsClients, CLIENT_NAME_CLOUDWATCH_LOGS)));
         futures.add(executor.submit(() -> closeAll(cloudTrailClients,     CLIENT_NAME_CLOUDTRAIL)));
+        futures.add(executor.submit(() -> closeAll(xrayClients,           CLIENT_NAME_XRAY)));
+        futures.add(executor.submit(() -> closeAll(codeCommitClients,     CLIENT_NAME_CODECOMMIT)));
+        futures.add(executor.submit(() -> closeAll(codeBuildClients,      CLIENT_NAME_CODEBUILD)));
+        futures.add(executor.submit(() -> closeAll(codePipelineClients,   CLIENT_NAME_CODEPIPELINE)));
+        futures.add(executor.submit(() -> closeAll(codeDeployClients,     CLIENT_NAME_CODEDEPLOY)));
+        futures.add(executor.submit(() -> closeAll(codeArtifactClients,   CLIENT_NAME_CODEARTIFACT)));
+        futures.add(executor.submit(() -> closeAll(codeGuruProfilerClients, CLIENT_NAME_CODEGURU_PROFILER)));
+        futures.add(executor.submit(() -> closeAll(codeGuruReviewerClients, CLIENT_NAME_CODEGURU_REVIEWER)));
+        futures.add(executor.submit(() -> closeAll(cloud9Clients,         CLIENT_NAME_CLOUD9)));
+        futures.add(executor.submit(() -> closeAll(workspacesClients,     CLIENT_NAME_WORKSPACES)));
+        futures.add(executor.submit(() -> closeAll(appStreamClients,      CLIENT_NAME_APPSTREAM)));
         futures.add(executor.submit(() -> closeAll(stsClients,            CLIENT_NAME_STS)));
         futures.add(executor.submit(() -> closeAll(efsClients,            CLIENT_NAME_EFS)));
         futures.add(executor.submit(() -> closeAll(fsxClients,            CLIENT_NAME_FSX)));

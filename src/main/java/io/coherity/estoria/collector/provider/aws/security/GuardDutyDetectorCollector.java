@@ -39,7 +39,6 @@ public class GuardDutyDetectorCollector extends AbstractAwsContextAwareCollector
 {
     public static final String ENTITY_TYPE = "GuardDutyDetector";
 
-    private GuardDutyClient guardDutyClient;
 
     public GuardDutyDetectorCollector()
     {
@@ -65,10 +64,7 @@ public class GuardDutyDetectorCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("GuardDutyDetectorCollector.collect called");
 
-        if (this.guardDutyClient == null)
-        {
-            this.guardDutyClient = AwsClientFactory.getInstance().getGuardDutyClient(providerContext);
-        }
+        GuardDutyClient guardDutyClient = AwsClientFactory.getInstance().getGuardDutyClient(providerContext);
 
         try
         {
@@ -77,7 +73,7 @@ public class GuardDutyDetectorCollector extends AbstractAwsContextAwareCollector
 
             do
             {
-                ListDetectorsResponse listResponse = this.guardDutyClient.listDetectors(
+                ListDetectorsResponse listResponse = guardDutyClient.listDetectors(
                     ListDetectorsRequest.builder()
                         .maxResults(50)
                         .nextToken(nextToken)
@@ -85,7 +81,7 @@ public class GuardDutyDetectorCollector extends AbstractAwsContextAwareCollector
 
                 for (String detectorId : listResponse.detectorIds())
                 {
-                    GetDetectorResponse detector = this.guardDutyClient.getDetector(
+                    GetDetectorResponse detector = guardDutyClient.getDetector(
                         GetDetectorRequest.builder()
                             .detectorId(detectorId)
                             .build());

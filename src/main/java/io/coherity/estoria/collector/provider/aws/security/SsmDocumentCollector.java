@@ -40,7 +40,6 @@ public class SsmDocumentCollector extends AbstractAwsContextAwareCollector
     public static final String ENTITY_TYPE = "SsmDocument";
     private static final int PAGE_SIZE = 50;
 
-    private SsmClient ssmClient;
 
     public SsmDocumentCollector()
     {
@@ -66,10 +65,7 @@ public class SsmDocumentCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("SsmDocumentCollector.collect called");
 
-        if (this.ssmClient == null)
-        {
-            this.ssmClient = AwsClientFactory.getInstance().getSsmClient(providerContext);
-        }
+        SsmClient ssmClient = AwsClientFactory.getInstance().getSsmClient(providerContext);
 
         try
         {
@@ -78,7 +74,7 @@ public class SsmDocumentCollector extends AbstractAwsContextAwareCollector
 
             do
             {
-                ListDocumentsResponse response = this.ssmClient.listDocuments(
+                ListDocumentsResponse response = ssmClient.listDocuments(
                     ListDocumentsRequest.builder()
                         .filters(DocumentKeyValuesFilter.builder()
                             .key("Owner")

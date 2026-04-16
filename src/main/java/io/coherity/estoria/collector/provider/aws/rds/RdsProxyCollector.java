@@ -39,7 +39,6 @@ public class RdsProxyCollector extends AbstractAwsContextAwareCollector
 {
     public static final String ENTITY_TYPE = "RdsProxy";
 
-    private RdsClient rdsClient;
 
     public RdsProxyCollector()
     {
@@ -65,10 +64,7 @@ public class RdsProxyCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("RdsProxyCollector.collectEntities called");
 
-        if (this.rdsClient == null)
-        {
-            this.rdsClient = AwsClientFactory.getInstance().getRdsClient(providerContext);
-        }
+        RdsClient rdsClient = AwsClientFactory.getInstance().getRdsClient(providerContext);
 
         try
         {
@@ -85,7 +81,7 @@ public class RdsProxyCollector extends AbstractAwsContextAwareCollector
                 requestBuilder.marker(token);
             });
 
-            DescribeDbProxiesResponse response = this.rdsClient.describeDBProxies(requestBuilder.build());
+            DescribeDbProxiesResponse response = rdsClient.describeDBProxies(requestBuilder.build());
             List<DBProxy> proxies = response.dbProxies();
             String nextMarker = response.marker();
 

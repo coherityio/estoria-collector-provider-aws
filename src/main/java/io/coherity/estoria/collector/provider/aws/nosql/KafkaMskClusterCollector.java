@@ -38,7 +38,6 @@ public class KafkaMskClusterCollector extends AbstractAwsContextAwareCollector
 {
     public static final String ENTITY_TYPE = "KafkaMskCluster";
 
-    private KafkaClient kafkaClient;
 
     public KafkaMskClusterCollector()
     {
@@ -64,10 +63,7 @@ public class KafkaMskClusterCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("KafkaMskClusterCollector.collectEntities called");
 
-        if (this.kafkaClient == null)
-        {
-            this.kafkaClient = AwsClientFactory.getInstance().getKafkaClient(providerContext);
-        }
+        KafkaClient kafkaClient = AwsClientFactory.getInstance().getKafkaClient(providerContext);
 
         try
         {
@@ -84,7 +80,7 @@ public class KafkaMskClusterCollector extends AbstractAwsContextAwareCollector
                 requestBuilder.nextToken(token);
             });
 
-            ListClustersResponse response = this.kafkaClient.listClusters(requestBuilder.build());
+            ListClustersResponse response = kafkaClient.listClusters(requestBuilder.build());
             List<ClusterInfo> clusters = response.clusterInfoList();
             String nextToken = response.nextToken();
 

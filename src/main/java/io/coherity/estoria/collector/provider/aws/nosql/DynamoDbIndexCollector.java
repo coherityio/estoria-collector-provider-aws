@@ -42,7 +42,6 @@ public class DynamoDbIndexCollector extends AbstractAwsContextAwareCollector
 {
     public static final String ENTITY_TYPE = "DynamoDbIndex";
 
-    private DynamoDbClient dynamoDbClient;
 
     public DynamoDbIndexCollector()
     {
@@ -68,10 +67,7 @@ public class DynamoDbIndexCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("DynamoDbIndexCollector.collectEntities called");
 
-        if (this.dynamoDbClient == null)
-        {
-            this.dynamoDbClient = AwsClientFactory.getInstance().getDynamoDbClient(providerContext);
-        }
+        DynamoDbClient dynamoDbClient = AwsClientFactory.getInstance().getDynamoDbClient(providerContext);
 
         try
         {
@@ -88,7 +84,7 @@ public class DynamoDbIndexCollector extends AbstractAwsContextAwareCollector
                 requestBuilder.exclusiveStartTableName(token);
             });
 
-            ListTablesResponse listResponse = this.dynamoDbClient.listTables(requestBuilder.build());
+            ListTablesResponse listResponse = dynamoDbClient.listTables(requestBuilder.build());
             List<String> tableNames = listResponse.tableNames();
             String lastEvaluated = listResponse.lastEvaluatedTableName();
 
@@ -106,7 +102,7 @@ public class DynamoDbIndexCollector extends AbstractAwsContextAwareCollector
 
                     try
                     {
-                        TableDescription table = this.dynamoDbClient
+                        TableDescription table = dynamoDbClient
                             .describeTable(DescribeTableRequest.builder().tableName(tableName).build())
                             .table();
 

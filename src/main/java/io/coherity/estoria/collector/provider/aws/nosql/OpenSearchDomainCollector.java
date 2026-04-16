@@ -44,7 +44,6 @@ public class OpenSearchDomainCollector extends AbstractAwsContextAwareCollector
 {
     public static final String ENTITY_TYPE = "OpenSearchDomain";
 
-    private OpenSearchClient openSearchClient;
 
     public OpenSearchDomainCollector()
     {
@@ -70,15 +69,12 @@ public class OpenSearchDomainCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("OpenSearchDomainCollector.collectEntities called");
 
-        if (this.openSearchClient == null)
-        {
-            this.openSearchClient = AwsClientFactory.getInstance().getOpenSearchClient(providerContext);
-        }
+        OpenSearchClient openSearchClient = AwsClientFactory.getInstance().getOpenSearchClient(providerContext);
 
         try
         {
             // OpenSearch ListDomainNames does not support pagination natively — returns all domains at once
-            ListDomainNamesResponse listResponse = this.openSearchClient.listDomainNames(
+            ListDomainNamesResponse listResponse = openSearchClient.listDomainNames(
                 ListDomainNamesRequest.builder().build());
 
             List<DomainInfo> domainInfos = listResponse.domainNames();
@@ -105,7 +101,7 @@ public class OpenSearchDomainCollector extends AbstractAwsContextAwareCollector
             {
                 List<String> batch = domainNames.subList(i, Math.min(i + batchSize, domainNames.size()));
 
-                DescribeDomainsResponse describeResponse = this.openSearchClient.describeDomains(
+                DescribeDomainsResponse describeResponse = openSearchClient.describeDomains(
                     DescribeDomainsRequest.builder().domainNames(batch).build());
 
                 if (describeResponse.domainStatusList() == null) continue;

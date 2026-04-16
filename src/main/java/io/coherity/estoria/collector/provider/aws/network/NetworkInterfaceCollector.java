@@ -42,7 +42,6 @@ public class NetworkInterfaceCollector extends AbstractAwsContextAwareCollector
 {
 	public static final String ENTITY_TYPE = "NetworkInterface";
 
-	private Ec2Client ec2Client;
 
 	public NetworkInterfaceCollector()
 	{
@@ -73,10 +72,7 @@ public class NetworkInterfaceCollector extends AbstractAwsContextAwareCollector
 	{
 		log.debug("NetworkInterfaceCollector.collectEntities called with request: {}", collectorRequestParams);
 
-		if (this.ec2Client == null)
-		{
-			this.ec2Client = AwsClientFactory.getInstance().getEc2Client(providerContext);
-		}
+		Ec2Client ec2Client = AwsClientFactory.getInstance().getEc2Client(providerContext);
 
 		try
 		{
@@ -100,7 +96,7 @@ public class NetworkInterfaceCollector extends AbstractAwsContextAwareCollector
 			DescribeNetworkInterfacesRequest describeRequest = requestBuilder.build();
 			log.debug("NetworkInterfaceCollector.collect calling DescribeNetworkInterfaces with maxResults={} nextToken={}",
 				describeRequest.maxResults(), describeRequest.nextToken());
-			DescribeNetworkInterfacesResponse response = this.ec2Client.describeNetworkInterfaces(describeRequest);
+			DescribeNetworkInterfacesResponse response = ec2Client.describeNetworkInterfaces(describeRequest);
 			List<NetworkInterface> networkInterfaces = response.networkInterfaces();
 			String nextToken = response.nextToken();
 

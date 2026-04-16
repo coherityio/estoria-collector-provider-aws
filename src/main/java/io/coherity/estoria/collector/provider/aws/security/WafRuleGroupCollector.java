@@ -39,7 +39,6 @@ public class WafRuleGroupCollector extends AbstractAwsContextAwareCollector
 {
     public static final String ENTITY_TYPE = "WafRuleGroup";
 
-    private Wafv2Client wafv2Client;
 
     public WafRuleGroupCollector()
     {
@@ -65,10 +64,7 @@ public class WafRuleGroupCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("WafRuleGroupCollector.collect called");
 
-        if (this.wafv2Client == null)
-        {
-            this.wafv2Client = AwsClientFactory.getInstance().getWafv2Client(providerContext);
-        }
+        Wafv2Client wafv2Client = AwsClientFactory.getInstance().getWafv2Client(providerContext);
 
         try
         {
@@ -84,7 +80,7 @@ public class WafRuleGroupCollector extends AbstractAwsContextAwareCollector
                 {
                     wafRequestBuilder.nextMarker(nextMarker);
                 }
-                ListRuleGroupsResponse response = this.wafv2Client.listRuleGroups(wafRequestBuilder.build());
+                ListRuleGroupsResponse response = wafv2Client.listRuleGroups(wafRequestBuilder.build());
 
                 for (RuleGroupSummary rg : response.ruleGroups())
                 {

@@ -40,7 +40,6 @@ public class RdsClusterSnapshotCollector extends AbstractAwsContextAwareCollecto
 {
     public static final String ENTITY_TYPE = "RdsClusterSnapshot";
 
-    private RdsClient rdsClient;
 
     public RdsClusterSnapshotCollector()
     {
@@ -66,10 +65,7 @@ public class RdsClusterSnapshotCollector extends AbstractAwsContextAwareCollecto
     {
         log.debug("RdsClusterSnapshotCollector.collectEntities called");
 
-        if (this.rdsClient == null)
-        {
-            this.rdsClient = AwsClientFactory.getInstance().getRdsClient(providerContext);
-        }
+        RdsClient rdsClient = AwsClientFactory.getInstance().getRdsClient(providerContext);
 
         try
         {
@@ -90,7 +86,7 @@ public class RdsClusterSnapshotCollector extends AbstractAwsContextAwareCollecto
             });
 
             DescribeDbClusterSnapshotsResponse response =
-                this.rdsClient.describeDBClusterSnapshots(requestBuilder.build());
+                rdsClient.describeDBClusterSnapshots(requestBuilder.build());
             List<DBClusterSnapshot> snapshots = response.dbClusterSnapshots();
             String nextMarker = response.marker();
 

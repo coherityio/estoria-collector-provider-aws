@@ -38,7 +38,6 @@ public class IamGroupCollector extends AbstractAwsContextAwareCollector
 {
     public static final String ENTITY_TYPE = "IamGroup";
 
-    private IamClient iamClient;
 
     public IamGroupCollector()
     {
@@ -64,10 +63,7 @@ public class IamGroupCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("IamGroupCollector.collect called");
 
-        if (this.iamClient == null)
-        {
-            this.iamClient = AwsClientFactory.getInstance().getIamClient(providerContext);
-        }
+        IamClient iamClient = AwsClientFactory.getInstance().getIamClient(providerContext);
 
         try
         {
@@ -84,7 +80,7 @@ public class IamGroupCollector extends AbstractAwsContextAwareCollector
                 requestBuilder.marker(token);
             });
 
-            ListGroupsResponse response = this.iamClient.listGroups(requestBuilder.build());
+            ListGroupsResponse response = iamClient.listGroups(requestBuilder.build());
             List<Group> groups = response.groups();
             String nextMarker = response.isTruncated() ? response.marker() : null;
 

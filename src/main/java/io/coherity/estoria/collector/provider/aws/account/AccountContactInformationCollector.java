@@ -39,7 +39,6 @@ public class AccountContactInformationCollector extends AbstractAwsContextAwareC
 {
     public static final String ENTITY_TYPE = "AccountContactInformation";
 
-    private AccountClient accountClient;
 
     public AccountContactInformationCollector()
     {
@@ -65,16 +64,13 @@ public class AccountContactInformationCollector extends AbstractAwsContextAwareC
     {
         log.debug("AccountContactInformationCollector.collectEntities called");
 
-        if (this.accountClient == null)
-        {
-            this.accountClient = AwsClientFactory.getInstance().getAccountClient(providerContext);
-        }
+        AccountClient accountClient = AwsClientFactory.getInstance().getAccountClient(providerContext);
 
         try
         {
             String accountId = awsSessionContext.getCurrentAccountId();
 
-            GetContactInformationResponse response = this.accountClient.getContactInformation(
+            GetContactInformationResponse response = accountClient.getContactInformation(
                 GetContactInformationRequest.builder().build());
 
             List<CloudEntity> entities = new ArrayList<>();

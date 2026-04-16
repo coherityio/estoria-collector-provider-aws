@@ -39,7 +39,6 @@ public class ElastiCacheClusterCollector extends AbstractAwsContextAwareCollecto
 {
     public static final String ENTITY_TYPE = "ElastiCacheCluster";
 
-    private ElastiCacheClient elastiCacheClient;
 
     public ElastiCacheClusterCollector()
     {
@@ -65,10 +64,7 @@ public class ElastiCacheClusterCollector extends AbstractAwsContextAwareCollecto
     {
         log.debug("ElastiCacheClusterCollector.collectEntities called");
 
-        if (this.elastiCacheClient == null)
-        {
-            this.elastiCacheClient = AwsClientFactory.getInstance().getElastiCacheClient(providerContext);
-        }
+        ElastiCacheClient elastiCacheClient = AwsClientFactory.getInstance().getElastiCacheClient(providerContext);
 
         try
         {
@@ -86,7 +82,7 @@ public class ElastiCacheClusterCollector extends AbstractAwsContextAwareCollecto
                 requestBuilder.marker(token);
             });
 
-            DescribeCacheClustersResponse response = this.elastiCacheClient.describeCacheClusters(requestBuilder.build());
+            DescribeCacheClustersResponse response = elastiCacheClient.describeCacheClusters(requestBuilder.build());
             List<CacheCluster> clusters = response.cacheClusters();
             String nextMarker = response.marker();
 

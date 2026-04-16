@@ -38,7 +38,6 @@ public class DynamoDbBackupCollector extends AbstractAwsContextAwareCollector
 {
     public static final String ENTITY_TYPE = "DynamoDbBackup";
 
-    private DynamoDbClient dynamoDbClient;
 
     public DynamoDbBackupCollector()
     {
@@ -64,10 +63,7 @@ public class DynamoDbBackupCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("DynamoDbBackupCollector.collectEntities called");
 
-        if (this.dynamoDbClient == null)
-        {
-            this.dynamoDbClient = AwsClientFactory.getInstance().getDynamoDbClient(providerContext);
-        }
+        DynamoDbClient dynamoDbClient = AwsClientFactory.getInstance().getDynamoDbClient(providerContext);
 
         try
         {
@@ -84,7 +80,7 @@ public class DynamoDbBackupCollector extends AbstractAwsContextAwareCollector
                 requestBuilder.exclusiveStartBackupArn(token);
             });
 
-            ListBackupsResponse response = this.dynamoDbClient.listBackups(requestBuilder.build());
+            ListBackupsResponse response = dynamoDbClient.listBackups(requestBuilder.build());
             List<BackupSummary> backups = response.backupSummaries();
             String lastEvaluated = response.lastEvaluatedBackupArn();
 

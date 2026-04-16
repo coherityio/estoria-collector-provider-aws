@@ -42,7 +42,6 @@ public class CloudFormationChangeSetCollector extends AbstractAwsContextAwareCol
 {
 	public static final String ENTITY_TYPE = "CloudFormationChangeSet";
 
-	private CloudFormationClient cloudFormationClient;
 
 	public CloudFormationChangeSetCollector()
 	{
@@ -68,10 +67,7 @@ public class CloudFormationChangeSetCollector extends AbstractAwsContextAwareCol
 	{
 		log.debug("CloudFormationChangeSetCollector.collectEntities called");
 
-		if (this.cloudFormationClient == null)
-		{
-			this.cloudFormationClient = AwsClientFactory.getInstance().getCloudFormationClient(providerContext);
-		}
+		CloudFormationClient cloudFormationClient = AwsClientFactory.getInstance().getCloudFormationClient(providerContext);
 
 		try
 		{
@@ -85,7 +81,7 @@ public class CloudFormationChangeSetCollector extends AbstractAwsContextAwareCol
 			{
 				DescribeStacksRequest.Builder stackReq = DescribeStacksRequest.builder();
 				if (stackNextToken != null) stackReq.nextToken(stackNextToken);
-				DescribeStacksResponse stackResp = this.cloudFormationClient.describeStacks(stackReq.build());
+				DescribeStacksResponse stackResp = cloudFormationClient.describeStacks(stackReq.build());
 				if (stackResp.stacks() != null)
 				{
 					for (Stack s : stackResp.stacks())
@@ -111,7 +107,7 @@ public class CloudFormationChangeSetCollector extends AbstractAwsContextAwareCol
 					ListChangeSetsRequest.Builder csReq = ListChangeSetsRequest.builder().stackName(stackName);
 					if (csNextToken != null) csReq.nextToken(csNextToken);
 
-					ListChangeSetsResponse csResp = this.cloudFormationClient.listChangeSets(csReq.build());
+					ListChangeSetsResponse csResp = cloudFormationClient.listChangeSets(csReq.build());
 					csNextToken = csResp.nextToken();
 
 					List<ChangeSetSummary> changeSets = csResp.summaries();

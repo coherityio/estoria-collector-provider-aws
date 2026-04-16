@@ -1,0 +1,80 @@
+{
+  "typesetId": "aws-tools",
+  "displayName": "AWS Developer Tools",
+  "description": "Entity types for AWS developer tools and software delivery services such as CodeCommit, CodeBuild, CodePipeline, CodeDeploy, CodeArtifact, CodeGuru, and Cloud9.",
+  "version": "1.0.0",
+  "entityTypes": [
+    {
+      "entityType": "CodeCommitRepository",
+      "displayName": "CodeCommit Repository",
+      "description": "An AWS CodeCommit source-code repository.",
+      "category": "RESOURCE",
+      "containmentScope": "ACCOUNT_REGIONAL",
+      "tags": ["tools", "codecommit", "repository", "aws"]
+    },
+    {
+      "entityType": "CodeBuildProject",
+      "displayName": "CodeBuild Project",
+      "description": "An AWS CodeBuild project used to compile, test, and package source code.",
+      "category": "RESOURCE",
+      "containmentScope": "ACCOUNT_REGIONAL",
+      "tags": ["tools", "codebuild", "ci", "aws"]
+    },
+    {
+      "entityType": "CodePipelinePipeline",
+      "displayName": "CodePipeline Pipeline",
+      "description": "An AWS CodePipeline continuous delivery pipeline.",
+      "category": "RESOURCE",
+      "containmentScope": "ACCOUNT_REGIONAL",
+      "tags": ["tools", "codepipeline", "cd", "aws"]
+    },
+    {
+      "entityType": "CodeDeployApplication",
+      "displayName": "CodeDeploy Application",
+      "description": "An AWS CodeDeploy application that groups deployment targets and deployment groups.",
+      "category": "RESOURCE",
+      "containmentScope": "ACCOUNT_REGIONAL",
+      "tags": ["tools", "codedeploy", "deployment", "aws"]
+    },
+    {
+      "entityType": "CodeDeployDeploymentGroup",
+      "displayName": "CodeDeploy Deployment Group",
+      "description": "An AWS CodeDeploy deployment group associated with a CodeDeploy application.",
+      "category": "RESOURCE",
+      "containmentScope": "ACCOUNT_REGIONAL",
+      "tags": ["tools", "codedeploy", "deployment-group", "aws"]
+    },
+    {
+      "entityType": "CodeArtifactRepository",
+      "displayName": "CodeArtifact Repository",
+      "description": "An AWS CodeArtifact package repository.",
+      "category": "RESOURCE",
+      "containmentScope": "ACCOUNT_REGIONAL",
+      "tags": ["tools", "codeartifact", "repository", "aws"]
+    },
+    {
+      "entityType": "CodeGuruProfilerGroup",
+      "displayName": "CodeGuru Profiler Group",
+      "description": "An Amazon CodeGuru Profiler profiling group used to analyze application performance.",
+      "category": "RESOURCE",
+      "containmentScope": "ACCOUNT_REGIONAL",
+      "tags": ["tools", "codeguru-profiler", "profiling", "aws"]
+    },
+    {
+      "entityType": "CodeGuruReviewerRepositoryAssociation",
+      "displayName": "CodeGuru Reviewer Repository Association",
+      "description": "A repository association configured for Amazon CodeGuru Reviewer source analysis.",
+      "category": "RESOURCE",
+      "containmentScope": "ACCOUNT_REGIONAL",
+      "tags": ["tools", "codeguru-reviewer", "repository", "aws"]
+    },
+    {
+      "entityType": "Cloud9Environment",
+      "displayName": "Cloud9 Environment",
+      "description": "An AWS Cloud9 development environment.",
+      "category": "RESOURCE",
+      "containmentScope": "ACCOUNT_REGIONAL",
+      "tags": ["tools", "cloud9", "ide", "aws"]
+    }
+  ]
+}

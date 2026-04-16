@@ -39,7 +39,6 @@ public class GlueDataCatalogResourcePolicyCollector extends AbstractAwsContextAw
 {
     public static final String ENTITY_TYPE = "GlueDataCatalogResourcePolicy";
 
-    private GlueClient glueClient;
 
     public GlueDataCatalogResourcePolicyCollector()
     {
@@ -65,10 +64,7 @@ public class GlueDataCatalogResourcePolicyCollector extends AbstractAwsContextAw
     {
         log.debug("GlueDataCatalogResourcePolicyCollector.collectEntities called");
 
-        if (this.glueClient == null)
-        {
-            this.glueClient = AwsClientFactory.getInstance().getGlueClient(providerContext);
-        }
+        GlueClient glueClient = AwsClientFactory.getInstance().getGlueClient(providerContext);
 
         List<CloudEntity> entities = new ArrayList<>();
         Instant now = Instant.now();
@@ -79,7 +75,7 @@ public class GlueDataCatalogResourcePolicyCollector extends AbstractAwsContextAw
             String region    = awsSessionContext.getRegion() != null ? awsSessionContext.getRegion().id() : null;
 
             GetResourcePolicyResponse response =
-                this.glueClient.getResourcePolicy(GetResourcePolicyRequest.builder().build());
+                glueClient.getResourcePolicy(GetResourcePolicyRequest.builder().build());
 
             String policyJson       = response.policyInJson();
             String policyHash       = response.policyHash();

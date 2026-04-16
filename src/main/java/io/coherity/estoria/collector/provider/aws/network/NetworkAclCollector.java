@@ -42,7 +42,6 @@ public class NetworkAclCollector extends AbstractAwsContextAwareCollector
 {
 	public static final String ENTITY_TYPE = "NetworkAcl";
 
-	private Ec2Client ec2Client;
 
 	public NetworkAclCollector()
 	{
@@ -73,10 +72,7 @@ public class NetworkAclCollector extends AbstractAwsContextAwareCollector
 	{
 		log.debug("NetworkAclCollector.collectEntities called with request: {}", collectorRequestParams);
 
-		if (this.ec2Client == null)
-		{
-			this.ec2Client = AwsClientFactory.getInstance().getEc2Client(providerContext);
-		}
+		Ec2Client ec2Client = AwsClientFactory.getInstance().getEc2Client(providerContext);
 
 		try
 		{
@@ -100,7 +96,7 @@ public class NetworkAclCollector extends AbstractAwsContextAwareCollector
 			DescribeNetworkAclsRequest describeRequest = requestBuilder.build();
 			log.debug("NetworkAclCollector.collect calling DescribeNetworkAcls with maxResults={} nextToken={}",
 				describeRequest.maxResults(), describeRequest.nextToken());
-			DescribeNetworkAclsResponse response = this.ec2Client.describeNetworkAcls(describeRequest);
+			DescribeNetworkAclsResponse response = ec2Client.describeNetworkAcls(describeRequest);
 			List<NetworkAcl> networkAcls = response.networkAcls();
 			String nextToken = response.nextToken();
 

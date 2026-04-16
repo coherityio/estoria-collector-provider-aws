@@ -41,7 +41,6 @@ public class Ec2SnapshotCollector extends AbstractAwsContextAwareCollector
 {
     public static final String ENTITY_TYPE = "Ec2Snapshot";
 
-    private Ec2Client ec2Client;
 
     public Ec2SnapshotCollector()
     {
@@ -76,10 +75,7 @@ public class Ec2SnapshotCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("Ec2SnapshotCollector.collect called");
 
-        if (this.ec2Client == null)
-        {
-            this.ec2Client = AwsClientFactory.getInstance().getEc2Client(providerContext);
-        }
+        Ec2Client ec2Client = AwsClientFactory.getInstance().getEc2Client(providerContext);
 
         try
         {
@@ -101,7 +97,7 @@ public class Ec2SnapshotCollector extends AbstractAwsContextAwareCollector
                 requestBuilder.nextToken(token);
             });
 
-            DescribeSnapshotsResponse response = this.ec2Client.describeSnapshots(requestBuilder.build());
+            DescribeSnapshotsResponse response = ec2Client.describeSnapshots(requestBuilder.build());
             List<Snapshot> snapshots = response.snapshots();
             String nextToken = response.nextToken();
 

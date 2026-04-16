@@ -41,7 +41,6 @@ public class AppConfigConfigurationProfileCollector extends AbstractAwsContextAw
 {
     public static final String ENTITY_TYPE = "AppConfigConfigurationProfile";
 
-    private AppConfigClient appConfigClient;
 
     public AppConfigConfigurationProfileCollector()
     {
@@ -67,10 +66,7 @@ public class AppConfigConfigurationProfileCollector extends AbstractAwsContextAw
     {
         log.debug("AppConfigConfigurationProfileCollector.collectEntities called");
 
-        if (this.appConfigClient == null)
-        {
-            this.appConfigClient = AwsClientFactory.getInstance().getAppConfigClient(providerContext);
-        }
+        AppConfigClient appConfigClient = AwsClientFactory.getInstance().getAppConfigClient(providerContext);
 
         try
         {
@@ -84,7 +80,7 @@ public class AppConfigConfigurationProfileCollector extends AbstractAwsContextAw
             {
                 ListApplicationsRequest.Builder appReq = ListApplicationsRequest.builder().maxResults(50);
                 if (appCursor != null) appReq.nextToken(appCursor);
-                ListApplicationsResponse appRes = this.appConfigClient.listApplications(appReq.build());
+                ListApplicationsResponse appRes = appConfigClient.listApplications(appReq.build());
                 if (appRes.items() != null)
                 {
                     appRes.items().forEach(a -> { if (a.id() != null) applicationIds.add(a.id()); });
@@ -107,7 +103,7 @@ public class AppConfigConfigurationProfileCollector extends AbstractAwsContextAw
                     if (profileCursor != null) profileReq.nextToken(profileCursor);
 
                     ListConfigurationProfilesResponse profileRes =
-                        this.appConfigClient.listConfigurationProfiles(profileReq.build());
+                        appConfigClient.listConfigurationProfiles(profileReq.build());
                     List<ConfigurationProfileSummary> profiles = profileRes.items();
 
                     if (profiles != null)

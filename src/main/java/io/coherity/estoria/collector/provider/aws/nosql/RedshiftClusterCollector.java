@@ -40,7 +40,6 @@ public class RedshiftClusterCollector extends AbstractAwsContextAwareCollector
 {
     public static final String ENTITY_TYPE = "RedshiftCluster";
 
-    private RedshiftClient redshiftClient;
 
     public RedshiftClusterCollector()
     {
@@ -66,10 +65,7 @@ public class RedshiftClusterCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("RedshiftClusterCollector.collectEntities called");
 
-        if (this.redshiftClient == null)
-        {
-            this.redshiftClient = AwsClientFactory.getInstance().getRedshiftClient(providerContext);
-        }
+        RedshiftClient redshiftClient = AwsClientFactory.getInstance().getRedshiftClient(providerContext);
 
         try
         {
@@ -86,7 +82,7 @@ public class RedshiftClusterCollector extends AbstractAwsContextAwareCollector
                 requestBuilder.marker(token);
             });
 
-            DescribeClustersResponse response = this.redshiftClient.describeClusters(requestBuilder.build());
+            DescribeClustersResponse response = redshiftClient.describeClusters(requestBuilder.build());
             List<Cluster> clusters = response.clusters();
             String nextMarker = response.marker();
 

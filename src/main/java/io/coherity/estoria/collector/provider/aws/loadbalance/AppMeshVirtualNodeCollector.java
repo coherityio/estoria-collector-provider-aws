@@ -41,7 +41,6 @@ public class AppMeshVirtualNodeCollector extends AbstractAwsContextAwareCollecto
 {
     public static final String ENTITY_TYPE = "AppMeshVirtualNode";
 
-    private AppMeshClient appMeshClient;
 
     public AppMeshVirtualNodeCollector()
     {
@@ -76,10 +75,7 @@ public class AppMeshVirtualNodeCollector extends AbstractAwsContextAwareCollecto
     {
         log.debug("AppMeshVirtualNodeCollector.collect called");
 
-        if (this.appMeshClient == null)
-        {
-            this.appMeshClient = AwsClientFactory.getInstance().getAppMeshClient(providerContext);
-        }
+        AppMeshClient appMeshClient = AwsClientFactory.getInstance().getAppMeshClient(providerContext);
 
         try
         {
@@ -90,7 +86,7 @@ public class AppMeshVirtualNodeCollector extends AbstractAwsContextAwareCollecto
             {
                 ListMeshesRequest.Builder meshReqBuilder = ListMeshesRequest.builder();
                 if (meshNextToken != null) meshReqBuilder.nextToken(meshNextToken);
-                ListMeshesResponse meshResp = this.appMeshClient.listMeshes(meshReqBuilder.build());
+                ListMeshesResponse meshResp = appMeshClient.listMeshes(meshReqBuilder.build());
                 for (MeshRef m : meshResp.meshes())
                 {
                     meshNames.add(m.meshName());
@@ -114,7 +110,7 @@ public class AppMeshVirtualNodeCollector extends AbstractAwsContextAwareCollecto
                     if (vnNextToken != null) vnReqBuilder.nextToken(vnNextToken);
 
                     ListVirtualNodesResponse vnResp =
-                        this.appMeshClient.listVirtualNodes(vnReqBuilder.build());
+                        appMeshClient.listVirtualNodes(vnReqBuilder.build());
 
                     for (VirtualNodeRef vn : vnResp.virtualNodes())
                     {

@@ -40,7 +40,6 @@ public class FsxBackupCollector extends AbstractAwsContextAwareCollector
 {
     public static final String ENTITY_TYPE = "FsxBackup";
 
-    private FSxClient fsxClient;
 
     public FsxBackupCollector()
     {
@@ -66,10 +65,7 @@ public class FsxBackupCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("FsxBackupCollector.collect called");
 
-        if (this.fsxClient == null)
-        {
-            this.fsxClient = AwsClientFactory.getInstance().getFsxClient(providerContext);
-        }
+        FSxClient fsxClient = AwsClientFactory.getInstance().getFsxClient(providerContext);
 
         try
         {
@@ -86,7 +82,7 @@ public class FsxBackupCollector extends AbstractAwsContextAwareCollector
                 requestBuilder.nextToken(token);
             });
 
-            DescribeBackupsResponse response = this.fsxClient.describeBackups(requestBuilder.build());
+            DescribeBackupsResponse response = fsxClient.describeBackups(requestBuilder.build());
             List<Backup> backups = response.backups();
             String nextToken = response.nextToken();
 

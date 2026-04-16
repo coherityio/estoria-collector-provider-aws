@@ -41,7 +41,6 @@ public class AppMeshVirtualServiceCollector extends AbstractAwsContextAwareColle
 {
     public static final String ENTITY_TYPE = "AppMeshVirtualService";
 
-    private AppMeshClient appMeshClient;
 
     public AppMeshVirtualServiceCollector()
     {
@@ -76,10 +75,7 @@ public class AppMeshVirtualServiceCollector extends AbstractAwsContextAwareColle
     {
         log.debug("AppMeshVirtualServiceCollector.collect called");
 
-        if (this.appMeshClient == null)
-        {
-            this.appMeshClient = AwsClientFactory.getInstance().getAppMeshClient(providerContext);
-        }
+        AppMeshClient appMeshClient = AwsClientFactory.getInstance().getAppMeshClient(providerContext);
 
         try
         {
@@ -90,7 +86,7 @@ public class AppMeshVirtualServiceCollector extends AbstractAwsContextAwareColle
             {
                 ListMeshesRequest.Builder meshReqBuilder = ListMeshesRequest.builder();
                 if (meshNextToken != null) meshReqBuilder.nextToken(meshNextToken);
-                ListMeshesResponse meshResp = this.appMeshClient.listMeshes(meshReqBuilder.build());
+                ListMeshesResponse meshResp = appMeshClient.listMeshes(meshReqBuilder.build());
                 for (MeshRef m : meshResp.meshes())
                 {
                     meshNames.add(m.meshName());
@@ -114,7 +110,7 @@ public class AppMeshVirtualServiceCollector extends AbstractAwsContextAwareColle
                     if (vsNextToken != null) vsReqBuilder.nextToken(vsNextToken);
 
                     ListVirtualServicesResponse vsResp =
-                        this.appMeshClient.listVirtualServices(vsReqBuilder.build());
+                        appMeshClient.listVirtualServices(vsReqBuilder.build());
 
                     for (VirtualServiceRef vs : vsResp.virtualServices())
                     {

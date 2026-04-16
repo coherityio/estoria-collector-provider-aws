@@ -40,7 +40,6 @@ public class S3MultiRegionAccessPointCollector extends AbstractAwsContextAwareCo
 {
     public static final String ENTITY_TYPE = "S3MultiRegionAccessPoint";
 
-    private S3ControlClient s3ControlClient;
 
     public S3MultiRegionAccessPointCollector()
     {
@@ -66,10 +65,7 @@ public class S3MultiRegionAccessPointCollector extends AbstractAwsContextAwareCo
     {
         log.debug("S3MultiRegionAccessPointCollector.collect called");
 
-        if (this.s3ControlClient == null)
-        {
-            this.s3ControlClient = AwsClientFactory.getInstance().getS3ControlClient(providerContext);
-        }
+        S3ControlClient s3ControlClient = AwsClientFactory.getInstance().getS3ControlClient(providerContext);
 
         String accountId = awsSessionContext.getCurrentAccountId();
 
@@ -90,7 +86,7 @@ public class S3MultiRegionAccessPointCollector extends AbstractAwsContextAwareCo
             });
 
             ListMultiRegionAccessPointsResponse response =
-                this.s3ControlClient.listMultiRegionAccessPoints(requestBuilder.build());
+                s3ControlClient.listMultiRegionAccessPoints(requestBuilder.build());
             List<MultiRegionAccessPointReport> reports = response.accessPoints();
             String nextToken = response.nextToken();
 

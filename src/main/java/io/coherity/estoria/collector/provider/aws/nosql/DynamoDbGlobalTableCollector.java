@@ -40,7 +40,6 @@ public class DynamoDbGlobalTableCollector extends AbstractAwsContextAwareCollect
 {
     public static final String ENTITY_TYPE = "DynamoDbGlobalTable";
 
-    private DynamoDbClient dynamoDbClient;
 
     public DynamoDbGlobalTableCollector()
     {
@@ -66,10 +65,7 @@ public class DynamoDbGlobalTableCollector extends AbstractAwsContextAwareCollect
     {
         log.debug("DynamoDbGlobalTableCollector.collectEntities called");
 
-        if (this.dynamoDbClient == null)
-        {
-            this.dynamoDbClient = AwsClientFactory.getInstance().getDynamoDbClient(providerContext);
-        }
+        DynamoDbClient dynamoDbClient = AwsClientFactory.getInstance().getDynamoDbClient(providerContext);
 
         try
         {
@@ -86,7 +82,7 @@ public class DynamoDbGlobalTableCollector extends AbstractAwsContextAwareCollect
                 requestBuilder.exclusiveStartGlobalTableName(token);
             });
 
-            ListGlobalTablesResponse response = this.dynamoDbClient.listGlobalTables(requestBuilder.build());
+            ListGlobalTablesResponse response = dynamoDbClient.listGlobalTables(requestBuilder.build());
             List<GlobalTable> globalTables = response.globalTables();
             String lastEvaluated = response.lastEvaluatedGlobalTableName();
 

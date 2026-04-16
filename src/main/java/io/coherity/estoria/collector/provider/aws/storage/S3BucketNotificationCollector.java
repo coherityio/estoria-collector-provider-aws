@@ -44,7 +44,6 @@ public class S3BucketNotificationCollector extends AbstractAwsContextAwareCollec
 {
     public static final String ENTITY_TYPE = "S3BucketNotification";
 
-    private S3Client s3Client;
 
     public S3BucketNotificationCollector()
     {
@@ -70,14 +69,11 @@ public class S3BucketNotificationCollector extends AbstractAwsContextAwareCollec
     {
         log.debug("S3BucketNotificationCollector.collect called");
 
-        if (this.s3Client == null)
-        {
-            this.s3Client = AwsClientFactory.getInstance().getS3Client(providerContext);
-        }
+        S3Client s3Client = AwsClientFactory.getInstance().getS3Client(providerContext);
 
         try
         {
-            ListBucketsResponse listResponse = this.s3Client.listBuckets();
+            ListBucketsResponse listResponse = s3Client.listBuckets();
             List<Bucket> buckets = listResponse.buckets();
 
             List<CloudEntity> entities = new ArrayList<>();
@@ -94,7 +90,7 @@ public class S3BucketNotificationCollector extends AbstractAwsContextAwareCollec
                     GetBucketNotificationConfigurationResponse notifResponse;
                     try
                     {
-                        notifResponse = this.s3Client.getBucketNotificationConfiguration(
+                        notifResponse = s3Client.getBucketNotificationConfiguration(
                             GetBucketNotificationConfigurationRequest.builder().bucket(bucketName).build());
                     }
                     catch (S3Exception ex)

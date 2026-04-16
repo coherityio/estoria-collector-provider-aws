@@ -38,7 +38,6 @@ public class OrganizationsAccountCollector extends AbstractAwsContextAwareCollec
 {
     public static final String ENTITY_TYPE = "OrganizationsAccount";
 
-    private OrganizationsClient organizationsClient;
 
     public OrganizationsAccountCollector()
     {
@@ -64,10 +63,7 @@ public class OrganizationsAccountCollector extends AbstractAwsContextAwareCollec
     {
         log.debug("OrganizationsAccountCollector.collect called");
 
-        if (this.organizationsClient == null)
-        {
-            this.organizationsClient = AwsClientFactory.getInstance().getOrganizationsClient(providerContext);
-        }
+        OrganizationsClient organizationsClient = AwsClientFactory.getInstance().getOrganizationsClient(providerContext);
 
         try
         {
@@ -84,7 +80,7 @@ public class OrganizationsAccountCollector extends AbstractAwsContextAwareCollec
                 requestBuilder.nextToken(token);
             });
 
-            ListAccountsResponse response = this.organizationsClient.listAccounts(requestBuilder.build());
+            ListAccountsResponse response = organizationsClient.listAccounts(requestBuilder.build());
             List<Account> accounts = response.accounts();
             String nextToken = response.nextToken();
 

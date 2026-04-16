@@ -43,7 +43,6 @@ public class OrganizationsPolicyCollector extends AbstractAwsContextAwareCollect
     public static final String ENTITY_TYPE = "OrganizationsPolicy";
     private static final int PAGE_SIZE = 20;
 
-    private OrganizationsClient organizationsClient;
 
     public OrganizationsPolicyCollector()
     {
@@ -69,10 +68,7 @@ public class OrganizationsPolicyCollector extends AbstractAwsContextAwareCollect
     {
         log.debug("OrganizationsPolicyCollector.collect called");
 
-        if (this.organizationsClient == null)
-        {
-            this.organizationsClient = AwsClientFactory.getInstance().getOrganizationsClient(providerContext);
-        }
+        OrganizationsClient organizationsClient = AwsClientFactory.getInstance().getOrganizationsClient(providerContext);
 
         try
         {
@@ -91,7 +87,7 @@ public class OrganizationsPolicyCollector extends AbstractAwsContextAwareCollect
                 {
                     try
                     {
-                        ListPoliciesResponse response = this.organizationsClient.listPolicies(
+                        ListPoliciesResponse response = organizationsClient.listPolicies(
                             ListPoliciesRequest.builder()
                                 .filter(policyType)
                                 .maxResults(PAGE_SIZE)

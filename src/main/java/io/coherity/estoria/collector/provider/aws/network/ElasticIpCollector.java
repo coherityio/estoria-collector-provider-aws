@@ -43,7 +43,6 @@ public class ElasticIpCollector extends AbstractAwsContextAwareCollector
 {
 	public static final String ENTITY_TYPE = "ElasticIp";
 
-	private Ec2Client ec2Client;
 
 	public ElasticIpCollector()
 	{
@@ -74,10 +73,7 @@ public class ElasticIpCollector extends AbstractAwsContextAwareCollector
 	{
 		log.debug("ElasticIpCollector.collectEntities called with request: {}", collectorRequestParams);
 
-		if (this.ec2Client == null)
-		{
-			this.ec2Client = AwsClientFactory.getInstance().getEc2Client(providerContext);
-		}
+		Ec2Client ec2Client = AwsClientFactory.getInstance().getEc2Client(providerContext);
 
 		try
 		{
@@ -88,7 +84,7 @@ public class ElasticIpCollector extends AbstractAwsContextAwareCollector
 			// DescribeAddresses does not support pagination
 			DescribeAddressesRequest describeRequest = DescribeAddressesRequest.builder().build();
 			log.debug("ElasticIpCollector.collect calling DescribeAddresses");
-			DescribeAddressesResponse response = this.ec2Client.describeAddresses(describeRequest);
+			DescribeAddressesResponse response = ec2Client.describeAddresses(describeRequest);
 			List<Address> addresses = response.addresses();
 
 			log.debug("ElasticIpCollector.collect received {} Elastic IPs",

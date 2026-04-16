@@ -38,7 +38,6 @@ public class OrganizationsOrganizationCollector extends AbstractAwsContextAwareC
 {
     public static final String ENTITY_TYPE = "OrganizationsOrganization";
 
-    private OrganizationsClient organizationsClient;
 
     public OrganizationsOrganizationCollector()
     {
@@ -64,14 +63,11 @@ public class OrganizationsOrganizationCollector extends AbstractAwsContextAwareC
     {
         log.debug("OrganizationsOrganizationCollector.collect called");
 
-        if (this.organizationsClient == null)
-        {
-            this.organizationsClient = AwsClientFactory.getInstance().getOrganizationsClient(providerContext);
-        }
+        OrganizationsClient organizationsClient = AwsClientFactory.getInstance().getOrganizationsClient(providerContext);
 
         try
         {
-            DescribeOrganizationResponse response = this.organizationsClient.describeOrganization(
+            DescribeOrganizationResponse response = organizationsClient.describeOrganization(
                 DescribeOrganizationRequest.builder().build());
             Organization org = response.organization();
 

@@ -41,7 +41,6 @@ public class S3BucketLoggingCollector extends AbstractAwsContextAwareCollector
 {
     public static final String ENTITY_TYPE = "S3BucketLogging";
 
-    private S3Client s3Client;
 
     public S3BucketLoggingCollector()
     {
@@ -67,14 +66,11 @@ public class S3BucketLoggingCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("S3BucketLoggingCollector.collect called");
 
-        if (this.s3Client == null)
-        {
-            this.s3Client = AwsClientFactory.getInstance().getS3Client(providerContext);
-        }
+        S3Client s3Client = AwsClientFactory.getInstance().getS3Client(providerContext);
 
         try
         {
-            ListBucketsResponse listResponse = this.s3Client.listBuckets();
+            ListBucketsResponse listResponse = s3Client.listBuckets();
             List<Bucket> buckets = listResponse.buckets();
 
             List<CloudEntity> entities = new ArrayList<>();
@@ -91,7 +87,7 @@ public class S3BucketLoggingCollector extends AbstractAwsContextAwareCollector
                     GetBucketLoggingResponse loggingResponse;
                     try
                     {
-                        loggingResponse = this.s3Client.getBucketLogging(
+                        loggingResponse = s3Client.getBucketLogging(
                             GetBucketLoggingRequest.builder().bucket(bucketName).build());
                     }
                     catch (S3Exception ex)

@@ -38,7 +38,6 @@ public class IamAccountPasswordPolicyCollector extends AbstractAwsContextAwareCo
 {
     public static final String ENTITY_TYPE = "IamAccountPasswordPolicy";
 
-    private IamClient iamClient;
 
     public IamAccountPasswordPolicyCollector()
     {
@@ -64,14 +63,11 @@ public class IamAccountPasswordPolicyCollector extends AbstractAwsContextAwareCo
     {
         log.debug("IamAccountPasswordPolicyCollector.collect called");
 
-        if (this.iamClient == null)
-        {
-            this.iamClient = AwsClientFactory.getInstance().getIamClient(providerContext);
-        }
+        IamClient iamClient = AwsClientFactory.getInstance().getIamClient(providerContext);
 
         try
         {
-            GetAccountPasswordPolicyResponse response = this.iamClient.getAccountPasswordPolicy(
+            GetAccountPasswordPolicyResponse response = iamClient.getAccountPasswordPolicy(
                 GetAccountPasswordPolicyRequest.builder().build());
             PasswordPolicy policy = response.passwordPolicy();
 

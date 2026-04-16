@@ -37,7 +37,6 @@ public class SecurityHubHubCollector extends AbstractAwsContextAwareCollector
 {
     public static final String ENTITY_TYPE = "SecurityHubHub";
 
-    private SecurityHubClient securityHubClient;
 
     public SecurityHubHubCollector()
     {
@@ -63,14 +62,11 @@ public class SecurityHubHubCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("SecurityHubHubCollector.collect called");
 
-        if (this.securityHubClient == null)
-        {
-            this.securityHubClient = AwsClientFactory.getInstance().getSecurityHubClient(providerContext);
-        }
+        SecurityHubClient securityHubClient = AwsClientFactory.getInstance().getSecurityHubClient(providerContext);
 
         try
         {
-            DescribeHubResponse response = this.securityHubClient.describeHub(
+            DescribeHubResponse response = securityHubClient.describeHub(
                 DescribeHubRequest.builder().build());
 
             Map<String, Object> attributes = new HashMap<>();

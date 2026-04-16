@@ -42,7 +42,6 @@ public class BackupSelectionCollector extends AbstractAwsContextAwareCollector
 {
 	public static final String ENTITY_TYPE = "BackupSelection";
 
-	private BackupClient backupClient;
 
 	public BackupSelectionCollector()
 	{
@@ -68,10 +67,7 @@ public class BackupSelectionCollector extends AbstractAwsContextAwareCollector
 	{
 		log.debug("BackupSelectionCollector.collectEntities called");
 
-		if (this.backupClient == null)
-		{
-			this.backupClient = AwsClientFactory.getInstance().getBackupClient(providerContext);
-		}
+		BackupClient backupClient = AwsClientFactory.getInstance().getBackupClient(providerContext);
 
 		try
 		{
@@ -85,7 +81,7 @@ public class BackupSelectionCollector extends AbstractAwsContextAwareCollector
 			{
 				ListBackupPlansRequest.Builder planReq = ListBackupPlansRequest.builder().includeDeleted(false);
 				if (planToken != null) planReq.nextToken(planToken);
-				ListBackupPlansResponse planResp = this.backupClient.listBackupPlans(planReq.build());
+				ListBackupPlansResponse planResp = backupClient.listBackupPlans(planReq.build());
 				if (planResp.backupPlansList() != null)
 				{
 					for (BackupPlansListMember plan : planResp.backupPlansList())
@@ -112,7 +108,7 @@ public class BackupSelectionCollector extends AbstractAwsContextAwareCollector
 						.backupPlanId(planId);
 					if (selToken != null) selReq.nextToken(selToken);
 
-					ListBackupSelectionsResponse selResp = this.backupClient.listBackupSelections(selReq.build());
+					ListBackupSelectionsResponse selResp = backupClient.listBackupSelections(selReq.build());
 					selToken = selResp.nextToken();
 
 					List<BackupSelectionsListMember> selections = selResp.backupSelectionsList();

@@ -38,7 +38,6 @@ public class CloudFrontOriginRequestPolicyCollector extends AbstractAwsContextAw
 {
     public static final String ENTITY_TYPE = "CloudFrontOriginRequestPolicy";
 
-    private CloudFrontClient cloudFrontClient;
 
     public CloudFrontOriginRequestPolicyCollector()
     {
@@ -64,10 +63,7 @@ public class CloudFrontOriginRequestPolicyCollector extends AbstractAwsContextAw
     {
         log.debug("CloudFrontOriginRequestPolicyCollector.collect called");
 
-        if (this.cloudFrontClient == null)
-        {
-            this.cloudFrontClient = AwsClientFactory.getInstance().getCloudFrontClient(providerContext);
-        }
+        CloudFrontClient cloudFrontClient = AwsClientFactory.getInstance().getCloudFrontClient(providerContext);
 
         try
         {
@@ -86,7 +82,7 @@ public class CloudFrontOriginRequestPolicyCollector extends AbstractAwsContextAw
             });
 
             ListOriginRequestPoliciesResponse response =
-                this.cloudFrontClient.listOriginRequestPolicies(requestBuilder.build());
+                cloudFrontClient.listOriginRequestPolicies(requestBuilder.build());
             List<OriginRequestPolicySummary> policies = response.originRequestPolicyList() != null
                 ? response.originRequestPolicyList().items() : null;
             String nextMarker = response.originRequestPolicyList() != null

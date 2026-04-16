@@ -38,7 +38,6 @@ public class IamServerCertificateCollector extends AbstractAwsContextAwareCollec
 {
     public static final String ENTITY_TYPE = "IamServerCertificate";
 
-    private IamClient iamClient;
 
     public IamServerCertificateCollector()
     {
@@ -64,10 +63,7 @@ public class IamServerCertificateCollector extends AbstractAwsContextAwareCollec
     {
         log.debug("IamServerCertificateCollector.collect called");
 
-        if (this.iamClient == null)
-        {
-            this.iamClient = AwsClientFactory.getInstance().getIamClient(providerContext);
-        }
+        IamClient iamClient = AwsClientFactory.getInstance().getIamClient(providerContext);
 
         try
         {
@@ -84,7 +80,7 @@ public class IamServerCertificateCollector extends AbstractAwsContextAwareCollec
                 requestBuilder.marker(token);
             });
 
-            ListServerCertificatesResponse response = this.iamClient.listServerCertificates(requestBuilder.build());
+            ListServerCertificatesResponse response = iamClient.listServerCertificates(requestBuilder.build());
             List<ServerCertificateMetadata> certs = response.serverCertificateMetadataList();
             String nextMarker = response.isTruncated() ? response.marker() : null;
 

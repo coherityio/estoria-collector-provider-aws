@@ -38,7 +38,6 @@ public class LicenseManagerLicenseConfigurationCollector extends AbstractAwsCont
 {
 	public static final String ENTITY_TYPE = "LicenseManagerLicenseConfiguration";
 
-	private LicenseManagerClient licenseManagerClient;
 
 	public LicenseManagerLicenseConfigurationCollector()
 	{
@@ -64,10 +63,7 @@ public class LicenseManagerLicenseConfigurationCollector extends AbstractAwsCont
 	{
 		log.debug("LicenseManagerLicenseConfigurationCollector.collectEntities called");
 
-		if (this.licenseManagerClient == null)
-		{
-			this.licenseManagerClient = AwsClientFactory.getInstance().getLicenseManagerClient(providerContext);
-		}
+		LicenseManagerClient licenseManagerClient = AwsClientFactory.getInstance().getLicenseManagerClient(providerContext);
 
 		try
 		{
@@ -85,7 +81,7 @@ public class LicenseManagerLicenseConfigurationCollector extends AbstractAwsCont
 			});
 
 			ListLicenseConfigurationsResponse response =
-				this.licenseManagerClient.listLicenseConfigurations(requestBuilder.build());
+				licenseManagerClient.listLicenseConfigurations(requestBuilder.build());
 			List<LicenseConfiguration> configs   = response.licenseConfigurations();
 			String                     nextToken = response.nextToken();
 

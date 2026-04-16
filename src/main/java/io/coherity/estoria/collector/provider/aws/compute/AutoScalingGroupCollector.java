@@ -40,7 +40,6 @@ public class AutoScalingGroupCollector extends AbstractAwsContextAwareCollector
 {
     public static final String ENTITY_TYPE = "AutoScalingGroup";
 
-    private AutoScalingClient autoScalingClient;
 
     public AutoScalingGroupCollector()
     {
@@ -75,10 +74,7 @@ public class AutoScalingGroupCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("AutoScalingGroupCollector.collect called");
 
-        if (this.autoScalingClient == null)
-        {
-            this.autoScalingClient = AwsClientFactory.getInstance().getAutoScalingClient(providerContext);
-        }
+        AutoScalingClient autoScalingClient = AwsClientFactory.getInstance().getAutoScalingClient(providerContext);
 
         try
         {
@@ -97,7 +93,7 @@ public class AutoScalingGroupCollector extends AbstractAwsContextAwareCollector
             });
 
             DescribeAutoScalingGroupsResponse response =
-                this.autoScalingClient.describeAutoScalingGroups(requestBuilder.build());
+                autoScalingClient.describeAutoScalingGroups(requestBuilder.build());
             List<AutoScalingGroup> groups = response.autoScalingGroups();
             String nextToken = response.nextToken();
 

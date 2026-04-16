@@ -38,7 +38,6 @@ public class RdsParameterGroupCollector extends AbstractAwsContextAwareCollector
 {
     public static final String ENTITY_TYPE = "RdsParameterGroup";
 
-    private RdsClient rdsClient;
 
     public RdsParameterGroupCollector()
     {
@@ -64,10 +63,7 @@ public class RdsParameterGroupCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("RdsParameterGroupCollector.collectEntities called");
 
-        if (this.rdsClient == null)
-        {
-            this.rdsClient = AwsClientFactory.getInstance().getRdsClient(providerContext);
-        }
+        RdsClient rdsClient = AwsClientFactory.getInstance().getRdsClient(providerContext);
 
         try
         {
@@ -84,7 +80,7 @@ public class RdsParameterGroupCollector extends AbstractAwsContextAwareCollector
                 requestBuilder.marker(token);
             });
 
-            DescribeDbParameterGroupsResponse response = this.rdsClient.describeDBParameterGroups(requestBuilder.build());
+            DescribeDbParameterGroupsResponse response = rdsClient.describeDBParameterGroups(requestBuilder.build());
             List<DBParameterGroup> paramGroups = response.dbParameterGroups();
             String nextMarker = response.marker();
 

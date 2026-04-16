@@ -40,7 +40,6 @@ public class StorageGatewayVolumeCollector extends AbstractAwsContextAwareCollec
 {
     public static final String ENTITY_TYPE = "StorageGatewayVolume";
 
-    private StorageGatewayClient storageGatewayClient;
 
     public StorageGatewayVolumeCollector()
     {
@@ -66,10 +65,7 @@ public class StorageGatewayVolumeCollector extends AbstractAwsContextAwareCollec
     {
         log.debug("StorageGatewayVolumeCollector.collect called");
 
-        if (this.storageGatewayClient == null)
-        {
-            this.storageGatewayClient = AwsClientFactory.getInstance().getStorageGatewayClient(providerContext);
-        }
+        StorageGatewayClient storageGatewayClient = AwsClientFactory.getInstance().getStorageGatewayClient(providerContext);
 
         try
         {
@@ -81,7 +77,7 @@ public class StorageGatewayVolumeCollector extends AbstractAwsContextAwareCollec
                 ListGatewaysRequest gwReq = ListGatewaysRequest.builder()
                     .marker(gwMarker)
                     .build();
-                ListGatewaysResponse gwResp = this.storageGatewayClient.listGateways(gwReq);
+                ListGatewaysResponse gwResp = storageGatewayClient.listGateways(gwReq);
                 if (gwResp.gateways() != null)
                 {
                     gwResp.gateways().forEach(gw -> gatewayArns.add(gw.gatewayARN()));
@@ -102,7 +98,7 @@ public class StorageGatewayVolumeCollector extends AbstractAwsContextAwareCollec
                         .gatewayARN(gatewayArn)
                         .marker(volMarker)
                         .build();
-                    ListVolumesResponse volResp = this.storageGatewayClient.listVolumes(volReq);
+                    ListVolumesResponse volResp = storageGatewayClient.listVolumes(volReq);
 
                     if (volResp.volumeInfos() != null)
                     {

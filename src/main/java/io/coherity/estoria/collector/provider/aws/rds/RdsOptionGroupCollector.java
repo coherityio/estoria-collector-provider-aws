@@ -39,7 +39,6 @@ public class RdsOptionGroupCollector extends AbstractAwsContextAwareCollector
 {
     public static final String ENTITY_TYPE = "RdsOptionGroup";
 
-    private RdsClient rdsClient;
 
     public RdsOptionGroupCollector()
     {
@@ -65,10 +64,7 @@ public class RdsOptionGroupCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("RdsOptionGroupCollector.collectEntities called");
 
-        if (this.rdsClient == null)
-        {
-            this.rdsClient = AwsClientFactory.getInstance().getRdsClient(providerContext);
-        }
+        RdsClient rdsClient = AwsClientFactory.getInstance().getRdsClient(providerContext);
 
         try
         {
@@ -85,7 +81,7 @@ public class RdsOptionGroupCollector extends AbstractAwsContextAwareCollector
                 requestBuilder.marker(token);
             });
 
-            DescribeOptionGroupsResponse response = this.rdsClient.describeOptionGroups(requestBuilder.build());
+            DescribeOptionGroupsResponse response = rdsClient.describeOptionGroups(requestBuilder.build());
             List<OptionGroup> optionGroups = response.optionGroupsList();
             String nextMarker = response.marker();
 

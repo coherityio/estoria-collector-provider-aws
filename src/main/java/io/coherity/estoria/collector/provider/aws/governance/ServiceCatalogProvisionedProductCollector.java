@@ -39,7 +39,6 @@ public class ServiceCatalogProvisionedProductCollector extends AbstractAwsContex
 {
 	public static final String ENTITY_TYPE = "ServiceCatalogProvisionedProduct";
 
-	private ServiceCatalogClient serviceCatalogClient;
 
 	public ServiceCatalogProvisionedProductCollector()
 	{
@@ -65,10 +64,7 @@ public class ServiceCatalogProvisionedProductCollector extends AbstractAwsContex
 	{
 		log.debug("ServiceCatalogProvisionedProductCollector.collectEntities called");
 
-		if (this.serviceCatalogClient == null)
-		{
-			this.serviceCatalogClient = AwsClientFactory.getInstance().getServiceCatalogClient(providerContext);
-		}
+		ServiceCatalogClient serviceCatalogClient = AwsClientFactory.getInstance().getServiceCatalogClient(providerContext);
 
 		try
 		{
@@ -86,7 +82,7 @@ public class ServiceCatalogProvisionedProductCollector extends AbstractAwsContex
 			});
 
 			ScanProvisionedProductsResponse response =
-				this.serviceCatalogClient.scanProvisionedProducts(requestBuilder.build());
+				serviceCatalogClient.scanProvisionedProducts(requestBuilder.build());
 			//List<ProvisionedProductAttribute> products  = response.provisionedProducts();
 
 			List<ProvisionedProductDetail> products = response.provisionedProducts();			

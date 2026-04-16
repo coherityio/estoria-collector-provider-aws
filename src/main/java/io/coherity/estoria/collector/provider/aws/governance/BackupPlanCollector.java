@@ -38,7 +38,6 @@ public class BackupPlanCollector extends AbstractAwsContextAwareCollector
 {
 	public static final String ENTITY_TYPE = "BackupPlan";
 
-	private BackupClient backupClient;
 
 	public BackupPlanCollector()
 	{
@@ -64,10 +63,7 @@ public class BackupPlanCollector extends AbstractAwsContextAwareCollector
 	{
 		log.debug("BackupPlanCollector.collectEntities called");
 
-		if (this.backupClient == null)
-		{
-			this.backupClient = AwsClientFactory.getInstance().getBackupClient(providerContext);
-		}
+		BackupClient backupClient = AwsClientFactory.getInstance().getBackupClient(providerContext);
 
 		try
 		{
@@ -85,7 +81,7 @@ public class BackupPlanCollector extends AbstractAwsContextAwareCollector
 				requestBuilder.nextToken(token);
 			});
 
-			ListBackupPlansResponse response = this.backupClient.listBackupPlans(requestBuilder.build());
+			ListBackupPlansResponse response = backupClient.listBackupPlans(requestBuilder.build());
 			List<BackupPlansListMember> plans     = response.backupPlansList();
 			String                      nextToken = response.nextToken();
 

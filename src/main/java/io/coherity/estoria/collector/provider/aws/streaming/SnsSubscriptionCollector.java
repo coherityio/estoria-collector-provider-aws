@@ -38,7 +38,6 @@ public class SnsSubscriptionCollector extends AbstractAwsContextAwareCollector
 {
     public static final String ENTITY_TYPE = "SnsSubscription";
 
-    private SnsClient snsClient;
 
     public SnsSubscriptionCollector()
     {
@@ -64,10 +63,7 @@ public class SnsSubscriptionCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("SnsSubscriptionCollector.collectEntities called");
 
-        if (this.snsClient == null)
-        {
-            this.snsClient = AwsClientFactory.getInstance().getSnsClient(providerContext);
-        }
+        SnsClient snsClient = AwsClientFactory.getInstance().getSnsClient(providerContext);
 
         try
         {
@@ -81,7 +77,7 @@ public class SnsSubscriptionCollector extends AbstractAwsContextAwareCollector
                 requestBuilder.nextToken(token);
             });
 
-            ListSubscriptionsResponse response = this.snsClient.listSubscriptions(requestBuilder.build());
+            ListSubscriptionsResponse response = snsClient.listSubscriptions(requestBuilder.build());
             List<Subscription> subscriptions = response.subscriptions();
             String             nextToken     = response.nextToken();
 

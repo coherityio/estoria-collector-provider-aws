@@ -42,7 +42,6 @@ public class Ec2PlacementGroupCollector extends AbstractAwsContextAwareCollector
 {
     public static final String ENTITY_TYPE = "Ec2PlacementGroup";
 
-    private Ec2Client ec2Client;
 
     public Ec2PlacementGroupCollector()
     {
@@ -77,10 +76,7 @@ public class Ec2PlacementGroupCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("Ec2PlacementGroupCollector.collect called");
 
-        if (this.ec2Client == null)
-        {
-            this.ec2Client = AwsClientFactory.getInstance().getEc2Client(providerContext);
-        }
+        Ec2Client ec2Client = AwsClientFactory.getInstance().getEc2Client(providerContext);
 
         try
         {
@@ -88,7 +84,7 @@ public class Ec2PlacementGroupCollector extends AbstractAwsContextAwareCollector
             String accountId = awsSessionContext.getCurrentAccountId();
 
             // DescribePlacementGroups does not support pagination
-            DescribePlacementGroupsResponse response = this.ec2Client.describePlacementGroups(
+            DescribePlacementGroupsResponse response = ec2Client.describePlacementGroups(
                 DescribePlacementGroupsRequest.builder().build());
             List<PlacementGroup> groups = response.placementGroups();
 

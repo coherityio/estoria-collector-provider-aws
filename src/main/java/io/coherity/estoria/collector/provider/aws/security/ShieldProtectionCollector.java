@@ -40,7 +40,6 @@ public class ShieldProtectionCollector extends AbstractAwsContextAwareCollector
     public static final String ENTITY_TYPE = "ShieldProtection";
     private static final int PAGE_SIZE = 100;
 
-    private ShieldClient shieldClient;
 
     public ShieldProtectionCollector()
     {
@@ -66,10 +65,7 @@ public class ShieldProtectionCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("ShieldProtectionCollector.collect called");
 
-        if (this.shieldClient == null)
-        {
-            this.shieldClient = AwsClientFactory.getInstance().getShieldClient(providerContext);
-        }
+        ShieldClient shieldClient = AwsClientFactory.getInstance().getShieldClient(providerContext);
 
         try
         {
@@ -78,7 +74,7 @@ public class ShieldProtectionCollector extends AbstractAwsContextAwareCollector
 
             do
             {
-                ListProtectionsResponse response = this.shieldClient.listProtections(
+                ListProtectionsResponse response = shieldClient.listProtections(
                     ListProtectionsRequest.builder()
                         .maxResults(PAGE_SIZE)
                         .nextToken(nextToken)

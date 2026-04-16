@@ -42,7 +42,6 @@ public class TimestreamTableCollector extends AbstractAwsContextAwareCollector
     public static final String ENTITY_TYPE = "TimestreamTable";
     private static final String CURSOR_SEP   = "::";
 
-    private TimestreamWriteClient timestreamClient;
 
     public TimestreamTableCollector()
     {
@@ -68,10 +67,7 @@ public class TimestreamTableCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("TimestreamTableCollector.collectEntities called");
 
-        if (this.timestreamClient == null)
-        {
-            this.timestreamClient = AwsClientFactory.getInstance().getTimestreamWriteClient(providerContext);
-        }
+        TimestreamWriteClient timestreamClient = AwsClientFactory.getInstance().getTimestreamWriteClient(providerContext);
 
         try
         {
@@ -81,7 +77,7 @@ public class TimestreamTableCollector extends AbstractAwsContextAwareCollector
             do {
                 ListDatabasesRequest.Builder dbReq = ListDatabasesRequest.builder();
                 if (dbNextToken != null) dbReq.nextToken(dbNextToken);
-                var dbResp = this.timestreamClient.listDatabases(dbReq.build());
+                var dbResp = timestreamClient.listDatabases(dbReq.build());
                 if (dbResp.databases() != null)
                 {
                     for (Database db : dbResp.databases())
@@ -134,7 +130,7 @@ public class TimestreamTableCollector extends AbstractAwsContextAwareCollector
                     if (pageSize > 0) tableReq.maxResults(pageSize);
                     if (tableNextToken != null) tableReq.nextToken(tableNextToken);
 
-                    ListTablesResponse tableResp = this.timestreamClient.listTables(tableReq.build());
+                    ListTablesResponse tableResp = timestreamClient.listTables(tableReq.build());
                     List<Table> tables = tableResp.tables();
                     tableNextToken = tableResp.nextToken();
 

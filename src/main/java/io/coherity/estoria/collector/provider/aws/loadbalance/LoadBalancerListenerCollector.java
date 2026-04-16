@@ -38,7 +38,6 @@ public class LoadBalancerListenerCollector extends AbstractAwsContextAwareCollec
 {
     public static final String ENTITY_TYPE = "LoadBalancerListener";
 
-    private ElasticLoadBalancingV2Client elbV2Client;
 
     public LoadBalancerListenerCollector()
     {
@@ -73,10 +72,7 @@ public class LoadBalancerListenerCollector extends AbstractAwsContextAwareCollec
     {
         log.debug("LoadBalancerListenerCollector.collect called");
 
-        if (this.elbV2Client == null)
-        {
-            this.elbV2Client = AwsClientFactory.getInstance().getElbV2Client(providerContext);
-        }
+        ElasticLoadBalancingV2Client elbV2Client = AwsClientFactory.getInstance().getElbV2Client(providerContext);
 
         try
         {
@@ -93,7 +89,7 @@ public class LoadBalancerListenerCollector extends AbstractAwsContextAwareCollec
                 requestBuilder.marker(token);
             });
 
-            DescribeListenersResponse response = this.elbV2Client.describeListeners(requestBuilder.build());
+            DescribeListenersResponse response = elbV2Client.describeListeners(requestBuilder.build());
             List<Listener> listeners = response.listeners();
             String nextMarker = response.nextMarker();
 

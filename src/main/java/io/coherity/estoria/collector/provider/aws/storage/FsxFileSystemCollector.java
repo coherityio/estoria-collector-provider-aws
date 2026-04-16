@@ -40,7 +40,6 @@ public class FsxFileSystemCollector extends AbstractAwsContextAwareCollector
 {
     public static final String ENTITY_TYPE = "FsxFileSystem";
 
-    private FSxClient fsxClient;
 
     public FsxFileSystemCollector()
     {
@@ -66,10 +65,7 @@ public class FsxFileSystemCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("FsxFileSystemCollector.collect called");
 
-        if (this.fsxClient == null)
-        {
-            this.fsxClient = AwsClientFactory.getInstance().getFsxClient(providerContext);
-        }
+        FSxClient fsxClient = AwsClientFactory.getInstance().getFsxClient(providerContext);
 
         try
         {
@@ -86,7 +82,7 @@ public class FsxFileSystemCollector extends AbstractAwsContextAwareCollector
                 requestBuilder.nextToken(token);
             });
 
-            DescribeFileSystemsResponse response = this.fsxClient.describeFileSystems(requestBuilder.build());
+            DescribeFileSystemsResponse response = fsxClient.describeFileSystems(requestBuilder.build());
             List<FileSystem> fileSystems = response.fileSystems();
             String nextToken = response.nextToken();
 

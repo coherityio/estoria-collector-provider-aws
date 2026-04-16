@@ -38,7 +38,6 @@ public class ElastiCacheParameterGroupCollector extends AbstractAwsContextAwareC
 {
     public static final String ENTITY_TYPE = "ElastiCacheParameterGroup";
 
-    private ElastiCacheClient elastiCacheClient;
 
     public ElastiCacheParameterGroupCollector()
     {
@@ -64,10 +63,7 @@ public class ElastiCacheParameterGroupCollector extends AbstractAwsContextAwareC
     {
         log.debug("ElastiCacheParameterGroupCollector.collectEntities called");
 
-        if (this.elastiCacheClient == null)
-        {
-            this.elastiCacheClient = AwsClientFactory.getInstance().getElastiCacheClient(providerContext);
-        }
+        ElastiCacheClient elastiCacheClient = AwsClientFactory.getInstance().getElastiCacheClient(providerContext);
 
         try
         {
@@ -86,7 +82,7 @@ public class ElastiCacheParameterGroupCollector extends AbstractAwsContextAwareC
             });
 
             DescribeCacheParameterGroupsResponse response =
-                this.elastiCacheClient.describeCacheParameterGroups(requestBuilder.build());
+                elastiCacheClient.describeCacheParameterGroups(requestBuilder.build());
             List<CacheParameterGroup> paramGroups = response.cacheParameterGroups();
             String nextMarker = response.marker();
 

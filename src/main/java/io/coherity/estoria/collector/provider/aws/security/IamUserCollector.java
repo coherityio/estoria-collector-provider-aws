@@ -38,7 +38,6 @@ public class IamUserCollector extends AbstractAwsContextAwareCollector
 {
     public static final String ENTITY_TYPE = "IamUser";
 
-    private IamClient iamClient;
 
     public IamUserCollector()
     {
@@ -64,10 +63,7 @@ public class IamUserCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("IamUserCollector.collect called");
 
-        if (this.iamClient == null)
-        {
-            this.iamClient = AwsClientFactory.getInstance().getIamClient(providerContext);
-        }
+        IamClient iamClient = AwsClientFactory.getInstance().getIamClient(providerContext);
 
         try
         {
@@ -84,7 +80,7 @@ public class IamUserCollector extends AbstractAwsContextAwareCollector
                 requestBuilder.marker(token);
             });
 
-            ListUsersResponse response = this.iamClient.listUsers(requestBuilder.build());
+            ListUsersResponse response = iamClient.listUsers(requestBuilder.build());
             List<User> users = response.users();
             String nextMarker = response.isTruncated() ? response.marker() : null;
 

@@ -40,7 +40,6 @@ public class NeptuneSubnetGroupCollector extends AbstractAwsContextAwareCollecto
 {
     public static final String ENTITY_TYPE = "NeptuneSubnetGroup";
 
-    private NeptuneClient neptuneClient;
 
     public NeptuneSubnetGroupCollector()
     {
@@ -66,10 +65,7 @@ public class NeptuneSubnetGroupCollector extends AbstractAwsContextAwareCollecto
     {
         log.debug("NeptuneSubnetGroupCollector.collectEntities called");
 
-        if (this.neptuneClient == null)
-        {
-            this.neptuneClient = AwsClientFactory.getInstance().getNeptuneClient(providerContext);
-        }
+        NeptuneClient neptuneClient = AwsClientFactory.getInstance().getNeptuneClient(providerContext);
 
         try
         {
@@ -86,7 +82,7 @@ public class NeptuneSubnetGroupCollector extends AbstractAwsContextAwareCollecto
                 requestBuilder.marker(token);
             });
 
-            DescribeDbSubnetGroupsResponse response = this.neptuneClient.describeDBSubnetGroups(requestBuilder.build());
+            DescribeDbSubnetGroupsResponse response = neptuneClient.describeDBSubnetGroups(requestBuilder.build());
             List<DBSubnetGroup> subnetGroups = response.dbSubnetGroups();
             String nextMarker = response.marker();
 
@@ -108,7 +104,7 @@ public class NeptuneSubnetGroupCollector extends AbstractAwsContextAwareCollecto
                     Map<String, String> tags = new HashMap<>();
                     if (arn != null && !arn.isBlank())
                     {
-                        tags = this.neptuneClient.listTagsForResource(r -> r.resourceName(arn))
+                        tags = neptuneClient.listTagsForResource(r -> r.resourceName(arn))
                             .tagList()
                             .stream()
                             .collect(Collectors.toMap(Tag::key, Tag::value, (a, b) -> b));

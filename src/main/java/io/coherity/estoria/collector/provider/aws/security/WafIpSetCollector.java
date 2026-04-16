@@ -39,7 +39,6 @@ public class WafIpSetCollector extends AbstractAwsContextAwareCollector
 {
     public static final String ENTITY_TYPE = "WafIpSet";
 
-    private Wafv2Client wafv2Client;
 
     public WafIpSetCollector()
     {
@@ -65,10 +64,7 @@ public class WafIpSetCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("WafIpSetCollector.collect called");
 
-        if (this.wafv2Client == null)
-        {
-            this.wafv2Client = AwsClientFactory.getInstance().getWafv2Client(providerContext);
-        }
+        Wafv2Client wafv2Client = AwsClientFactory.getInstance().getWafv2Client(providerContext);
 
         try
         {
@@ -84,7 +80,7 @@ public class WafIpSetCollector extends AbstractAwsContextAwareCollector
                 {
                     wafRequestBuilder.nextMarker(nextMarker);
                 }
-                ListIpSetsResponse response = this.wafv2Client.listIPSets(wafRequestBuilder.build());
+                ListIpSetsResponse response = wafv2Client.listIPSets(wafRequestBuilder.build());
 
                 for (IPSetSummary ipSet : response.ipSets())
                 {

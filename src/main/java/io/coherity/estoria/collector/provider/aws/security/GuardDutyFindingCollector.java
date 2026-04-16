@@ -45,7 +45,6 @@ public class GuardDutyFindingCollector extends AbstractAwsContextAwareCollector
     private static final int PAGE_SIZE = 50;
     private static final int BATCH_SIZE = 50; // getFindings max
 
-    private GuardDutyClient guardDutyClient;
 
     public GuardDutyFindingCollector()
     {
@@ -71,10 +70,7 @@ public class GuardDutyFindingCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("GuardDutyFindingCollector.collect called");
 
-        if (this.guardDutyClient == null)
-        {
-            this.guardDutyClient = AwsClientFactory.getInstance().getGuardDutyClient(providerContext);
-        }
+        GuardDutyClient guardDutyClient = AwsClientFactory.getInstance().getGuardDutyClient(providerContext);
 
         try
         {
@@ -85,7 +81,7 @@ public class GuardDutyFindingCollector extends AbstractAwsContextAwareCollector
             String detectorNextToken = null;
             do
             {
-                ListDetectorsResponse detectorResponse = this.guardDutyClient.listDetectors(
+                ListDetectorsResponse detectorResponse = guardDutyClient.listDetectors(
                     ListDetectorsRequest.builder()
                         .maxResults(50)
                         .nextToken(detectorNextToken)
@@ -102,7 +98,7 @@ public class GuardDutyFindingCollector extends AbstractAwsContextAwareCollector
                 String findingNextToken = null;
                 do
                 {
-                    ListFindingsResponse listResponse = this.guardDutyClient.listFindings(
+                    ListFindingsResponse listResponse = guardDutyClient.listFindings(
                         ListFindingsRequest.builder()
                             .detectorId(detectorId)
                             .maxResults(PAGE_SIZE)
@@ -117,7 +113,7 @@ public class GuardDutyFindingCollector extends AbstractAwsContextAwareCollector
                 for (int i = 0; i < findingIds.size(); i += BATCH_SIZE)
                 {
                     List<String> batch = findingIds.subList(i, Math.min(i + BATCH_SIZE, findingIds.size()));
-                    GetFindingsResponse getResponse = this.guardDutyClient.getFindings(
+                    GetFindingsResponse getResponse = guardDutyClient.getFindings(
                         GetFindingsRequest.builder()
                             .detectorId(detectorId)
                             .findingIds(batch)

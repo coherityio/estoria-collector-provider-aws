@@ -38,7 +38,6 @@ public class RdsEventSubscriptionCollector extends AbstractAwsContextAwareCollec
 {
     public static final String ENTITY_TYPE = "RdsEventSubscription";
 
-    private RdsClient rdsClient;
 
     public RdsEventSubscriptionCollector()
     {
@@ -64,10 +63,7 @@ public class RdsEventSubscriptionCollector extends AbstractAwsContextAwareCollec
     {
         log.debug("RdsEventSubscriptionCollector.collectEntities called");
 
-        if (this.rdsClient == null)
-        {
-            this.rdsClient = AwsClientFactory.getInstance().getRdsClient(providerContext);
-        }
+        RdsClient rdsClient = AwsClientFactory.getInstance().getRdsClient(providerContext);
 
         try
         {
@@ -85,7 +81,7 @@ public class RdsEventSubscriptionCollector extends AbstractAwsContextAwareCollec
             });
 
             DescribeEventSubscriptionsResponse response =
-                this.rdsClient.describeEventSubscriptions(requestBuilder.build());
+                rdsClient.describeEventSubscriptions(requestBuilder.build());
             List<EventSubscription> subscriptions = response.eventSubscriptionsList();
             String nextMarker = response.marker();
 

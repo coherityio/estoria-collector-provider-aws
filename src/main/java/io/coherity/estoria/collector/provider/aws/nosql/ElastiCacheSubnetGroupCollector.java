@@ -39,7 +39,6 @@ public class ElastiCacheSubnetGroupCollector extends AbstractAwsContextAwareColl
 {
     public static final String ENTITY_TYPE = "ElastiCacheSubnetGroup";
 
-    private ElastiCacheClient elastiCacheClient;
 
     public ElastiCacheSubnetGroupCollector()
     {
@@ -65,10 +64,7 @@ public class ElastiCacheSubnetGroupCollector extends AbstractAwsContextAwareColl
     {
         log.debug("ElastiCacheSubnetGroupCollector.collectEntities called");
 
-        if (this.elastiCacheClient == null)
-        {
-            this.elastiCacheClient = AwsClientFactory.getInstance().getElastiCacheClient(providerContext);
-        }
+        ElastiCacheClient elastiCacheClient = AwsClientFactory.getInstance().getElastiCacheClient(providerContext);
 
         try
         {
@@ -86,7 +82,7 @@ public class ElastiCacheSubnetGroupCollector extends AbstractAwsContextAwareColl
             });
 
             DescribeCacheSubnetGroupsResponse response =
-                this.elastiCacheClient.describeCacheSubnetGroups(requestBuilder.build());
+                elastiCacheClient.describeCacheSubnetGroups(requestBuilder.build());
             List<CacheSubnetGroup> subnetGroups = response.cacheSubnetGroups();
             String nextMarker = response.marker();
 

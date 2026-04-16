@@ -39,7 +39,6 @@ public class BudgetsBudgetCollector extends AbstractAwsContextAwareCollector
 {
     public static final String ENTITY_TYPE = "BudgetsBudget";
 
-    private BudgetsClient budgetsClient;
 
     public BudgetsBudgetCollector()
     {
@@ -65,10 +64,7 @@ public class BudgetsBudgetCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("BudgetsBudgetCollector.collectEntities called");
 
-        if (this.budgetsClient == null)
-        {
-            this.budgetsClient = AwsClientFactory.getInstance().getBudgetsClient(providerContext);
-        }
+        BudgetsClient budgetsClient = AwsClientFactory.getInstance().getBudgetsClient(providerContext);
 
         try
         {
@@ -88,7 +84,7 @@ public class BudgetsBudgetCollector extends AbstractAwsContextAwareCollector
                 requestBuilder.nextToken(token);
             });
 
-            DescribeBudgetsResponse response = this.budgetsClient.describeBudgets(requestBuilder.build());
+            DescribeBudgetsResponse response = budgetsClient.describeBudgets(requestBuilder.build());
             List<Budget> budgets = response.budgets();
             String nextToken = response.nextToken();
 

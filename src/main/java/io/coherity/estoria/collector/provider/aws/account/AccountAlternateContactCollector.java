@@ -41,7 +41,6 @@ public class AccountAlternateContactCollector extends AbstractAwsContextAwareCol
 {
     public static final String ENTITY_TYPE = "AccountAlternateContact";
 
-    private AccountClient accountClient;
 
     public AccountAlternateContactCollector()
     {
@@ -67,10 +66,7 @@ public class AccountAlternateContactCollector extends AbstractAwsContextAwareCol
     {
         log.debug("AccountAlternateContactCollector.collectEntities called");
 
-        if (this.accountClient == null)
-        {
-            this.accountClient = AwsClientFactory.getInstance().getAccountClient(providerContext);
-        }
+        AccountClient accountClient = AwsClientFactory.getInstance().getAccountClient(providerContext);
 
         try
         {
@@ -88,7 +84,7 @@ public class AccountAlternateContactCollector extends AbstractAwsContextAwareCol
                         .alternateContactType(contactType)
                         .build();
 
-                    GetAlternateContactResponse response = this.accountClient.getAlternateContact(request);
+                    GetAlternateContactResponse response = accountClient.getAlternateContact(request);
                     AlternateContact contact = response.alternateContact();
 
                     if (contact == null) continue;

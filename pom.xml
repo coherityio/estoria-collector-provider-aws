@@ -247,6 +247,10 @@
         </dependency>
         <dependency>
             <groupId>software.amazon.awssdk</groupId>
+            <artifactId>xray</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
             <artifactId>account</artifactId>
         </dependency>
         <dependency>
@@ -346,6 +350,50 @@
         <dependency>
             <groupId>software.amazon.awssdk</groupId>
             <artifactId>cloudtrail</artifactId>
+        </dependency>
+
+        <!-- Developer Tools -->
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>codecommit</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>codebuild</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>codepipeline</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>codedeploy</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>codeartifact</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>codeguruprofiler</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>codegurureviewer</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>cloud9</artifactId>
+        </dependency>
+
+        <!-- End User Computing -->
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>workspaces</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>appstream</artifactId>
         </dependency>
 
         <!-- Data Integration & Analytics -->

@@ -39,7 +39,6 @@ public class SsmAssociationCollector extends AbstractAwsContextAwareCollector
     public static final String ENTITY_TYPE = "SsmAssociation";
     private static final int PAGE_SIZE = 50;
 
-    private SsmClient ssmClient;
 
     public SsmAssociationCollector()
     {
@@ -65,10 +64,7 @@ public class SsmAssociationCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("SsmAssociationCollector.collect called");
 
-        if (this.ssmClient == null)
-        {
-            this.ssmClient = AwsClientFactory.getInstance().getSsmClient(providerContext);
-        }
+        SsmClient ssmClient = AwsClientFactory.getInstance().getSsmClient(providerContext);
 
         try
         {
@@ -77,7 +73,7 @@ public class SsmAssociationCollector extends AbstractAwsContextAwareCollector
 
             do
             {
-                ListAssociationsResponse response = this.ssmClient.listAssociations(
+                ListAssociationsResponse response = ssmClient.listAssociations(
                     ListAssociationsRequest.builder()
                         .maxResults(PAGE_SIZE)
                         .nextToken(nextToken)

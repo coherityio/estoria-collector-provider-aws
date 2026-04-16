@@ -38,7 +38,6 @@ public class CloudFrontFunctionCollector extends AbstractAwsContextAwareCollecto
 {
     public static final String ENTITY_TYPE = "CloudFrontFunction";
 
-    private CloudFrontClient cloudFrontClient;
 
     public CloudFrontFunctionCollector()
     {
@@ -64,10 +63,7 @@ public class CloudFrontFunctionCollector extends AbstractAwsContextAwareCollecto
     {
         log.debug("CloudFrontFunctionCollector.collect called");
 
-        if (this.cloudFrontClient == null)
-        {
-            this.cloudFrontClient = AwsClientFactory.getInstance().getCloudFrontClient(providerContext);
-        }
+        CloudFrontClient cloudFrontClient = AwsClientFactory.getInstance().getCloudFrontClient(providerContext);
 
         try
         {
@@ -85,7 +81,7 @@ public class CloudFrontFunctionCollector extends AbstractAwsContextAwareCollecto
                 requestBuilder.marker(token);
             });
 
-            ListFunctionsResponse response = this.cloudFrontClient.listFunctions(requestBuilder.build());
+            ListFunctionsResponse response = cloudFrontClient.listFunctions(requestBuilder.build());
             List<FunctionSummary> functions = response.functionList() != null
                 ? response.functionList().items() : null;
             String nextMarker = response.functionList() != null

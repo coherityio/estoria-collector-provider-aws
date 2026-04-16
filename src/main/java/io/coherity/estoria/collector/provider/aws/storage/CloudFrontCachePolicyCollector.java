@@ -38,7 +38,6 @@ public class CloudFrontCachePolicyCollector extends AbstractAwsContextAwareColle
 {
     public static final String ENTITY_TYPE = "CloudFrontCachePolicy";
 
-    private CloudFrontClient cloudFrontClient;
 
     public CloudFrontCachePolicyCollector()
     {
@@ -64,10 +63,7 @@ public class CloudFrontCachePolicyCollector extends AbstractAwsContextAwareColle
     {
         log.debug("CloudFrontCachePolicyCollector.collect called");
 
-        if (this.cloudFrontClient == null)
-        {
-            this.cloudFrontClient = AwsClientFactory.getInstance().getCloudFrontClient(providerContext);
-        }
+        CloudFrontClient cloudFrontClient = AwsClientFactory.getInstance().getCloudFrontClient(providerContext);
 
         try
         {
@@ -85,7 +81,7 @@ public class CloudFrontCachePolicyCollector extends AbstractAwsContextAwareColle
                 requestBuilder.marker(token);
             });
 
-            ListCachePoliciesResponse response = this.cloudFrontClient.listCachePolicies(requestBuilder.build());
+            ListCachePoliciesResponse response = cloudFrontClient.listCachePolicies(requestBuilder.build());
             List<CachePolicySummary> policies = response.cachePolicyList() != null
                 ? response.cachePolicyList().items() : null;
             String nextMarker = response.cachePolicyList() != null

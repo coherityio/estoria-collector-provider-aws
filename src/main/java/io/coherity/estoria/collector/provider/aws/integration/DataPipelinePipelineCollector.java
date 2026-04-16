@@ -44,7 +44,6 @@ public class DataPipelinePipelineCollector extends AbstractAwsContextAwareCollec
     public static final String ENTITY_TYPE = "DataPipelinePipeline";
     private static final int    DESCRIBE_MAX = 25; // DescribePipelines supports up to 25 IDs per call
 
-    private DataPipelineClient dataPipelineClient;
 
     public DataPipelinePipelineCollector()
     {
@@ -70,10 +69,7 @@ public class DataPipelinePipelineCollector extends AbstractAwsContextAwareCollec
     {
         log.debug("DataPipelinePipelineCollector.collectEntities called");
 
-        if (this.dataPipelineClient == null)
-        {
-            this.dataPipelineClient = AwsClientFactory.getInstance().getDataPipelineClient(providerContext);
-        }
+        DataPipelineClient dataPipelineClient = AwsClientFactory.getInstance().getDataPipelineClient(providerContext);
 
         try
         {
@@ -87,7 +83,7 @@ public class DataPipelinePipelineCollector extends AbstractAwsContextAwareCollec
             {
                 ListPipelinesRequest.Builder listReq = ListPipelinesRequest.builder();
                 if (marker != null) listReq.marker(marker);
-                ListPipelinesResponse listResp = this.dataPipelineClient.listPipelines(listReq.build());
+                ListPipelinesResponse listResp = dataPipelineClient.listPipelines(listReq.build());
                 if (listResp.pipelineIdList() != null)
                 {
                     for (PipelineIdName pin : listResp.pipelineIdList())
@@ -109,7 +105,7 @@ public class DataPipelinePipelineCollector extends AbstractAwsContextAwareCollec
             {
                 List<String> batch = pipelineIds.subList(i, Math.min(i + DESCRIBE_MAX, pipelineIds.size()));
 
-                DescribePipelinesResponse descResp = this.dataPipelineClient.describePipelines(
+                DescribePipelinesResponse descResp = dataPipelineClient.describePipelines(
                     DescribePipelinesRequest.builder().pipelineIds(batch).build());
 
                 List<PipelineDescription> descriptions = descResp.pipelineDescriptionList();

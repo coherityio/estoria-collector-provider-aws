@@ -40,7 +40,6 @@ public class CapacityReservationCollector extends AbstractAwsContextAwareCollect
 {
     public static final String ENTITY_TYPE = "CapacityReservation";
 
-    private Ec2Client ec2Client;
 
     public CapacityReservationCollector()
     {
@@ -75,10 +74,7 @@ public class CapacityReservationCollector extends AbstractAwsContextAwareCollect
     {
         log.debug("CapacityReservationCollector.collect called");
 
-        if (this.ec2Client == null)
-        {
-            this.ec2Client = AwsClientFactory.getInstance().getEc2Client(providerContext);
-        }
+        Ec2Client ec2Client = AwsClientFactory.getInstance().getEc2Client(providerContext);
 
         String region    = awsSessionContext.getRegion() != null ? awsSessionContext.getRegion().id() : null;
         String accountId = awsSessionContext.getCurrentAccountId();
@@ -100,7 +96,7 @@ public class CapacityReservationCollector extends AbstractAwsContextAwareCollect
             });
 
             DescribeCapacityReservationsResponse response =
-                this.ec2Client.describeCapacityReservations(requestBuilder.build());
+                ec2Client.describeCapacityReservations(requestBuilder.build());
             List<CapacityReservation> reservations = response.capacityReservations();
             String nextToken = response.nextToken();
 

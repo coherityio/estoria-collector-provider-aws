@@ -39,7 +39,6 @@ public class Ec2LaunchConfigurationCollector extends AbstractAwsContextAwareColl
 {
     public static final String ENTITY_TYPE = "Ec2LaunchConfiguration";
 
-    private AutoScalingClient autoScalingClient;
 
     public Ec2LaunchConfigurationCollector()
     {
@@ -74,10 +73,7 @@ public class Ec2LaunchConfigurationCollector extends AbstractAwsContextAwareColl
     {
         log.debug("Ec2LaunchConfigurationCollector.collect called");
 
-        if (this.autoScalingClient == null)
-        {
-            this.autoScalingClient = AwsClientFactory.getInstance().getAutoScalingClient(providerContext);
-        }
+        AutoScalingClient autoScalingClient = AwsClientFactory.getInstance().getAutoScalingClient(providerContext);
 
         try
         {
@@ -96,7 +92,7 @@ public class Ec2LaunchConfigurationCollector extends AbstractAwsContextAwareColl
             });
 
             DescribeLaunchConfigurationsResponse response =
-                this.autoScalingClient.describeLaunchConfigurations(requestBuilder.build());
+                autoScalingClient.describeLaunchConfigurations(requestBuilder.build());
             List<LaunchConfiguration> configs = response.launchConfigurations();
             String nextToken = response.nextToken();
 

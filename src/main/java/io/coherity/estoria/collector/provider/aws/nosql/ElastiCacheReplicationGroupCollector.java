@@ -38,7 +38,6 @@ public class ElastiCacheReplicationGroupCollector extends AbstractAwsContextAwar
 {
     public static final String ENTITY_TYPE = "ElastiCacheReplicationGroup";
 
-    private ElastiCacheClient elastiCacheClient;
 
     public ElastiCacheReplicationGroupCollector()
     {
@@ -64,10 +63,7 @@ public class ElastiCacheReplicationGroupCollector extends AbstractAwsContextAwar
     {
         log.debug("ElastiCacheReplicationGroupCollector.collectEntities called");
 
-        if (this.elastiCacheClient == null)
-        {
-            this.elastiCacheClient = AwsClientFactory.getInstance().getElastiCacheClient(providerContext);
-        }
+        ElastiCacheClient elastiCacheClient = AwsClientFactory.getInstance().getElastiCacheClient(providerContext);
 
         try
         {
@@ -85,7 +81,7 @@ public class ElastiCacheReplicationGroupCollector extends AbstractAwsContextAwar
             });
 
             DescribeReplicationGroupsResponse response =
-                this.elastiCacheClient.describeReplicationGroups(requestBuilder.build());
+                elastiCacheClient.describeReplicationGroups(requestBuilder.build());
             List<ReplicationGroup> groups = response.replicationGroups();
             String nextMarker = response.marker();
 

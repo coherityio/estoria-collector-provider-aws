@@ -42,7 +42,6 @@ public class SesReceiptRuleSetCollector extends AbstractAwsContextAwareCollector
 {
 	public static final String ENTITY_TYPE = "SesReceiptRuleSet";
 
-	private SesClient sesClient;
 
 	public SesReceiptRuleSetCollector()
 	{
@@ -68,10 +67,7 @@ public class SesReceiptRuleSetCollector extends AbstractAwsContextAwareCollector
 	{
 		log.debug("SesReceiptRuleSetCollector.collectEntities called");
 
-		if (this.sesClient == null)
-		{
-			this.sesClient = AwsClientFactory.getInstance().getSesClient(providerContext);
-		}
+		SesClient sesClient = AwsClientFactory.getInstance().getSesClient(providerContext);
 
 		try
 		{
@@ -86,7 +82,7 @@ public class SesReceiptRuleSetCollector extends AbstractAwsContextAwareCollector
 				requestBuilder.nextToken(token);
 			});
 
-			ListReceiptRuleSetsResponse response = this.sesClient.listReceiptRuleSets(requestBuilder.build());
+			ListReceiptRuleSetsResponse response = sesClient.listReceiptRuleSets(requestBuilder.build());
 			List<ReceiptRuleSetMetadata> ruleSets  = response.ruleSets();
 			String                       nextToken = response.nextToken();
 

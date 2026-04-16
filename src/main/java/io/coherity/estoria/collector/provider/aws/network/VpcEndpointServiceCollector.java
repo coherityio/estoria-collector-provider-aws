@@ -42,7 +42,6 @@ public class VpcEndpointServiceCollector extends AbstractAwsContextAwareCollecto
 {
 	public static final String ENTITY_TYPE = "VpcEndpointService";
 
-	private Ec2Client ec2Client;
 
 	public VpcEndpointServiceCollector()
 	{
@@ -73,10 +72,7 @@ public class VpcEndpointServiceCollector extends AbstractAwsContextAwareCollecto
 	{
 		log.debug("VpcEndpointServiceCollector.collectEntities called with request: {}", collectorRequestParams);
 
-		if (this.ec2Client == null)
-		{
-			this.ec2Client = AwsClientFactory.getInstance().getEc2Client(providerContext);
-		}
+		Ec2Client ec2Client = AwsClientFactory.getInstance().getEc2Client(providerContext);
 
 		try
 		{
@@ -100,7 +96,7 @@ public class VpcEndpointServiceCollector extends AbstractAwsContextAwareCollecto
 			DescribeVpcEndpointServicesRequest describeRequest = requestBuilder.build();
 			log.debug("VpcEndpointServiceCollector.collect calling DescribeVpcEndpointServices with maxResults={} nextToken={}",
 				describeRequest.maxResults(), describeRequest.nextToken());
-			DescribeVpcEndpointServicesResponse response = this.ec2Client.describeVpcEndpointServices(describeRequest);
+			DescribeVpcEndpointServicesResponse response = ec2Client.describeVpcEndpointServices(describeRequest);
 			List<ServiceDetail> services = response.serviceDetails();
 			String nextToken = response.nextToken();
 

@@ -38,7 +38,6 @@ public class RedshiftParameterGroupCollector extends AbstractAwsContextAwareColl
 {
     public static final String ENTITY_TYPE = "RedshiftParameterGroup";
 
-    private RedshiftClient redshiftClient;
 
     public RedshiftParameterGroupCollector()
     {
@@ -64,10 +63,7 @@ public class RedshiftParameterGroupCollector extends AbstractAwsContextAwareColl
     {
         log.debug("RedshiftParameterGroupCollector.collectEntities called");
 
-        if (this.redshiftClient == null)
-        {
-            this.redshiftClient = AwsClientFactory.getInstance().getRedshiftClient(providerContext);
-        }
+        RedshiftClient redshiftClient = AwsClientFactory.getInstance().getRedshiftClient(providerContext);
 
         try
         {
@@ -86,7 +82,7 @@ public class RedshiftParameterGroupCollector extends AbstractAwsContextAwareColl
             });
 
             DescribeClusterParameterGroupsResponse response =
-                this.redshiftClient.describeClusterParameterGroups(requestBuilder.build());
+                redshiftClient.describeClusterParameterGroups(requestBuilder.build());
             List<ClusterParameterGroup> paramGroups = response.parameterGroups();
             String nextMarker = response.marker();
 

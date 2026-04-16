@@ -41,7 +41,6 @@ public class AthenaNamedQueryCollector extends AbstractAwsContextAwareCollector
     public static final String ENTITY_TYPE = "AthenaNamedQuery";
     private static final int    BATCH_SIZE    = 50; // BatchGetNamedQuery max is 50
 
-    private AthenaClient athenaClient;
 
     public AthenaNamedQueryCollector()
     {
@@ -67,10 +66,7 @@ public class AthenaNamedQueryCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("AthenaNamedQueryCollector.collectEntities called");
 
-        if (this.athenaClient == null)
-        {
-            this.athenaClient = AwsClientFactory.getInstance().getAthenaClient(providerContext);
-        }
+        AthenaClient athenaClient = AwsClientFactory.getInstance().getAthenaClient(providerContext);
 
         try
         {
@@ -84,7 +80,7 @@ public class AthenaNamedQueryCollector extends AbstractAwsContextAwareCollector
             {
                 ListNamedQueriesRequest.Builder listReq = ListNamedQueriesRequest.builder();
                 if (nextToken != null) listReq.nextToken(nextToken);
-                ListNamedQueriesResponse listResp = this.athenaClient.listNamedQueries(listReq.build());
+                ListNamedQueriesResponse listResp = athenaClient.listNamedQueries(listReq.build());
                 if (listResp.namedQueryIds() != null) queryIds.addAll(listResp.namedQueryIds());
                 nextToken = listResp.nextToken();
             }
@@ -100,7 +96,7 @@ public class AthenaNamedQueryCollector extends AbstractAwsContextAwareCollector
             {
                 List<String> batch = queryIds.subList(i, Math.min(i + BATCH_SIZE, queryIds.size()));
 
-                BatchGetNamedQueryResponse batchResp = this.athenaClient.batchGetNamedQuery(
+                BatchGetNamedQueryResponse batchResp = athenaClient.batchGetNamedQuery(
                     BatchGetNamedQueryRequest.builder().namedQueryIds(batch).build());
 
                 List<NamedQuery> queries = batchResp.namedQueries();

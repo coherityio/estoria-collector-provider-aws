@@ -39,7 +39,6 @@ public class StorageGatewayCollector extends AbstractAwsContextAwareCollector
 {
     public static final String ENTITY_TYPE = "StorageGateway";
 
-    private StorageGatewayClient storageGatewayClient;
 
     public StorageGatewayCollector()
     {
@@ -65,10 +64,7 @@ public class StorageGatewayCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("StorageGatewayCollector.collect called");
 
-        if (this.storageGatewayClient == null)
-        {
-            this.storageGatewayClient = AwsClientFactory.getInstance().getStorageGatewayClient(providerContext);
-        }
+        StorageGatewayClient storageGatewayClient = AwsClientFactory.getInstance().getStorageGatewayClient(providerContext);
 
         try
         {
@@ -85,7 +81,7 @@ public class StorageGatewayCollector extends AbstractAwsContextAwareCollector
                 requestBuilder.marker(token);
             });
 
-            ListGatewaysResponse response = this.storageGatewayClient.listGateways(requestBuilder.build());
+            ListGatewaysResponse response = storageGatewayClient.listGateways(requestBuilder.build());
             List<GatewayInfo> gateways = response.gateways();
             String nextMarker = response.marker();
 

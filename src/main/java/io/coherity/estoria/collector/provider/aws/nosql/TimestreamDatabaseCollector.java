@@ -38,7 +38,6 @@ public class TimestreamDatabaseCollector extends AbstractAwsContextAwareCollecto
 {
     public static final String ENTITY_TYPE = "TimestreamDatabase";
 
-    private TimestreamWriteClient timestreamClient;
 
     public TimestreamDatabaseCollector()
     {
@@ -64,10 +63,7 @@ public class TimestreamDatabaseCollector extends AbstractAwsContextAwareCollecto
     {
         log.debug("TimestreamDatabaseCollector.collectEntities called");
 
-        if (this.timestreamClient == null)
-        {
-            this.timestreamClient = AwsClientFactory.getInstance().getTimestreamWriteClient(providerContext);
-        }
+        TimestreamWriteClient timestreamClient = AwsClientFactory.getInstance().getTimestreamWriteClient(providerContext);
 
         try
         {
@@ -84,7 +80,7 @@ public class TimestreamDatabaseCollector extends AbstractAwsContextAwareCollecto
                 requestBuilder.nextToken(token);
             });
 
-            ListDatabasesResponse response = this.timestreamClient.listDatabases(requestBuilder.build());
+            ListDatabasesResponse response = timestreamClient.listDatabases(requestBuilder.build());
             List<Database> databases = response.databases();
             String nextToken = response.nextToken();
 

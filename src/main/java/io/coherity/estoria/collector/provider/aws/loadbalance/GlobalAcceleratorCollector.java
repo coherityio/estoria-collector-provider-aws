@@ -39,7 +39,6 @@ public class GlobalAcceleratorCollector extends AbstractAwsContextAwareCollector
 {
     public static final String ENTITY_TYPE = "GlobalAccelerator";
 
-    private GlobalAcceleratorClient globalAcceleratorClient;
 
     public GlobalAcceleratorCollector()
     {
@@ -74,10 +73,7 @@ public class GlobalAcceleratorCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("GlobalAcceleratorCollector.collect called");
 
-        if (this.globalAcceleratorClient == null)
-        {
-            this.globalAcceleratorClient = AwsClientFactory.getInstance().getGlobalAcceleratorClient(providerContext);
-        }
+        GlobalAcceleratorClient globalAcceleratorClient = AwsClientFactory.getInstance().getGlobalAcceleratorClient(providerContext);
 
         try
         {
@@ -94,7 +90,7 @@ public class GlobalAcceleratorCollector extends AbstractAwsContextAwareCollector
                 requestBuilder.nextToken(token);
             });
 
-            ListAcceleratorsResponse response = this.globalAcceleratorClient.listAccelerators(requestBuilder.build());
+            ListAcceleratorsResponse response = globalAcceleratorClient.listAccelerators(requestBuilder.build());
             List<Accelerator> accelerators = response.accelerators();
             String nextToken = response.nextToken();
 

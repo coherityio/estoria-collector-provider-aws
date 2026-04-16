@@ -41,7 +41,6 @@ public class SpotFleetRequestCollector extends AbstractAwsContextAwareCollector
 {
     public static final String ENTITY_TYPE = "SpotFleetRequest";
 
-    private Ec2Client ec2Client;
 
     public SpotFleetRequestCollector()
     {
@@ -76,10 +75,7 @@ public class SpotFleetRequestCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("SpotFleetRequestCollector.collect called");
 
-        if (this.ec2Client == null)
-        {
-            this.ec2Client = AwsClientFactory.getInstance().getEc2Client(providerContext);
-        }
+        Ec2Client ec2Client = AwsClientFactory.getInstance().getEc2Client(providerContext);
 
         String region    = awsSessionContext.getRegion() != null ? awsSessionContext.getRegion().id() : null;
         String accountId = awsSessionContext.getCurrentAccountId();
@@ -101,7 +97,7 @@ public class SpotFleetRequestCollector extends AbstractAwsContextAwareCollector
             });
 
             DescribeSpotFleetRequestsResponse response =
-                this.ec2Client.describeSpotFleetRequests(requestBuilder.build());
+                ec2Client.describeSpotFleetRequests(requestBuilder.build());
             List<SpotFleetRequestConfig> configs = response.spotFleetRequestConfigs();
             String nextToken = response.nextToken();
 

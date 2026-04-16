@@ -45,7 +45,6 @@ public class SsoPermissionSetCollector extends AbstractAwsContextAwareCollector
     public static final String ENTITY_TYPE = "SsoPermissionSet";
     private static final int PAGE_SIZE = 100;
 
-    private SsoAdminClient ssoAdminClient;
 
     public SsoPermissionSetCollector()
     {
@@ -71,10 +70,7 @@ public class SsoPermissionSetCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("SsoPermissionSetCollector.collect called");
 
-        if (this.ssoAdminClient == null)
-        {
-            this.ssoAdminClient = AwsClientFactory.getInstance().getSsoAdminClient(providerContext);
-        }
+        SsoAdminClient ssoAdminClient = AwsClientFactory.getInstance().getSsoAdminClient(providerContext);
 
         try
         {
@@ -85,7 +81,7 @@ public class SsoPermissionSetCollector extends AbstractAwsContextAwareCollector
             String instancesNextToken = null;
             do
             {
-                ListInstancesResponse instancesResponse = this.ssoAdminClient.listInstances(
+                ListInstancesResponse instancesResponse = ssoAdminClient.listInstances(
                     ListInstancesRequest.builder()
                         .maxResults(PAGE_SIZE)
                         .nextToken(instancesNextToken)
@@ -102,7 +98,7 @@ public class SsoPermissionSetCollector extends AbstractAwsContextAwareCollector
                 String nextToken = null;
                 do
                 {
-                    ListPermissionSetsResponse listResponse = this.ssoAdminClient.listPermissionSets(
+                    ListPermissionSetsResponse listResponse = ssoAdminClient.listPermissionSets(
                         ListPermissionSetsRequest.builder()
                             .instanceArn(instanceArn)
                             .maxResults(PAGE_SIZE)
@@ -111,7 +107,7 @@ public class SsoPermissionSetCollector extends AbstractAwsContextAwareCollector
 
                     for (String permissionSetArn : listResponse.permissionSets())
                     {
-                        DescribePermissionSetResponse describeResponse = this.ssoAdminClient.describePermissionSet(
+                        DescribePermissionSetResponse describeResponse = ssoAdminClient.describePermissionSet(
                             DescribePermissionSetRequest.builder()
                                 .instanceArn(instanceArn)
                                 .permissionSetArn(permissionSetArn)

@@ -39,7 +39,6 @@ public class ConfigRuleCollector extends AbstractAwsContextAwareCollector
     public static final String ENTITY_TYPE = "ConfigRule";
     private static final int PAGE_SIZE = 50;
 
-    private ConfigClient configClient;
 
     public ConfigRuleCollector()
     {
@@ -65,10 +64,7 @@ public class ConfigRuleCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("ConfigRuleCollector.collect called");
 
-        if (this.configClient == null)
-        {
-            this.configClient = AwsClientFactory.getInstance().getConfigClient(providerContext);
-        }
+        ConfigClient configClient = AwsClientFactory.getInstance().getConfigClient(providerContext);
 
         try
         {
@@ -77,7 +73,7 @@ public class ConfigRuleCollector extends AbstractAwsContextAwareCollector
 
             do
             {
-                DescribeConfigRulesResponse response = this.configClient.describeConfigRules(
+                DescribeConfigRulesResponse response = configClient.describeConfigRules(
                     DescribeConfigRulesRequest.builder()
                         .nextToken(nextToken)
                         .build());

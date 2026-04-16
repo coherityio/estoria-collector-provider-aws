@@ -40,7 +40,6 @@ public class PrivateLinkServiceCollector extends AbstractAwsContextAwareCollecto
 {
     public static final String ENTITY_TYPE = "PrivateLinkService";
 
-    private Ec2Client ec2Client;
 
     public PrivateLinkServiceCollector()
     {
@@ -75,10 +74,7 @@ public class PrivateLinkServiceCollector extends AbstractAwsContextAwareCollecto
     {
         log.debug("PrivateLinkServiceCollector.collect called");
 
-        if (this.ec2Client == null)
-        {
-            this.ec2Client = AwsClientFactory.getInstance().getEc2Client(providerContext);
-        }
+        Ec2Client ec2Client = AwsClientFactory.getInstance().getEc2Client(providerContext);
 
         try
         {
@@ -100,7 +96,7 @@ public class PrivateLinkServiceCollector extends AbstractAwsContextAwareCollecto
             });
 
             DescribeVpcEndpointServiceConfigurationsResponse response =
-                this.ec2Client.describeVpcEndpointServiceConfigurations(requestBuilder.build());
+                ec2Client.describeVpcEndpointServiceConfigurations(requestBuilder.build());
             List<ServiceConfiguration> services = response.serviceConfigurations();
             String nextToken = response.nextToken();
 

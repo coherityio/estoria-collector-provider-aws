@@ -1,0 +1,48 @@
+{
+  "typesetId": "aws-enduser",
+  "displayName": "AWS End User Computing",
+  "description": "Entity types for AWS end-user computing services such as WorkSpaces and AppStream 2.0.",
+  "version": "1.0.0",
+  "entityTypes": [
+    {
+      "entityType": "WorkSpacesWorkspace",
+      "displayName": "WorkSpaces Workspace",
+      "description": "An Amazon WorkSpaces virtual desktop assigned to a user.",
+      "category": "RESOURCE",
+      "containmentScope": "ACCOUNT_REGIONAL",
+      "tags": ["enduser", "workspaces", "workspace", "aws"]
+    },
+    {
+      "entityType": "WorkSpacesDirectory",
+      "displayName": "WorkSpaces Directory",
+      "description": "An Amazon WorkSpaces directory registered for workspace provisioning and authentication.",
+      "category": "RESOURCE",
+      "containmentScope": "ACCOUNT_REGIONAL",
+      "tags": ["enduser", "workspaces", "directory", "aws"]
+    },
+    {
+      "entityType": "WorkSpacesApplication",
+      "displayName": "WorkSpaces Application",
+      "description": "An Amazon WorkSpaces application made available to end users.",
+      "category": "RESOURCE",
+      "containmentScope": "ACCOUNT_REGIONAL",
+      "tags": ["enduser", "workspaces", "application", "aws"]
+    },
+    {
+      "entityType": "AppStreamFleet",
+      "displayName": "AppStream Fleet",
+      "description": "An Amazon AppStream 2.0 fleet that provides streaming instances for users.",
+      "category": "RESOURCE",
+      "containmentScope": "ACCOUNT_REGIONAL",
+      "tags": ["enduser", "appstream", "fleet", "aws"]
+    },
+    {
+      "entityType": "AppStreamStack",
+      "displayName": "AppStream Stack",
+      "description": "An Amazon AppStream 2.0 stack that controls user access, settings, and streaming experience.",
+      "category": "RESOURCE",
+      "containmentScope": "ACCOUNT_REGIONAL",
+      "tags": ["enduser", "appstream", "stack", "aws"]
+    }
+  ]
+}

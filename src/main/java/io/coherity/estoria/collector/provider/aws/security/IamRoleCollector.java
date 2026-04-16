@@ -38,7 +38,6 @@ public class IamRoleCollector extends AbstractAwsContextAwareCollector
 {
     public static final String ENTITY_TYPE = "IamRole";
 
-    private IamClient iamClient;
 
     public IamRoleCollector()
     {
@@ -64,10 +63,7 @@ public class IamRoleCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("IamRoleCollector.collect called");
 
-        if (this.iamClient == null)
-        {
-            this.iamClient = AwsClientFactory.getInstance().getIamClient(providerContext);
-        }
+        IamClient iamClient = AwsClientFactory.getInstance().getIamClient(providerContext);
 
         try
         {
@@ -84,7 +80,7 @@ public class IamRoleCollector extends AbstractAwsContextAwareCollector
                 requestBuilder.marker(token);
             });
 
-            ListRolesResponse response = this.iamClient.listRoles(requestBuilder.build());
+            ListRolesResponse response = iamClient.listRoles(requestBuilder.build());
             List<Role> roles = response.roles();
             String nextMarker = response.isTruncated() ? response.marker() : null;
 

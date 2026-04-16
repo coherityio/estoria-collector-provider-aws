@@ -42,7 +42,6 @@ public class SubnetCollector extends AbstractAwsContextAwareCollector
 {
 	public static final String ENTITY_TYPE = "Subnet";
 
-	private Ec2Client ec2Client;
 
 	public SubnetCollector()
 	{
@@ -73,10 +72,7 @@ public class SubnetCollector extends AbstractAwsContextAwareCollector
 	{
 		log.debug("SubnetCollector.collectEntities called with request: {}", collectorRequestParams);
 
-		if (this.ec2Client == null)
-		{
-			this.ec2Client = AwsClientFactory.getInstance().getEc2Client(providerContext);
-		}
+		Ec2Client ec2Client = AwsClientFactory.getInstance().getEc2Client(providerContext);
 
 		try
 		{
@@ -100,7 +96,7 @@ public class SubnetCollector extends AbstractAwsContextAwareCollector
 			DescribeSubnetsRequest describeRequest = requestBuilder.build();
 			log.debug("SubnetCollector.collect calling DescribeSubnets with maxResults={} nextToken={}",
 				describeRequest.maxResults(), describeRequest.nextToken());
-			DescribeSubnetsResponse response = this.ec2Client.describeSubnets(describeRequest);
+			DescribeSubnetsResponse response = ec2Client.describeSubnets(describeRequest);
 			List<Subnet> subnets = response.subnets();
 			String nextToken = response.nextToken();
 

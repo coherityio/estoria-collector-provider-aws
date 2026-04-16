@@ -38,7 +38,6 @@ public class AthenaWorkGroupCollector extends AbstractAwsContextAwareCollector
 {
     public static final String ENTITY_TYPE = "AthenaWorkGroup";
 
-    private AthenaClient athenaClient;
 
     public AthenaWorkGroupCollector()
     {
@@ -64,10 +63,7 @@ public class AthenaWorkGroupCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("AthenaWorkGroupCollector.collectEntities called");
 
-        if (this.athenaClient == null)
-        {
-            this.athenaClient = AwsClientFactory.getInstance().getAthenaClient(providerContext);
-        }
+        AthenaClient athenaClient = AwsClientFactory.getInstance().getAthenaClient(providerContext);
 
         try
         {
@@ -87,7 +83,7 @@ public class AthenaWorkGroupCollector extends AbstractAwsContextAwareCollector
                 requestBuilder.nextToken(token);
             });
 
-            ListWorkGroupsResponse response = this.athenaClient.listWorkGroups(requestBuilder.build());
+            ListWorkGroupsResponse response = athenaClient.listWorkGroups(requestBuilder.build());
             List<WorkGroupSummary> workGroups = response.workGroups();
             String                nextToken   = response.nextToken();
 

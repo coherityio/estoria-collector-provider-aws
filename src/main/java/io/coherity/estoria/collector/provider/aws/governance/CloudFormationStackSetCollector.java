@@ -40,7 +40,6 @@ public class CloudFormationStackSetCollector extends AbstractAwsContextAwareColl
 {
 	public static final String ENTITY_TYPE = "CloudFormationStackSet";
 
-	private CloudFormationClient cloudFormationClient;
 
 	public CloudFormationStackSetCollector()
 	{
@@ -66,10 +65,7 @@ public class CloudFormationStackSetCollector extends AbstractAwsContextAwareColl
 	{
 		log.debug("CloudFormationStackSetCollector.collectEntities called");
 
-		if (this.cloudFormationClient == null)
-		{
-			this.cloudFormationClient = AwsClientFactory.getInstance().getCloudFormationClient(providerContext);
-		}
+		CloudFormationClient cloudFormationClient = AwsClientFactory.getInstance().getCloudFormationClient(providerContext);
 
 		try
 		{
@@ -87,7 +83,7 @@ public class CloudFormationStackSetCollector extends AbstractAwsContextAwareColl
 				requestBuilder.nextToken(token);
 			});
 
-			ListStackSetsResponse response = this.cloudFormationClient.listStackSets(requestBuilder.build());
+			ListStackSetsResponse response = cloudFormationClient.listStackSets(requestBuilder.build());
 			List<StackSetSummary> stackSets = response.summaries();
 			String               nextToken  = response.nextToken();
 

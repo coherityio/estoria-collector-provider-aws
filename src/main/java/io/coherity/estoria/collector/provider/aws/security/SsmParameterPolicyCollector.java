@@ -43,7 +43,6 @@ public class SsmParameterPolicyCollector extends AbstractAwsContextAwareCollecto
     public static final String ENTITY_TYPE = "SsmParameterPolicy";
     private static final int PAGE_SIZE = 50;
 
-    private SsmClient ssmClient;
 
     public SsmParameterPolicyCollector()
     {
@@ -69,10 +68,7 @@ public class SsmParameterPolicyCollector extends AbstractAwsContextAwareCollecto
     {
         log.debug("SsmParameterPolicyCollector.collect called");
 
-        if (this.ssmClient == null)
-        {
-            this.ssmClient = AwsClientFactory.getInstance().getSsmClient(providerContext);
-        }
+        SsmClient ssmClient = AwsClientFactory.getInstance().getSsmClient(providerContext);
 
         try
         {
@@ -81,7 +77,7 @@ public class SsmParameterPolicyCollector extends AbstractAwsContextAwareCollecto
 
             do
             {
-                DescribeParametersResponse response = this.ssmClient.describeParameters(
+                DescribeParametersResponse response = ssmClient.describeParameters(
                     DescribeParametersRequest.builder()
                         .maxResults(PAGE_SIZE)
                         .nextToken(nextToken)

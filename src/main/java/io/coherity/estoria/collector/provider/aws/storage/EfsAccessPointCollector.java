@@ -40,7 +40,6 @@ public class EfsAccessPointCollector extends AbstractAwsContextAwareCollector
 {
     public static final String ENTITY_TYPE = "EfsAccessPoint";
 
-    private EfsClient efsClient;
 
     public EfsAccessPointCollector()
     {
@@ -66,10 +65,7 @@ public class EfsAccessPointCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("EfsAccessPointCollector.collect called");
 
-        if (this.efsClient == null)
-        {
-            this.efsClient = AwsClientFactory.getInstance().getEfsClient(providerContext);
-        }
+        EfsClient efsClient = AwsClientFactory.getInstance().getEfsClient(providerContext);
 
         try
         {
@@ -86,7 +82,7 @@ public class EfsAccessPointCollector extends AbstractAwsContextAwareCollector
                 requestBuilder.nextToken(token);
             });
 
-            DescribeAccessPointsResponse response = this.efsClient.describeAccessPoints(requestBuilder.build());
+            DescribeAccessPointsResponse response = efsClient.describeAccessPoints(requestBuilder.build());
             List<AccessPointDescription> accessPoints = response.accessPoints();
             String nextToken = response.nextToken();
 

@@ -41,7 +41,6 @@ public class TargetHealthCollector extends AbstractAwsContextAwareCollector
 {
     public static final String ENTITY_TYPE = "TargetHealth";
 
-    private ElasticLoadBalancingV2Client elbV2Client;
 
     public TargetHealthCollector()
     {
@@ -76,10 +75,7 @@ public class TargetHealthCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("TargetHealthCollector.collect called");
 
-        if (this.elbV2Client == null)
-        {
-            this.elbV2Client = AwsClientFactory.getInstance().getElbV2Client(providerContext);
-        }
+        ElasticLoadBalancingV2Client elbV2Client = AwsClientFactory.getInstance().getElbV2Client(providerContext);
 
         try
         {
@@ -91,7 +87,7 @@ public class TargetHealthCollector extends AbstractAwsContextAwareCollector
                 DescribeTargetGroupsRequest.Builder tgRequestBuilder = DescribeTargetGroupsRequest.builder();
                 if (tgMarker != null) tgRequestBuilder.marker(tgMarker);
 
-                var tgResponse = this.elbV2Client.describeTargetGroups(tgRequestBuilder.build());
+                var tgResponse = elbV2Client.describeTargetGroups(tgRequestBuilder.build());
                 for (TargetGroup tg : tgResponse.targetGroups())
                 {
                     targetGroupArns.add(tg.targetGroupArn());
@@ -109,7 +105,7 @@ public class TargetHealthCollector extends AbstractAwsContextAwareCollector
             {
                 try
                 {
-                    DescribeTargetHealthResponse healthResponse = this.elbV2Client.describeTargetHealth(
+                    DescribeTargetHealthResponse healthResponse = elbV2Client.describeTargetHealth(
                         DescribeTargetHealthRequest.builder().targetGroupArn(tgArn).build());
 
                     for (TargetHealthDescription thd : healthResponse.targetHealthDescriptions())

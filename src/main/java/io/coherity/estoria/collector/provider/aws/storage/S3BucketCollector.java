@@ -44,7 +44,6 @@ public class S3BucketCollector extends AbstractAwsContextAwareCollector
 {
     public static final String ENTITY_TYPE = "S3Bucket";
 
-    private S3Client s3Client;
 
     public S3BucketCollector()
     {
@@ -70,15 +69,12 @@ public class S3BucketCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("S3BucketCollector.collect called");
 
-        if (this.s3Client == null)
-        {
-            this.s3Client = AwsClientFactory.getInstance().getS3Client(providerContext);
-        }
+        S3Client s3Client = AwsClientFactory.getInstance().getS3Client(providerContext);
 
         try
         {
             // SDK 2.25.60: ListBuckets does not support server-side pagination—returns all buckets at once
-            ListBucketsResponse response = this.s3Client.listBuckets(ListBucketsRequest.builder().build());
+            ListBucketsResponse response = s3Client.listBuckets(ListBucketsRequest.builder().build());
             List<Bucket> buckets = response.buckets();
             String nextToken = null;
 
@@ -101,7 +97,7 @@ public class S3BucketCollector extends AbstractAwsContextAwareCollector
                     String region = "";
                     try
                     {
-                        region = this.s3Client.getBucketLocation(
+                        region = s3Client.getBucketLocation(
                             GetBucketLocationRequest.builder().bucket(bucketName).build())
                             .locationConstraintAsString();
                         if (region == null || region.isBlank()) region = "us-east-1";
@@ -115,7 +111,7 @@ public class S3BucketCollector extends AbstractAwsContextAwareCollector
                     String versioning = "";
                     try
                     {
-                        BucketVersioningStatus status = this.s3Client.getBucketVersioning(
+                        BucketVersioningStatus status = s3Client.getBucketVersioning(
                             GetBucketVersioningRequest.builder().bucket(bucketName).build()).status();
                         versioning = status != null ? status.toString() : "Disabled";
                     }
@@ -128,7 +124,7 @@ public class S3BucketCollector extends AbstractAwsContextAwareCollector
                     List<String> encryptionAlgorithms = new ArrayList<>();
                     try
                     {
-                        List<ServerSideEncryptionRule> rules = this.s3Client.getBucketEncryption(
+                        List<ServerSideEncryptionRule> rules = s3Client.getBucketEncryption(
                             GetBucketEncryptionRequest.builder().bucket(bucketName).build())
                             .serverSideEncryptionConfiguration().rules();
                         if (rules != null)

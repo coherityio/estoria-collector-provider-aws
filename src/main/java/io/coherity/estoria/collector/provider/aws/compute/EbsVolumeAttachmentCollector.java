@@ -41,7 +41,6 @@ public class EbsVolumeAttachmentCollector extends AbstractAwsContextAwareCollect
 {
     public static final String ENTITY_TYPE = "EbsVolumeAttachment";
 
-    private Ec2Client ec2Client;
 
     public EbsVolumeAttachmentCollector()
     {
@@ -76,10 +75,7 @@ public class EbsVolumeAttachmentCollector extends AbstractAwsContextAwareCollect
     {
         log.debug("EbsVolumeAttachmentCollector.collect called");
 
-        if (this.ec2Client == null)
-        {
-            this.ec2Client = AwsClientFactory.getInstance().getEc2Client(providerContext);
-        }
+        Ec2Client ec2Client = AwsClientFactory.getInstance().getEc2Client(providerContext);
 
         try
         {
@@ -99,7 +95,7 @@ public class EbsVolumeAttachmentCollector extends AbstractAwsContextAwareCollect
                 int pageSize = collectorRequestParams.getPageSize();
                 if (pageSize > 0) reqBuilder.maxResults(pageSize);
 
-                DescribeVolumesResponse response = this.ec2Client.describeVolumes(reqBuilder.build());
+                DescribeVolumesResponse response = ec2Client.describeVolumes(reqBuilder.build());
 
                 for (Volume volume : response.volumes())
                 {

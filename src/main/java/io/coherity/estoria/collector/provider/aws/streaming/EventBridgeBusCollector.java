@@ -38,7 +38,6 @@ public class EventBridgeBusCollector extends AbstractAwsContextAwareCollector
 {
     public static final String ENTITY_TYPE = "EventBridgeBus";
 
-    private EventBridgeClient eventBridgeClient;
 
     public EventBridgeBusCollector()
     {
@@ -64,10 +63,7 @@ public class EventBridgeBusCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("EventBridgeBusCollector.collectEntities called");
 
-        if (this.eventBridgeClient == null)
-        {
-            this.eventBridgeClient = AwsClientFactory.getInstance().getEventBridgeClient(providerContext);
-        }
+        EventBridgeClient eventBridgeClient = AwsClientFactory.getInstance().getEventBridgeClient(providerContext);
 
         try
         {
@@ -87,7 +83,7 @@ public class EventBridgeBusCollector extends AbstractAwsContextAwareCollector
                 requestBuilder.nextToken(token);
             });
 
-            ListEventBusesResponse response = this.eventBridgeClient.listEventBuses(requestBuilder.build());
+            ListEventBusesResponse response = eventBridgeClient.listEventBuses(requestBuilder.build());
             List<EventBus> buses    = response.eventBuses();
             String         nextToken = response.nextToken();
 

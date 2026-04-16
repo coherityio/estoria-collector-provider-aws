@@ -40,7 +40,6 @@ public class KinesisStreamCollector extends AbstractAwsContextAwareCollector
 {
     public static final String ENTITY_TYPE = "KinesisStream";
 
-    private KinesisClient kinesisClient;
 
     public KinesisStreamCollector()
     {
@@ -66,10 +65,7 @@ public class KinesisStreamCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("KinesisStreamCollector.collectEntities called");
 
-        if (this.kinesisClient == null)
-        {
-            this.kinesisClient = AwsClientFactory.getInstance().getKinesisClient(providerContext);
-        }
+        KinesisClient kinesisClient = AwsClientFactory.getInstance().getKinesisClient(providerContext);
 
         try
         {
@@ -89,7 +85,7 @@ public class KinesisStreamCollector extends AbstractAwsContextAwareCollector
                 requestBuilder.nextToken(token);
             });
 
-            ListStreamsResponse response = this.kinesisClient.listStreams(requestBuilder.build());
+            ListStreamsResponse response = kinesisClient.listStreams(requestBuilder.build());
             List<StreamSummary> streamSummaries = response.streamSummaries();
             String nextToken = response.nextToken();
 
@@ -112,7 +108,7 @@ public class KinesisStreamCollector extends AbstractAwsContextAwareCollector
                     StreamDescriptionSummary detail = null;
                     try
                     {
-                        detail = this.kinesisClient
+                        detail = kinesisClient
                             .describeStreamSummary(DescribeStreamSummaryRequest.builder()
                                 .streamName(streamName)
                                 .build())

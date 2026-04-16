@@ -38,7 +38,6 @@ public class IamSamlProviderCollector extends AbstractAwsContextAwareCollector
 {
     public static final String ENTITY_TYPE = "IamSamlProvider";
 
-    private IamClient iamClient;
 
     public IamSamlProviderCollector()
     {
@@ -64,15 +63,12 @@ public class IamSamlProviderCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("IamSamlProviderCollector.collect called");
 
-        if (this.iamClient == null)
-        {
-            this.iamClient = AwsClientFactory.getInstance().getIamClient(providerContext);
-        }
+        IamClient iamClient = AwsClientFactory.getInstance().getIamClient(providerContext);
 
         try
         {
             // ListSAMLProviders returns all providers at once — no pagination
-            ListSamlProvidersResponse response = this.iamClient.listSAMLProviders(
+            ListSamlProvidersResponse response = iamClient.listSAMLProviders(
                 ListSamlProvidersRequest.builder().build());
             List<SAMLProviderListEntry> providers = response.samlProviderList();
 

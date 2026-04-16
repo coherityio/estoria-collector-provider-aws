@@ -38,7 +38,6 @@ public class CloudFrontResponseHeadersPolicyCollector extends AbstractAwsContext
 {
     public static final String ENTITY_TYPE = "CloudFrontResponseHeadersPolicy";
 
-    private CloudFrontClient cloudFrontClient;
 
     public CloudFrontResponseHeadersPolicyCollector()
     {
@@ -64,10 +63,7 @@ public class CloudFrontResponseHeadersPolicyCollector extends AbstractAwsContext
     {
         log.debug("CloudFrontResponseHeadersPolicyCollector.collect called");
 
-        if (this.cloudFrontClient == null)
-        {
-            this.cloudFrontClient = AwsClientFactory.getInstance().getCloudFrontClient(providerContext);
-        }
+        CloudFrontClient cloudFrontClient = AwsClientFactory.getInstance().getCloudFrontClient(providerContext);
 
         try
         {
@@ -86,7 +82,7 @@ public class CloudFrontResponseHeadersPolicyCollector extends AbstractAwsContext
             });
 
             ListResponseHeadersPoliciesResponse response =
-                this.cloudFrontClient.listResponseHeadersPolicies(requestBuilder.build());
+                cloudFrontClient.listResponseHeadersPolicies(requestBuilder.build());
             List<ResponseHeadersPolicySummary> policies = response.responseHeadersPolicyList() != null
                 ? response.responseHeadersPolicyList().items() : null;
             String nextMarker = response.responseHeadersPolicyList() != null

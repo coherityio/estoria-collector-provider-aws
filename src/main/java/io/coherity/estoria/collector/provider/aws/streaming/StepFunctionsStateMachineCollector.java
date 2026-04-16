@@ -38,7 +38,6 @@ public class StepFunctionsStateMachineCollector extends AbstractAwsContextAwareC
 {
     public static final String ENTITY_TYPE = "StepFunctionsStateMachine";
 
-    private SfnClient sfnClient;
 
     public StepFunctionsStateMachineCollector()
     {
@@ -64,10 +63,7 @@ public class StepFunctionsStateMachineCollector extends AbstractAwsContextAwareC
     {
         log.debug("StepFunctionsStateMachineCollector.collectEntities called");
 
-        if (this.sfnClient == null)
-        {
-            this.sfnClient = AwsClientFactory.getInstance().getSfnClient(providerContext);
-        }
+        SfnClient sfnClient = AwsClientFactory.getInstance().getSfnClient(providerContext);
 
         try
         {
@@ -87,7 +83,7 @@ public class StepFunctionsStateMachineCollector extends AbstractAwsContextAwareC
                 requestBuilder.nextToken(token);
             });
 
-            ListStateMachinesResponse response   = this.sfnClient.listStateMachines(requestBuilder.build());
+            ListStateMachinesResponse response   = sfnClient.listStateMachines(requestBuilder.build());
             List<StateMachineListItem> machines  = response.stateMachines();
             String                     nextToken = response.nextToken();
 

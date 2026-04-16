@@ -39,7 +39,6 @@ public class IamPolicyCollector extends AbstractAwsContextAwareCollector
 {
     public static final String ENTITY_TYPE = "IamPolicy";
 
-    private IamClient iamClient;
 
     public IamPolicyCollector()
     {
@@ -65,10 +64,7 @@ public class IamPolicyCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("IamPolicyCollector.collect called");
 
-        if (this.iamClient == null)
-        {
-            this.iamClient = AwsClientFactory.getInstance().getIamClient(providerContext);
-        }
+        IamClient iamClient = AwsClientFactory.getInstance().getIamClient(providerContext);
 
         try
         {
@@ -87,7 +83,7 @@ public class IamPolicyCollector extends AbstractAwsContextAwareCollector
                 requestBuilder.marker(token);
             });
 
-            ListPoliciesResponse response = this.iamClient.listPolicies(requestBuilder.build());
+            ListPoliciesResponse response = iamClient.listPolicies(requestBuilder.build());
             List<Policy> policies = response.policies();
             String nextMarker = response.isTruncated() ? response.marker() : null;
 

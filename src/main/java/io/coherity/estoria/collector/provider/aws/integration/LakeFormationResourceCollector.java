@@ -38,7 +38,6 @@ public class LakeFormationResourceCollector extends AbstractAwsContextAwareColle
 {
     public static final String ENTITY_TYPE = "LakeFormationResource";
 
-    private LakeFormationClient lakeFormationClient;
 
     public LakeFormationResourceCollector()
     {
@@ -64,10 +63,7 @@ public class LakeFormationResourceCollector extends AbstractAwsContextAwareColle
     {
         log.debug("LakeFormationResourceCollector.collectEntities called");
 
-        if (this.lakeFormationClient == null)
-        {
-            this.lakeFormationClient = AwsClientFactory.getInstance().getLakeFormationClient(providerContext);
-        }
+        LakeFormationClient lakeFormationClient = AwsClientFactory.getInstance().getLakeFormationClient(providerContext);
 
         try
         {
@@ -87,7 +83,7 @@ public class LakeFormationResourceCollector extends AbstractAwsContextAwareColle
                 requestBuilder.nextToken(token);
             });
 
-            ListResourcesResponse response = this.lakeFormationClient.listResources(requestBuilder.build());
+            ListResourcesResponse response = lakeFormationClient.listResources(requestBuilder.build());
             List<ResourceInfo> resourceList = response.resourceInfoList();
             String             nextToken    = response.nextToken();
 

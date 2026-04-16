@@ -42,7 +42,6 @@ public class VpcPeeringConnectionCollector extends AbstractAwsContextAwareCollec
 {
 	public static final String ENTITY_TYPE = "VpcPeeringConnection";
 
-	private Ec2Client ec2Client;
 
 	public VpcPeeringConnectionCollector()
 	{
@@ -73,10 +72,7 @@ public class VpcPeeringConnectionCollector extends AbstractAwsContextAwareCollec
 	{
 		log.debug("VpcPeeringConnectionCollector.collectEntities called with request: {}", collectorRequestParams);
 
-		if (this.ec2Client == null)
-		{
-			this.ec2Client = AwsClientFactory.getInstance().getEc2Client(providerContext);
-		}
+		Ec2Client ec2Client = AwsClientFactory.getInstance().getEc2Client(providerContext);
 
 		try
 		{
@@ -100,7 +96,7 @@ public class VpcPeeringConnectionCollector extends AbstractAwsContextAwareCollec
 			DescribeVpcPeeringConnectionsRequest describeRequest = requestBuilder.build();
 			log.debug("VpcPeeringConnectionCollector.collect calling DescribeVpcPeeringConnections with maxResults={} nextToken={}",
 				describeRequest.maxResults(), describeRequest.nextToken());
-			DescribeVpcPeeringConnectionsResponse response = this.ec2Client.describeVpcPeeringConnections(describeRequest);
+			DescribeVpcPeeringConnectionsResponse response = ec2Client.describeVpcPeeringConnections(describeRequest);
 			List<VpcPeeringConnection> peerings = response.vpcPeeringConnections();
 			String nextToken = response.nextToken();
 

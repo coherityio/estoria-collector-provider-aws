@@ -43,7 +43,6 @@ public class VpnConnectionCollector extends AbstractAwsContextAwareCollector
 {
 	public static final String ENTITY_TYPE = "VpnConnection";
 
-	private Ec2Client ec2Client;
 
 	public VpnConnectionCollector()
 	{
@@ -74,10 +73,7 @@ public class VpnConnectionCollector extends AbstractAwsContextAwareCollector
 	{
 		log.debug("VpnConnectionCollector.collectEntities called with request: {}", collectorRequestParams);
 
-		if (this.ec2Client == null)
-		{
-			this.ec2Client = AwsClientFactory.getInstance().getEc2Client(providerContext);
-		}
+		Ec2Client ec2Client = AwsClientFactory.getInstance().getEc2Client(providerContext);
 
 		try
 		{
@@ -88,7 +84,7 @@ public class VpnConnectionCollector extends AbstractAwsContextAwareCollector
 			// DescribeVpnConnections does not support pagination
 			DescribeVpnConnectionsRequest describeRequest = DescribeVpnConnectionsRequest.builder().build();
 			log.debug("VpnConnectionCollector.collect calling DescribeVpnConnections");
-			DescribeVpnConnectionsResponse response = this.ec2Client.describeVpnConnections(describeRequest);
+			DescribeVpnConnectionsResponse response = ec2Client.describeVpnConnections(describeRequest);
 			List<VpnConnection> vpnConnections = response.vpnConnections();
 
 			log.debug("VpnConnectionCollector.collect received {} VPN connections",

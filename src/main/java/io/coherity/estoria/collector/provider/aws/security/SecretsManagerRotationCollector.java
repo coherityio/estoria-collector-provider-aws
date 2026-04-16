@@ -40,7 +40,6 @@ public class SecretsManagerRotationCollector extends AbstractAwsContextAwareColl
     public static final String ENTITY_TYPE = "SecretsManagerRotation";
     private static final int PAGE_SIZE = 100;
 
-    private SecretsManagerClient secretsManagerClient;
 
     public SecretsManagerRotationCollector()
     {
@@ -66,10 +65,7 @@ public class SecretsManagerRotationCollector extends AbstractAwsContextAwareColl
     {
         log.debug("SecretsManagerRotationCollector.collect called");
 
-        if (this.secretsManagerClient == null)
-        {
-            this.secretsManagerClient = AwsClientFactory.getInstance().getSecretsManagerClient(providerContext);
-        }
+        SecretsManagerClient secretsManagerClient = AwsClientFactory.getInstance().getSecretsManagerClient(providerContext);
 
         try
         {
@@ -78,7 +74,7 @@ public class SecretsManagerRotationCollector extends AbstractAwsContextAwareColl
 
             do
             {
-                ListSecretsResponse response = this.secretsManagerClient.listSecrets(
+                ListSecretsResponse response = secretsManagerClient.listSecrets(
                     ListSecretsRequest.builder()
                         .maxResults(PAGE_SIZE)
                         .nextToken(nextToken)

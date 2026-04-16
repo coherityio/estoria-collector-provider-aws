@@ -40,7 +40,6 @@ public class ServiceCatalogPortfolioCollector extends AbstractAwsContextAwareCol
 {
 	public static final String ENTITY_TYPE = "ServiceCatalogPortfolio";
 
-	private ServiceCatalogClient serviceCatalogClient;
 
 	public ServiceCatalogPortfolioCollector()
 	{
@@ -66,10 +65,7 @@ public class ServiceCatalogPortfolioCollector extends AbstractAwsContextAwareCol
 	{
 		log.debug("ServiceCatalogPortfolioCollector.collectEntities called");
 
-		if (this.serviceCatalogClient == null)
-		{
-			this.serviceCatalogClient = AwsClientFactory.getInstance().getServiceCatalogClient(providerContext);
-		}
+		ServiceCatalogClient serviceCatalogClient = AwsClientFactory.getInstance().getServiceCatalogClient(providerContext);
 
 		try
 		{
@@ -86,7 +82,7 @@ public class ServiceCatalogPortfolioCollector extends AbstractAwsContextAwareCol
 				requestBuilder.pageToken(token);
 			});
 
-			ListPortfoliosResponse response = this.serviceCatalogClient.listPortfolios(requestBuilder.build());
+			ListPortfoliosResponse response = serviceCatalogClient.listPortfolios(requestBuilder.build());
 			List<PortfolioDetail> portfolios = response.portfolioDetails();
 			String                nextToken  = response.nextPageToken();
 

@@ -42,7 +42,6 @@ public class RouteTableCollector extends AbstractAwsContextAwareCollector
 {
 	public static final String ENTITY_TYPE = "RouteTable";
 
-	private Ec2Client ec2Client;
 
 	public RouteTableCollector()
 	{
@@ -73,10 +72,7 @@ public class RouteTableCollector extends AbstractAwsContextAwareCollector
 	{
 		log.debug("RouteTableCollector.collectEntities called with request: {}", collectorRequestParams);
 
-		if (this.ec2Client == null)
-		{
-			this.ec2Client = AwsClientFactory.getInstance().getEc2Client(providerContext);
-		}
+		Ec2Client ec2Client = AwsClientFactory.getInstance().getEc2Client(providerContext);
 
 		try
 		{
@@ -100,7 +96,7 @@ public class RouteTableCollector extends AbstractAwsContextAwareCollector
 			DescribeRouteTablesRequest describeRequest = requestBuilder.build();
 			log.debug("RouteTableCollector.collect calling DescribeRouteTables with maxResults={} nextToken={}",
 				describeRequest.maxResults(), describeRequest.nextToken());
-			DescribeRouteTablesResponse response = this.ec2Client.describeRouteTables(describeRequest);
+			DescribeRouteTablesResponse response = ec2Client.describeRouteTables(describeRequest);
 			List<RouteTable> routeTables = response.routeTables();
 			String nextToken = response.nextToken();
 

@@ -39,7 +39,6 @@ public class LakeFormationDataLakeSettingsCollector extends AbstractAwsContextAw
 {
     public static final String ENTITY_TYPE = "LakeFormationDataLakeSettings";
 
-    private LakeFormationClient lakeFormationClient;
 
     public LakeFormationDataLakeSettingsCollector()
     {
@@ -65,10 +64,7 @@ public class LakeFormationDataLakeSettingsCollector extends AbstractAwsContextAw
     {
         log.debug("LakeFormationDataLakeSettingsCollector.collectEntities called");
 
-        if (this.lakeFormationClient == null)
-        {
-            this.lakeFormationClient = AwsClientFactory.getInstance().getLakeFormationClient(providerContext);
-        }
+        LakeFormationClient lakeFormationClient = AwsClientFactory.getInstance().getLakeFormationClient(providerContext);
 
         List<CloudEntity> entities = new ArrayList<>();
         Instant now = Instant.now();
@@ -79,7 +75,7 @@ public class LakeFormationDataLakeSettingsCollector extends AbstractAwsContextAw
             String region    = awsSessionContext.getRegion() != null ? awsSessionContext.getRegion().id() : null;
 
             GetDataLakeSettingsResponse response =
-                this.lakeFormationClient.getDataLakeSettings(
+                lakeFormationClient.getDataLakeSettings(
                     GetDataLakeSettingsRequest.builder().catalogId(accountId).build());
 
             DataLakeSettings settings = response.dataLakeSettings();

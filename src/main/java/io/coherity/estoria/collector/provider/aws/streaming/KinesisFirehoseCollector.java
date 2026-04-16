@@ -40,7 +40,6 @@ public class KinesisFirehoseCollector extends AbstractAwsContextAwareCollector
 {
     public static final String ENTITY_TYPE = "KinesisFirehose";
 
-    private FirehoseClient firehoseClient;
 
     public KinesisFirehoseCollector()
     {
@@ -66,10 +65,7 @@ public class KinesisFirehoseCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("KinesisFirehoseCollector.collectEntities called");
 
-        if (this.firehoseClient == null)
-        {
-            this.firehoseClient = AwsClientFactory.getInstance().getFirehoseClient(providerContext);
-        }
+        FirehoseClient firehoseClient = AwsClientFactory.getInstance().getFirehoseClient(providerContext);
 
         try
         {
@@ -89,7 +85,7 @@ public class KinesisFirehoseCollector extends AbstractAwsContextAwareCollector
                 requestBuilder.exclusiveStartDeliveryStreamName(token);
             });
 
-            ListDeliveryStreamsResponse response = this.firehoseClient.listDeliveryStreams(requestBuilder.build());
+            ListDeliveryStreamsResponse response = firehoseClient.listDeliveryStreams(requestBuilder.build());
             List<String> streamNames  = response.deliveryStreamNames();
             Boolean      hasMore      = response.hasMoreDeliveryStreams();
             String       lastStream   = (streamNames != null && !streamNames.isEmpty())
@@ -110,7 +106,7 @@ public class KinesisFirehoseCollector extends AbstractAwsContextAwareCollector
                     DeliveryStreamDescription detail = null;
                     try
                     {
-                        detail = this.firehoseClient
+                        detail = firehoseClient
                             .describeDeliveryStream(DescribeDeliveryStreamRequest.builder()
                                 .deliveryStreamName(streamName)
                                 .build())

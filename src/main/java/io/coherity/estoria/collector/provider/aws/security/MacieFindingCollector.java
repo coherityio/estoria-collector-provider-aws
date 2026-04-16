@@ -45,7 +45,6 @@ public class MacieFindingCollector extends AbstractAwsContextAwareCollector
     private static final int PAGE_SIZE = 50;
     private static final int BATCH_SIZE = 25; // getFindings max
 
-    private Macie2Client macie2Client;
 
     public MacieFindingCollector()
     {
@@ -71,10 +70,7 @@ public class MacieFindingCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("MacieFindingCollector.collect called");
 
-        if (this.macie2Client == null)
-        {
-            this.macie2Client = AwsClientFactory.getInstance().getMacie2Client(providerContext);
-        }
+        Macie2Client macie2Client = AwsClientFactory.getInstance().getMacie2Client(providerContext);
 
         try
         {
@@ -85,7 +81,7 @@ public class MacieFindingCollector extends AbstractAwsContextAwareCollector
             String nextToken = null;
             do
             {
-                ListFindingsResponse listResponse = this.macie2Client.listFindings(
+                ListFindingsResponse listResponse = macie2Client.listFindings(
                     ListFindingsRequest.builder()
                         .maxResults(PAGE_SIZE)
                         .nextToken(nextToken)
@@ -103,7 +99,7 @@ public class MacieFindingCollector extends AbstractAwsContextAwareCollector
             for (int i = 0; i < findingIds.size(); i += BATCH_SIZE)
             {
                 List<String> batch = findingIds.subList(i, Math.min(i + BATCH_SIZE, findingIds.size()));
-                GetFindingsResponse getResponse = this.macie2Client.getFindings(
+                GetFindingsResponse getResponse = macie2Client.getFindings(
                     GetFindingsRequest.builder()
                         .findingIds(batch)
                         .build());

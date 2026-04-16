@@ -41,7 +41,6 @@ public class EfsFileSystemCollector extends AbstractAwsContextAwareCollector
 {
     public static final String ENTITY_TYPE = "EfsFileSystem";
 
-    private EfsClient efsClient;
 
     public EfsFileSystemCollector()
     {
@@ -67,10 +66,7 @@ public class EfsFileSystemCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("EfsFileSystemCollector.collect called");
 
-        if (this.efsClient == null)
-        {
-            this.efsClient = AwsClientFactory.getInstance().getEfsClient(providerContext);
-        }
+        EfsClient efsClient = AwsClientFactory.getInstance().getEfsClient(providerContext);
 
         try
         {
@@ -87,7 +83,7 @@ public class EfsFileSystemCollector extends AbstractAwsContextAwareCollector
                 requestBuilder.marker(token);
             });
 
-            DescribeFileSystemsResponse response = this.efsClient.describeFileSystems(requestBuilder.build());
+            DescribeFileSystemsResponse response = efsClient.describeFileSystems(requestBuilder.build());
             List<FileSystemDescription> fileSystems = response.fileSystems();
             String nextMarker = response.nextMarker();
 

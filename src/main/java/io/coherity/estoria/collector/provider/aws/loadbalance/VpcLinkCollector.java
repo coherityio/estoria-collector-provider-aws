@@ -40,7 +40,6 @@ public class VpcLinkCollector extends AbstractAwsContextAwareCollector
 {
     public static final String ENTITY_TYPE = "VpcLink";
 
-    private ApiGatewayClient apiGatewayClient;
 
     public VpcLinkCollector()
     {
@@ -75,10 +74,7 @@ public class VpcLinkCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("VpcLinkCollector.collect called");
 
-        if (this.apiGatewayClient == null)
-        {
-            this.apiGatewayClient = AwsClientFactory.getInstance().getApiGatewayClient(providerContext);
-        }
+        ApiGatewayClient apiGatewayClient = AwsClientFactory.getInstance().getApiGatewayClient(providerContext);
 
         try
         {
@@ -98,7 +94,7 @@ public class VpcLinkCollector extends AbstractAwsContextAwareCollector
                 requestBuilder.position(token);
             });
 
-            GetVpcLinksResponse response = this.apiGatewayClient.getVpcLinks(requestBuilder.build());
+            GetVpcLinksResponse response = apiGatewayClient.getVpcLinks(requestBuilder.build());
             List<VpcLink> vpcLinks = response.items();
             String nextPosition = response.position();
 

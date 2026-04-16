@@ -38,7 +38,6 @@ public class EfsMountTargetCollector extends AbstractAwsContextAwareCollector
 {
     public static final String ENTITY_TYPE = "EfsMountTarget";
 
-    private EfsClient efsClient;
 
     public EfsMountTargetCollector()
     {
@@ -64,10 +63,7 @@ public class EfsMountTargetCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("EfsMountTargetCollector.collect called");
 
-        if (this.efsClient == null)
-        {
-            this.efsClient = AwsClientFactory.getInstance().getEfsClient(providerContext);
-        }
+        EfsClient efsClient = AwsClientFactory.getInstance().getEfsClient(providerContext);
 
         try
         {
@@ -84,7 +80,7 @@ public class EfsMountTargetCollector extends AbstractAwsContextAwareCollector
                 requestBuilder.marker(token);
             });
 
-            DescribeMountTargetsResponse response = this.efsClient.describeMountTargets(requestBuilder.build());
+            DescribeMountTargetsResponse response = efsClient.describeMountTargets(requestBuilder.build());
             List<MountTargetDescription> mountTargets = response.mountTargets();
             String nextMarker = response.nextMarker();
 

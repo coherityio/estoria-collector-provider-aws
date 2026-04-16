@@ -42,7 +42,6 @@ public class Ec2InstanceCollector extends AbstractAwsContextAwareCollector
 {
     public static final String ENTITY_TYPE = "Ec2Instance";
 
-    private Ec2Client ec2Client;
 
     public Ec2InstanceCollector()
     {
@@ -77,10 +76,7 @@ public class Ec2InstanceCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("Ec2InstanceCollector.collect called");
 
-        if (this.ec2Client == null)
-        {
-            this.ec2Client = AwsClientFactory.getInstance().getEc2Client(providerContext);
-        }
+        Ec2Client ec2Client = AwsClientFactory.getInstance().getEc2Client(providerContext);
 
         try
         {
@@ -100,7 +96,7 @@ public class Ec2InstanceCollector extends AbstractAwsContextAwareCollector
                 requestBuilder.nextToken(token);
             });
 
-            DescribeInstancesResponse response = this.ec2Client.describeInstances(requestBuilder.build());
+            DescribeInstancesResponse response = ec2Client.describeInstances(requestBuilder.build());
             String nextToken = response.nextToken();
 
             List<CloudEntity> entities = new ArrayList<>();

@@ -39,7 +39,6 @@ public class SsmManagedInstanceCollector extends AbstractAwsContextAwareCollecto
     public static final String ENTITY_TYPE = "SsmManagedInstance";
     private static final int PAGE_SIZE = 50;
 
-    private SsmClient ssmClient;
 
     public SsmManagedInstanceCollector()
     {
@@ -65,10 +64,7 @@ public class SsmManagedInstanceCollector extends AbstractAwsContextAwareCollecto
     {
         log.debug("SsmManagedInstanceCollector.collect called");
 
-        if (this.ssmClient == null)
-        {
-            this.ssmClient = AwsClientFactory.getInstance().getSsmClient(providerContext);
-        }
+        SsmClient ssmClient = AwsClientFactory.getInstance().getSsmClient(providerContext);
 
         try
         {
@@ -77,7 +73,7 @@ public class SsmManagedInstanceCollector extends AbstractAwsContextAwareCollecto
 
             do
             {
-                DescribeInstanceInformationResponse response = this.ssmClient.describeInstanceInformation(
+                DescribeInstanceInformationResponse response = ssmClient.describeInstanceInformation(
                     DescribeInstanceInformationRequest.builder()
                         .maxResults(PAGE_SIZE)
                         .nextToken(nextToken)

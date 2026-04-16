@@ -40,7 +40,6 @@ public class TagEditorResourceCollector extends AbstractAwsContextAwareCollector
 {
 	public static final String ENTITY_TYPE = "TagEditorResource";
 
-	private ResourceGroupsTaggingApiClient resourceGroupsTaggingApiClient;
 
 	public TagEditorResourceCollector()
 	{
@@ -66,11 +65,8 @@ public class TagEditorResourceCollector extends AbstractAwsContextAwareCollector
 	{
 		log.debug("TagEditorResourceCollector.collectEntities called");
 
-		if (this.resourceGroupsTaggingApiClient == null)
-		{
-			this.resourceGroupsTaggingApiClient =
-				AwsClientFactory.getInstance().getResourceGroupsTaggingApiClient(providerContext);
-		}
+		ResourceGroupsTaggingApiClient resourceGroupsTaggingApiClient =
+			AwsClientFactory.getInstance().getResourceGroupsTaggingApiClient(providerContext);
 
 		try
 		{
@@ -87,7 +83,7 @@ public class TagEditorResourceCollector extends AbstractAwsContextAwareCollector
 				requestBuilder.paginationToken(token);
 			});
 
-			GetResourcesResponse response = this.resourceGroupsTaggingApiClient.getResources(requestBuilder.build());
+			GetResourcesResponse response = resourceGroupsTaggingApiClient.getResources(requestBuilder.build());
 			List<ResourceTagMapping> mappings       = response.resourceTagMappingList();
 			String                   paginationToken = response.paginationToken();
 

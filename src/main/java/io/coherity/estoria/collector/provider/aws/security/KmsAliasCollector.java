@@ -39,7 +39,6 @@ public class KmsAliasCollector extends AbstractAwsContextAwareCollector
     public static final String ENTITY_TYPE = "KmsAlias";
     private static final int PAGE_SIZE = 100;
 
-    private KmsClient kmsClient;
 
     public KmsAliasCollector()
     {
@@ -65,10 +64,7 @@ public class KmsAliasCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("KmsAliasCollector.collect called");
 
-        if (this.kmsClient == null)
-        {
-            this.kmsClient = AwsClientFactory.getInstance().getKmsClient(providerContext);
-        }
+        KmsClient kmsClient = AwsClientFactory.getInstance().getKmsClient(providerContext);
 
         try
         {
@@ -77,7 +73,7 @@ public class KmsAliasCollector extends AbstractAwsContextAwareCollector
 
             do
             {
-                ListAliasesResponse response = this.kmsClient.listAliases(
+                ListAliasesResponse response = kmsClient.listAliases(
                     ListAliasesRequest.builder()
                         .limit(PAGE_SIZE)
                         .marker(marker)

@@ -40,7 +40,6 @@ public class IamOpenIdConnectProviderCollector extends AbstractAwsContextAwareCo
 {
     public static final String ENTITY_TYPE = "IamOpenIdConnectProvider";
 
-    private IamClient iamClient;
 
     public IamOpenIdConnectProviderCollector()
     {
@@ -66,15 +65,12 @@ public class IamOpenIdConnectProviderCollector extends AbstractAwsContextAwareCo
     {
         log.debug("IamOpenIdConnectProviderCollector.collect called");
 
-        if (this.iamClient == null)
-        {
-            this.iamClient = AwsClientFactory.getInstance().getIamClient(providerContext);
-        }
+        IamClient iamClient = AwsClientFactory.getInstance().getIamClient(providerContext);
 
         try
         {
             // ListOpenIDConnectProviders returns all at once — no pagination
-            ListOpenIdConnectProvidersResponse listResponse = this.iamClient.listOpenIDConnectProviders(
+            ListOpenIdConnectProvidersResponse listResponse = iamClient.listOpenIDConnectProviders(
                 ListOpenIdConnectProvidersRequest.builder().build());
             List<OpenIDConnectProviderListEntry> entries = listResponse.openIDConnectProviderList();
 
@@ -96,7 +92,7 @@ public class IamOpenIdConnectProviderCollector extends AbstractAwsContextAwareCo
                 // Fetch details
                 try
                 {
-                    GetOpenIdConnectProviderResponse detail = this.iamClient.getOpenIDConnectProvider(
+                    GetOpenIdConnectProviderResponse detail = iamClient.getOpenIDConnectProvider(
                         GetOpenIdConnectProviderRequest.builder().openIDConnectProviderArn(arn).build());
                     attributes.put("url", detail.url());
                     attributes.put("clientIdList", detail.clientIDList());

@@ -38,7 +38,6 @@ public class CloudFrontDistributionCollector extends AbstractAwsContextAwareColl
 {
     public static final String ENTITY_TYPE = "CloudFrontDistribution";
 
-    private CloudFrontClient cloudFrontClient;
 
     public CloudFrontDistributionCollector()
     {
@@ -64,10 +63,7 @@ public class CloudFrontDistributionCollector extends AbstractAwsContextAwareColl
     {
         log.debug("CloudFrontDistributionCollector.collect called");
 
-        if (this.cloudFrontClient == null)
-        {
-            this.cloudFrontClient = AwsClientFactory.getInstance().getCloudFrontClient(providerContext);
-        }
+        CloudFrontClient cloudFrontClient = AwsClientFactory.getInstance().getCloudFrontClient(providerContext);
 
         try
         {
@@ -84,7 +80,7 @@ public class CloudFrontDistributionCollector extends AbstractAwsContextAwareColl
                 requestBuilder.marker(token);
             });
 
-            ListDistributionsResponse response = this.cloudFrontClient.listDistributions(requestBuilder.build());
+            ListDistributionsResponse response = cloudFrontClient.listDistributions(requestBuilder.build());
             List<DistributionSummary> distributions = response.distributionList() != null
                 ? response.distributionList().items() : null;
             String nextMarker = response.distributionList() != null

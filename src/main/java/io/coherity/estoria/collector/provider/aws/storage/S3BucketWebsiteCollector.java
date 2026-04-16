@@ -41,7 +41,6 @@ public class S3BucketWebsiteCollector extends AbstractAwsContextAwareCollector
 {
     public static final String ENTITY_TYPE = "S3BucketWebsite";
 
-    private S3Client s3Client;
 
     public S3BucketWebsiteCollector()
     {
@@ -67,14 +66,11 @@ public class S3BucketWebsiteCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("S3BucketWebsiteCollector.collect called");
 
-        if (this.s3Client == null)
-        {
-            this.s3Client = AwsClientFactory.getInstance().getS3Client(providerContext);
-        }
+        S3Client s3Client = AwsClientFactory.getInstance().getS3Client(providerContext);
 
         try
         {
-            ListBucketsResponse listResponse = this.s3Client.listBuckets();
+            ListBucketsResponse listResponse = s3Client.listBuckets();
             List<Bucket> buckets = listResponse.buckets();
 
             List<CloudEntity> entities = new ArrayList<>();
@@ -91,7 +87,7 @@ public class S3BucketWebsiteCollector extends AbstractAwsContextAwareCollector
                     GetBucketWebsiteResponse websiteResponse;
                     try
                     {
-                        websiteResponse = this.s3Client.getBucketWebsite(
+                        websiteResponse = s3Client.getBucketWebsite(
                             GetBucketWebsiteRequest.builder().bucket(bucketName).build());
                     }
                     catch (S3Exception ex)

@@ -41,7 +41,6 @@ public class SecurityHubFindingCollector extends AbstractAwsContextAwareCollecto
     public static final String ENTITY_TYPE = "SecurityHubFinding";
     private static final int PAGE_SIZE = 100;
 
-    private SecurityHubClient securityHubClient;
 
     public SecurityHubFindingCollector()
     {
@@ -67,10 +66,7 @@ public class SecurityHubFindingCollector extends AbstractAwsContextAwareCollecto
     {
         log.debug("SecurityHubFindingCollector.collect called");
 
-        if (this.securityHubClient == null)
-        {
-            this.securityHubClient = AwsClientFactory.getInstance().getSecurityHubClient(providerContext);
-        }
+        SecurityHubClient securityHubClient = AwsClientFactory.getInstance().getSecurityHubClient(providerContext);
 
         try
         {
@@ -79,7 +75,7 @@ public class SecurityHubFindingCollector extends AbstractAwsContextAwareCollecto
 
             do
             {
-                GetFindingsResponse response = this.securityHubClient.getFindings(
+                GetFindingsResponse response = securityHubClient.getFindings(
                     GetFindingsRequest.builder()
                         .maxResults(PAGE_SIZE)
                         .nextToken(nextToken)

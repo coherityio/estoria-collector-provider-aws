@@ -42,7 +42,6 @@ public class VpcCollector extends AbstractAwsContextAwareCollector
 {
 	public static final String ENTITY_TYPE = "Vpc";
 
-	private Ec2Client ec2Client;
 
 	public VpcCollector()
 	{
@@ -73,10 +72,7 @@ public class VpcCollector extends AbstractAwsContextAwareCollector
 	{
 		log.debug("VpcCollector.collectEntities called with request: {}", collectorRequestParams);
 
-		if(this.ec2Client == null)
-		{
-			this.ec2Client = AwsClientFactory.getInstance().getEc2Client(providerContext);
-		}
+		Ec2Client ec2Client = AwsClientFactory.getInstance().getEc2Client(providerContext);
 
 		try
 		{
@@ -102,7 +98,7 @@ public class VpcCollector extends AbstractAwsContextAwareCollector
 			DescribeVpcsRequest describeRequest = requestBuilder.build();
 			log.debug("VpcCollector.collect calling DescribeVpcs with maxResults={} nextToken={}",
 				describeRequest.maxResults(), describeRequest.nextToken());
-			DescribeVpcsResponse response = this.ec2Client.describeVpcs(describeRequest);
+			DescribeVpcsResponse response = ec2Client.describeVpcs(describeRequest);
 			List<Vpc> vpcs = response.vpcs();
 			String nextToken = response.nextToken();
 

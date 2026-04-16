@@ -42,7 +42,6 @@ public class CarrierGatewayCollector extends AbstractAwsContextAwareCollector
 {
 	public static final String ENTITY_TYPE = "CarrierGateway";
 
-	private Ec2Client ec2Client;
 
 	public CarrierGatewayCollector()
 	{
@@ -73,10 +72,7 @@ public class CarrierGatewayCollector extends AbstractAwsContextAwareCollector
 	{
 		log.debug("CarrierGatewayCollector.collectEntities called with request: {}", collectorRequestParams);
 
-		if (this.ec2Client == null)
-		{
-			this.ec2Client = AwsClientFactory.getInstance().getEc2Client(providerContext);
-		}
+		Ec2Client ec2Client = AwsClientFactory.getInstance().getEc2Client(providerContext);
 
 		try
 		{
@@ -100,7 +96,7 @@ public class CarrierGatewayCollector extends AbstractAwsContextAwareCollector
 			DescribeCarrierGatewaysRequest describeRequest = requestBuilder.build();
 			log.debug("CarrierGatewayCollector.collect calling DescribeCarrierGateways with maxResults={} nextToken={}",
 				describeRequest.maxResults(), describeRequest.nextToken());
-			DescribeCarrierGatewaysResponse response = this.ec2Client.describeCarrierGateways(describeRequest);
+			DescribeCarrierGatewaysResponse response = ec2Client.describeCarrierGateways(describeRequest);
 			List<CarrierGateway> carrierGateways = response.carrierGateways();
 			String nextToken = response.nextToken();
 

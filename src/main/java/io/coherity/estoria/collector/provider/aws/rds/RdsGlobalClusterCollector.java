@@ -44,7 +44,6 @@ public class RdsGlobalClusterCollector extends AbstractAwsContextAwareCollector
 {
     public static final String ENTITY_TYPE = "RdsGlobalCluster";
 
-    private RdsClient rdsClient;
 
     public RdsGlobalClusterCollector()
     {
@@ -70,10 +69,7 @@ public class RdsGlobalClusterCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("RdsGlobalClusterCollector.collectEntities called");
 
-        if (this.rdsClient == null)
-        {
-            this.rdsClient = AwsClientFactory.getInstance().getRdsClient(providerContext);
-        }
+        RdsClient rdsClient = AwsClientFactory.getInstance().getRdsClient(providerContext);
 
         try
         {
@@ -90,7 +86,7 @@ public class RdsGlobalClusterCollector extends AbstractAwsContextAwareCollector
                 requestBuilder.marker(token);
             });
 
-            DescribeGlobalClustersResponse response = this.rdsClient.describeGlobalClusters(requestBuilder.build());
+            DescribeGlobalClustersResponse response = rdsClient.describeGlobalClusters(requestBuilder.build());
             List<GlobalCluster> globalClusters = response.globalClusters();
             String nextMarker = response.marker();
 

@@ -41,7 +41,6 @@ public class BackupRecoveryPointCollector extends AbstractAwsContextAwareCollect
 {
 	public static final String ENTITY_TYPE = "BackupRecoveryPoint";
 
-	private BackupClient backupClient;
 
 	public BackupRecoveryPointCollector()
 	{
@@ -67,10 +66,7 @@ public class BackupRecoveryPointCollector extends AbstractAwsContextAwareCollect
 	{
 		log.debug("BackupRecoveryPointCollector.collectEntities called");
 
-		if (this.backupClient == null)
-		{
-			this.backupClient = AwsClientFactory.getInstance().getBackupClient(providerContext);
-		}
+		BackupClient backupClient = AwsClientFactory.getInstance().getBackupClient(providerContext);
 
 		try
 		{
@@ -84,7 +80,7 @@ public class BackupRecoveryPointCollector extends AbstractAwsContextAwareCollect
 			{
 				ListBackupVaultsRequest.Builder vaultReq = ListBackupVaultsRequest.builder();
 				if (vaultToken != null) vaultReq.nextToken(vaultToken);
-				ListBackupVaultsResponse vaultResp = this.backupClient.listBackupVaults(vaultReq.build());
+				ListBackupVaultsResponse vaultResp = backupClient.listBackupVaults(vaultReq.build());
 				if (vaultResp.backupVaultList() != null)
 				{
 					vaultResp.backupVaultList().forEach(v -> {
@@ -114,7 +110,7 @@ public class BackupRecoveryPointCollector extends AbstractAwsContextAwareCollect
 					if (rpToken != null) rpReq.nextToken(rpToken);
 
 					ListRecoveryPointsByBackupVaultResponse rpResp =
-						this.backupClient.listRecoveryPointsByBackupVault(rpReq.build());
+						backupClient.listRecoveryPointsByBackupVault(rpReq.build());
 					rpToken = rpResp.nextToken();
 
 					List<RecoveryPointByBackupVault> points = rpResp.recoveryPoints();

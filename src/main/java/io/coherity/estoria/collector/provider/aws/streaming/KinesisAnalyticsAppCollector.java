@@ -39,7 +39,6 @@ public class KinesisAnalyticsAppCollector extends AbstractAwsContextAwareCollect
 {
     public static final String ENTITY_TYPE = "KinesisAnalyticsApp";
 
-    private KinesisAnalyticsV2Client analyticsClient;
 
     public KinesisAnalyticsAppCollector()
     {
@@ -65,10 +64,7 @@ public class KinesisAnalyticsAppCollector extends AbstractAwsContextAwareCollect
     {
         log.debug("KinesisAnalyticsAppCollector.collectEntities called");
 
-        if (this.analyticsClient == null)
-        {
-            this.analyticsClient = AwsClientFactory.getInstance().getKinesisAnalyticsV2Client(providerContext);
-        }
+        KinesisAnalyticsV2Client analyticsClient = AwsClientFactory.getInstance().getKinesisAnalyticsV2Client(providerContext);
 
         try
         {
@@ -88,7 +84,7 @@ public class KinesisAnalyticsAppCollector extends AbstractAwsContextAwareCollect
                 requestBuilder.nextToken(token);
             });
 
-            ListApplicationsResponse response = this.analyticsClient.listApplications(requestBuilder.build());
+            ListApplicationsResponse response = analyticsClient.listApplications(requestBuilder.build());
             List<ApplicationSummary> apps     = response.applicationSummaries();
             String nextToken                  = response.nextToken();
 

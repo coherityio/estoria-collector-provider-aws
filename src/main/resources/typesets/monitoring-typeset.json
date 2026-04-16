@@ -1,0 +1,88 @@
+{
+  "typesetId": "aws-monitoring",
+  "displayName": "AWS Monitoring",
+  "description": "Entity types for AWS monitoring, observability, and audit services including CloudWatch, CloudTrail, and X-Ray.",
+  "version": "1.0.0",
+  "entityTypes": [
+    {
+      "entityType": "CloudWatchLogGroup",
+      "displayName": "CloudWatch Log Group",
+      "description": "An Amazon CloudWatch Logs log group that stores related log streams.",
+      "category": "RESOURCE",
+      "containmentScope": "ACCOUNT_REGIONAL",
+      "tags": ["monitoring", "cloudwatch", "logs", "log-group", "aws"]
+    },
+    {
+      "entityType": "CloudWatchLogStream",
+      "displayName": "CloudWatch Log Stream",
+      "description": "A summary-level Amazon CloudWatch Logs log stream within a log group.",
+      "category": "RESOURCE",
+      "containmentScope": "ACCOUNT_REGIONAL",
+      "tags": ["monitoring", "cloudwatch", "logs", "log-stream", "aws"]
+    },
+    {
+      "entityType": "CloudWatchMetricAlarm",
+      "displayName": "CloudWatch Metric Alarm",
+      "description": "An Amazon CloudWatch metric alarm that evaluates a metric threshold.",
+      "category": "RESOURCE",
+      "containmentScope": "ACCOUNT_REGIONAL",
+      "tags": ["monitoring", "cloudwatch", "alarm", "metric", "aws"]
+    },
+    {
+      "entityType": "CloudWatchCompositeAlarm",
+      "displayName": "CloudWatch Composite Alarm",
+      "description": "An Amazon CloudWatch composite alarm based on other alarms.",
+      "category": "RESOURCE",
+      "containmentScope": "ACCOUNT_REGIONAL",
+      "tags": ["monitoring", "cloudwatch", "alarm", "composite", "aws"]
+    },
+    {
+      "entityType": "CloudWatchDashboard",
+      "displayName": "CloudWatch Dashboard",
+      "description": "An Amazon CloudWatch dashboard used to visualize metrics and alarms.",
+      "category": "RESOURCE",
+      "containmentScope": "ACCOUNT_REGIONAL",
+      "tags": ["monitoring", "cloudwatch", "dashboard", "aws"]
+    },
+    {
+      "entityType": "CloudTrailTrail",
+      "displayName": "CloudTrail Trail",
+      "description": "An AWS CloudTrail trail that records account activity and API events.",
+      "category": "RESOURCE",
+      "containmentScope": "ACCOUNT_REGIONAL",
+      "tags": ["monitoring", "cloudtrail", "trail", "audit", "aws"]
+    },
+    {
+      "entityType": "CloudTrailEventDataStore",
+      "displayName": "CloudTrail Event Data Store",
+      "description": "An AWS CloudTrail Lake event data store for retained and queryable events.",
+      "category": "RESOURCE",
+      "containmentScope": "ACCOUNT_REGIONAL",
+      "tags": ["monitoring", "cloudtrail", "lake", "event-data-store", "aws"]
+    },
+    {
+      "entityType": "XRayGroup",
+      "displayName": "X-Ray Group",
+      "description": "An AWS X-Ray group that organizes traces using a filter expression.",
+      "category": "RESOURCE",
+      "containmentScope": "ACCOUNT_REGIONAL",
+      "tags": ["monitoring", "xray", "group", "tracing", "aws"]
+    },
+    {
+      "entityType": "XRaySamplingRule",
+      "displayName": "X-Ray Sampling Rule",
+      "description": "An AWS X-Ray sampling rule that controls trace sampling behavior.",
+      "category": "RESOURCE",
+      "containmentScope": "ACCOUNT_REGIONAL",
+      "tags": ["monitoring", "xray", "sampling", "rule", "aws"]
+    },
+    {
+      "entityType": "XRayEncryptionConfig",
+      "displayName": "X-Ray Encryption Config",
+      "description": "The AWS X-Ray encryption configuration for trace data in an account and region.",
+      "category": "RESOURCE",
+      "containmentScope": "ACCOUNT_REGIONAL",
+      "tags": ["monitoring", "xray", "encryption", "config", "aws"]
+    }
+  ]
+}

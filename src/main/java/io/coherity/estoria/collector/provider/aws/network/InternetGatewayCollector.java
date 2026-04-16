@@ -42,7 +42,6 @@ public class InternetGatewayCollector extends AbstractAwsContextAwareCollector
 {
 	public static final String ENTITY_TYPE = "InternetGateway";
 
-	private Ec2Client ec2Client;
 
 	public InternetGatewayCollector()
 	{
@@ -73,10 +72,7 @@ public class InternetGatewayCollector extends AbstractAwsContextAwareCollector
 	{
 		log.debug("InternetGatewayCollector.collectEntities called with request: {}", collectorRequestParams);
 
-		if (this.ec2Client == null)
-		{
-			this.ec2Client = AwsClientFactory.getInstance().getEc2Client(providerContext);
-		}
+		Ec2Client ec2Client = AwsClientFactory.getInstance().getEc2Client(providerContext);
 
 		try
 		{
@@ -100,7 +96,7 @@ public class InternetGatewayCollector extends AbstractAwsContextAwareCollector
 			DescribeInternetGatewaysRequest describeRequest = requestBuilder.build();
 			log.debug("InternetGatewayCollector.collect calling DescribeInternetGateways with maxResults={} nextToken={}",
 				describeRequest.maxResults(), describeRequest.nextToken());
-			DescribeInternetGatewaysResponse response = this.ec2Client.describeInternetGateways(describeRequest);
+			DescribeInternetGatewaysResponse response = ec2Client.describeInternetGateways(describeRequest);
 			List<InternetGateway> igws = response.internetGateways();
 			String nextToken = response.nextToken();
 

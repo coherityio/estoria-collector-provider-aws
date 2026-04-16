@@ -43,7 +43,6 @@ public class Ec2KeyPairCollector extends AbstractAwsContextAwareCollector
 {
     public static final String ENTITY_TYPE = "Ec2KeyPair";
 
-    private Ec2Client ec2Client;
 
     public Ec2KeyPairCollector()
     {
@@ -78,10 +77,7 @@ public class Ec2KeyPairCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("Ec2KeyPairCollector.collect called");
 
-        if (this.ec2Client == null)
-        {
-            this.ec2Client = AwsClientFactory.getInstance().getEc2Client(providerContext);
-        }
+        Ec2Client ec2Client = AwsClientFactory.getInstance().getEc2Client(providerContext);
 
         try
         {
@@ -89,7 +85,7 @@ public class Ec2KeyPairCollector extends AbstractAwsContextAwareCollector
             String accountId = awsSessionContext.getCurrentAccountId();
 
             // DescribeKeyPairs does not support pagination
-            DescribeKeyPairsResponse response = this.ec2Client.describeKeyPairs(
+            DescribeKeyPairsResponse response = ec2Client.describeKeyPairs(
                 DescribeKeyPairsRequest.builder().includePublicKey(true).build());
             List<KeyPairInfo> keyPairs = response.keyPairs();
 

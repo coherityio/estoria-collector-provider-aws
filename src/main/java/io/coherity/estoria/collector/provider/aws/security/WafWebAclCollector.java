@@ -39,7 +39,6 @@ public class WafWebAclCollector extends AbstractAwsContextAwareCollector
 {
     public static final String ENTITY_TYPE = "WafWebAcl";
 
-    private Wafv2Client wafv2Client;
 
     public WafWebAclCollector()
     {
@@ -65,10 +64,7 @@ public class WafWebAclCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("WafWebAclCollector.collect called");
 
-        if (this.wafv2Client == null)
-        {
-            this.wafv2Client = AwsClientFactory.getInstance().getWafv2Client(providerContext);
-        }
+        Wafv2Client wafv2Client = AwsClientFactory.getInstance().getWafv2Client(providerContext);
 
         try
         {
@@ -84,7 +80,7 @@ public class WafWebAclCollector extends AbstractAwsContextAwareCollector
                 {
                     wafRequestBuilder.nextMarker(nextMarker);
                 }
-                ListWebAcLsResponse response = this.wafv2Client.listWebACLs(wafRequestBuilder.build());
+                ListWebAcLsResponse response = wafv2Client.listWebACLs(wafRequestBuilder.build());
 
                 for (WebACLSummary acl : response.webACLs())
                 {

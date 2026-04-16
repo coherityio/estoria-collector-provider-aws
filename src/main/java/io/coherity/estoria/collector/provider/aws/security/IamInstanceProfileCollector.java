@@ -39,7 +39,6 @@ public class IamInstanceProfileCollector extends AbstractAwsContextAwareCollecto
 {
     public static final String ENTITY_TYPE = "IamInstanceProfile";
 
-    private IamClient iamClient;
 
     public IamInstanceProfileCollector()
     {
@@ -65,10 +64,7 @@ public class IamInstanceProfileCollector extends AbstractAwsContextAwareCollecto
     {
         log.debug("IamInstanceProfileCollector.collect called");
 
-        if (this.iamClient == null)
-        {
-            this.iamClient = AwsClientFactory.getInstance().getIamClient(providerContext);
-        }
+        IamClient iamClient = AwsClientFactory.getInstance().getIamClient(providerContext);
 
         try
         {
@@ -85,7 +81,7 @@ public class IamInstanceProfileCollector extends AbstractAwsContextAwareCollecto
                 requestBuilder.marker(token);
             });
 
-            ListInstanceProfilesResponse response = this.iamClient.listInstanceProfiles(requestBuilder.build());
+            ListInstanceProfilesResponse response = iamClient.listInstanceProfiles(requestBuilder.build());
             List<InstanceProfile> profiles = response.instanceProfiles();
             String nextMarker = response.isTruncated() ? response.marker() : null;
 

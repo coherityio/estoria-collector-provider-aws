@@ -39,7 +39,6 @@ public class RdsSubnetGroupCollector extends AbstractAwsContextAwareCollector
 {
     public static final String ENTITY_TYPE = "RdsSubnetGroup";
 
-    private RdsClient rdsClient;
 
     public RdsSubnetGroupCollector()
     {
@@ -65,10 +64,7 @@ public class RdsSubnetGroupCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("RdsSubnetGroupCollector.collectEntities called");
 
-        if (this.rdsClient == null)
-        {
-            this.rdsClient = AwsClientFactory.getInstance().getRdsClient(providerContext);
-        }
+        RdsClient rdsClient = AwsClientFactory.getInstance().getRdsClient(providerContext);
 
         try
         {
@@ -85,7 +81,7 @@ public class RdsSubnetGroupCollector extends AbstractAwsContextAwareCollector
                 requestBuilder.marker(token);
             });
 
-            DescribeDbSubnetGroupsResponse response = this.rdsClient.describeDBSubnetGroups(requestBuilder.build());
+            DescribeDbSubnetGroupsResponse response = rdsClient.describeDBSubnetGroups(requestBuilder.build());
             List<DBSubnetGroup> subnetGroups = response.dbSubnetGroups();
             String nextMarker = response.marker();
 

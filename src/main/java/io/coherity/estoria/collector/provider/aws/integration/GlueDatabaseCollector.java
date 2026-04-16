@@ -38,7 +38,6 @@ public class GlueDatabaseCollector extends AbstractAwsContextAwareCollector
 {
     public static final String ENTITY_TYPE = "GlueDatabase";
 
-    private GlueClient glueClient;
 
     public GlueDatabaseCollector()
     {
@@ -64,10 +63,7 @@ public class GlueDatabaseCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("GlueDatabaseCollector.collectEntities called");
 
-        if (this.glueClient == null)
-        {
-            this.glueClient = AwsClientFactory.getInstance().getGlueClient(providerContext);
-        }
+        GlueClient glueClient = AwsClientFactory.getInstance().getGlueClient(providerContext);
 
         try
         {
@@ -87,7 +83,7 @@ public class GlueDatabaseCollector extends AbstractAwsContextAwareCollector
                 requestBuilder.nextToken(token);
             });
 
-            GetDatabasesResponse response = this.glueClient.getDatabases(requestBuilder.build());
+            GetDatabasesResponse response = glueClient.getDatabases(requestBuilder.build());
             List<Database> databases = response.databaseList();
             String         nextToken = response.nextToken();
 

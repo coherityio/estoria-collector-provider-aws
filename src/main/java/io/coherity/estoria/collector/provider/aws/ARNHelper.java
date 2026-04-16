@@ -24,6 +24,8 @@ public final class ARNHelper
     public static final String SERVICE_IAM = "iam";
     public static final String SERVICE_LAMBDA = "lambda";
     public static final String SERVICE_CLOUDTRAIL = "cloudtrail";
+    public static final String SERVICE_CLOUDWATCH = "cloudwatch";
+    public static final String SERVICE_CLOUDWATCH_LOGS = "logs";
     public static final String SERVICE_S3 = "s3";
     public static final String SERVICE_ELB = "elasticloadbalancing";
     public static final String SERVICE_GLOBAL_ACCELERATOR = "globalaccelerator";
@@ -31,11 +33,22 @@ public final class ARNHelper
     public static final String SERVICE_EXECUTE_API = "execute-api";
     public static final String SERVICE_API_GATEWAY = "apigateway";
     public static final String SERVICE_CLOUDFORMATION = "cloudformation";
+    public static final String SERVICE_CODEARTIFACT = "codeartifact";
+    public static final String SERVICE_CODEBUILD = "codebuild";
+    public static final String SERVICE_CODECOMMIT = "codecommit";
+    public static final String SERVICE_CODEDEPLOY = "codedeploy";
+    public static final String SERVICE_CODEGURU_PROFILER = "codeguru-profiler";
+    public static final String SERVICE_CODEGURU_REVIEWER = "codeguru-reviewer";
+    public static final String SERVICE_CODEPIPELINE = "codepipeline";
+    public static final String SERVICE_CLOUD9 = "cloud9";
     public static final String SERVICE_GLUE = "glue";
     public static final String SERVICE_BACKUP = "backup";
     public static final String SERVICE_APPCONFIG = "appconfig";
     public static final String SERVICE_NEPTUNE = "neptune";
     public static final String SERVICE_SERVICE_CATALOG = "catalog";
+    public static final String SERVICE_WORKSPACES = "workspaces";
+    public static final String SERVICE_APPSTREAM = "appstream";
+    public static final String SERVICE_XRAY = "xray";
     public static final String SERVICE_SES             = "ses";
     public static final String SERVICE_SES_V2          = "ses";
 
@@ -95,9 +108,27 @@ public final class ARNHelper
 
     // ===== CloudTrail =====
     public static final String RESOURCE_TRAIL = "trail";
+    public static final String RESOURCE_EVENT_DATA_STORE = "eventdatastore";
+
+    // ===== Monitoring =====
+    public static final String RESOURCE_LOG_GROUP = "log-group";
+    public static final String RESOURCE_LOG_STREAM = "log-stream";
+    public static final String RESOURCE_ALARM = "alarm";
+    public static final String RESOURCE_DASHBOARD = "dashboard";
+    public static final String RESOURCE_GROUP = "group";
+    public static final String RESOURCE_SAMPLING_RULE = "sampling-rule";
+    public static final String RESOURCE_ENCRYPTION_CONFIG = "encryption-config";
 
     // ===== CloudFormation =====
     public static final String RESOURCE_STACKSET = "stackset";
+
+    // ===== Developer Tools =====
+    public static final String RESOURCE_APPLICATION_CODEDEPLOY = "application";
+    public static final String RESOURCE_DEPLOYMENT_GROUP = "deploymentgroup";
+    public static final String RESOURCE_ENVIRONMENT = "environment";
+    public static final String RESOURCE_PROFILING_GROUP = "profilingGroup";
+    public static final String RESOURCE_PROJECT = "project";
+    public static final String RESOURCE_REPOSITORY_ASSOCIATION = "association";
 
     // ===== Glue =====
     public static final String RESOURCE_JOB = "job";
@@ -115,6 +146,12 @@ public final class ARNHelper
 
     // ===== Service Catalog =====
     public static final String RESOURCE_PROVISIONED_PRODUCT = "stack";
+
+    // ===== End User Computing =====
+    public static final String RESOURCE_WORKSPACE = "workspace";
+    public static final String RESOURCE_DIRECTORY = "directory";
+    public static final String RESOURCE_FLEET = "fleet";
+    public static final String RESOURCE_STACK = "stack";
 
     // ===== Regex =====
     public static final String ARN_REGEX = "^arn:([^:]*):([^:]*):([^:]*):([^:]*):(.*)$";
@@ -511,6 +548,165 @@ public final class ARNHelper
 
         return buildArn(partitionForRegion(region), SERVICE_CLOUDFORMATION, region, accountId,
             RESOURCE_STACKSET + RESOURCE_SEPARATOR_SLASH + stackSetName + RESOURCE_SEPARATOR_COLON + stackSetId);
+    }
+
+    // ===== Developer Tools =====
+
+    public static String codeCommitRepositoryArn(String region, String accountId, String repositoryName)
+    {
+        return buildArn(partitionForRegion(region), SERVICE_CODECOMMIT, region, accountId,
+            requireNonBlank(repositoryName, "repositoryName"));
+    }
+
+    public static String codeBuildProjectArn(String region, String accountId, String projectName)
+    {
+        return buildArn(partitionForRegion(region), SERVICE_CODEBUILD, region, accountId,
+            RESOURCE_PROJECT, projectName, ResourceSeparator.SLASH);
+    }
+
+    public static String codePipelinePipelineArn(String region, String accountId, String pipelineName)
+    {
+        return buildArn(partitionForRegion(region), SERVICE_CODEPIPELINE, region, accountId,
+            requireNonBlank(pipelineName, "pipelineName"));
+    }
+
+    public static String codeDeployApplicationArn(String region, String accountId, String applicationName)
+    {
+        return buildArn(partitionForRegion(region), SERVICE_CODEDEPLOY, region, accountId,
+            RESOURCE_APPLICATION_CODEDEPLOY, applicationName, ResourceSeparator.COLON);
+    }
+
+    public static String codeDeployDeploymentGroupArn(
+        String region,
+        String accountId,
+        String applicationName,
+        String deploymentGroupName)
+    {
+        requireNonBlank(applicationName, "applicationName");
+        requireNonBlank(deploymentGroupName, "deploymentGroupName");
+
+        return buildArn(partitionForRegion(region), SERVICE_CODEDEPLOY, region, accountId,
+            RESOURCE_DEPLOYMENT_GROUP + RESOURCE_SEPARATOR_COLON + applicationName
+                + RESOURCE_SEPARATOR_SLASH + deploymentGroupName);
+    }
+
+    public static String codeArtifactRepositoryArn(String region, String accountId, String domainName, String repositoryName)
+    {
+        requireNonBlank(domainName, "domainName");
+        requireNonBlank(repositoryName, "repositoryName");
+
+        return buildArn(partitionForRegion(region), SERVICE_CODEARTIFACT, region, accountId,
+            RESOURCE_REPOSITORY + RESOURCE_SEPARATOR_SLASH + domainName + RESOURCE_SEPARATOR_SLASH + repositoryName);
+    }
+
+    public static String codeGuruProfilerGroupArn(String region, String accountId, String profilingGroupName)
+    {
+        return buildArn(partitionForRegion(region), SERVICE_CODEGURU_PROFILER, region, accountId,
+            RESOURCE_PROFILING_GROUP, profilingGroupName, ResourceSeparator.COLON);
+    }
+
+    public static String codeGuruReviewerRepositoryAssociationArn(String region, String accountId, String associationId)
+    {
+        return buildArn(partitionForRegion(region), SERVICE_CODEGURU_REVIEWER, region, accountId,
+            RESOURCE_REPOSITORY_ASSOCIATION, associationId, ResourceSeparator.COLON);
+    }
+
+    public static String cloud9EnvironmentArn(String region, String accountId, String environmentId)
+    {
+        return buildArn(partitionForRegion(region), SERVICE_CLOUD9, region, accountId,
+            RESOURCE_ENVIRONMENT, environmentId, ResourceSeparator.COLON);
+    }
+
+    // ===== End User Computing =====
+
+    public static String workSpacesWorkspaceArn(String region, String accountId, String workspaceId)
+    {
+        return buildArn(partitionForRegion(region), SERVICE_WORKSPACES, region, accountId,
+            RESOURCE_WORKSPACE, workspaceId, ResourceSeparator.SLASH);
+    }
+
+    public static String workSpacesDirectoryArn(String region, String accountId, String directoryId)
+    {
+        return buildArn(partitionForRegion(region), SERVICE_WORKSPACES, region, accountId,
+            RESOURCE_DIRECTORY, directoryId, ResourceSeparator.SLASH);
+    }
+
+    public static String workSpacesApplicationArn(String region, String accountId, String applicationId)
+    {
+        return buildArn(partitionForRegion(region), SERVICE_WORKSPACES, region, accountId,
+            RESOURCE_APPLICATION, applicationId, ResourceSeparator.SLASH);
+    }
+
+    public static String appStreamFleetArn(String region, String accountId, String fleetName)
+    {
+        return buildArn(partitionForRegion(region), SERVICE_APPSTREAM, region, accountId,
+            RESOURCE_FLEET, fleetName, ResourceSeparator.SLASH);
+    }
+
+    public static String appStreamStackArn(String region, String accountId, String stackName)
+    {
+        return buildArn(partitionForRegion(region), SERVICE_APPSTREAM, region, accountId,
+            RESOURCE_STACK, stackName, ResourceSeparator.SLASH);
+    }
+
+    // ===== Monitoring =====
+
+    public static String cloudWatchLogGroupArn(String region, String accountId, String logGroupName)
+    {
+        return buildArn(partitionForRegion(region), SERVICE_CLOUDWATCH_LOGS, region, accountId,
+            RESOURCE_LOG_GROUP, logGroupName, ResourceSeparator.COLON);
+    }
+
+    public static String cloudWatchLogStreamArn(String region, String accountId, String logGroupName, String logStreamName)
+    {
+        requireNonBlank(logGroupName, "logGroupName");
+        requireNonBlank(logStreamName, "logStreamName");
+
+        return buildArn(partitionForRegion(region), SERVICE_CLOUDWATCH_LOGS, region, accountId,
+            RESOURCE_LOG_GROUP + RESOURCE_SEPARATOR_COLON + logGroupName
+                + RESOURCE_SEPARATOR_COLON + RESOURCE_LOG_STREAM + RESOURCE_SEPARATOR_COLON + logStreamName);
+    }
+
+    public static String cloudWatchAlarmArn(String region, String accountId, String alarmName)
+    {
+        return buildArn(partitionForRegion(region), SERVICE_CLOUDWATCH, region, accountId,
+            RESOURCE_ALARM, alarmName, ResourceSeparator.COLON);
+    }
+
+    public static String cloudWatchDashboardArn(String region, String accountId, String dashboardName)
+    {
+        return buildArn(partitionForRegion(region), SERVICE_CLOUDWATCH, null, accountId,
+            RESOURCE_DASHBOARD, dashboardName, ResourceSeparator.SLASH);
+    }
+
+    public static String cloudTrailTrailArn(String region, String accountId, String trailName)
+    {
+        return buildArn(partitionForRegion(region), SERVICE_CLOUDTRAIL, region, accountId,
+            RESOURCE_TRAIL, trailName, ResourceSeparator.SLASH);
+    }
+
+    public static String cloudTrailEventDataStoreArn(String region, String accountId, String eventDataStoreId)
+    {
+        return buildArn(partitionForRegion(region), SERVICE_CLOUDTRAIL, region, accountId,
+            RESOURCE_EVENT_DATA_STORE, eventDataStoreId, ResourceSeparator.SLASH);
+    }
+
+    public static String xRayGroupArn(String region, String accountId, String groupName)
+    {
+        return buildArn(partitionForRegion(region), SERVICE_XRAY, region, accountId,
+            RESOURCE_GROUP, groupName, ResourceSeparator.COLON);
+    }
+
+    public static String xRaySamplingRuleArn(String region, String accountId, String ruleName)
+    {
+        return buildArn(partitionForRegion(region), SERVICE_XRAY, region, accountId,
+            RESOURCE_SAMPLING_RULE, ruleName, ResourceSeparator.COLON);
+    }
+
+    public static String xRayEncryptionConfigArn(String region, String accountId)
+    {
+        return buildArn(partitionForRegion(region), SERVICE_XRAY, region, accountId,
+            RESOURCE_ENCRYPTION_CONFIG, "default", ResourceSeparator.COLON);
     }
 
     // ===== Glue =====

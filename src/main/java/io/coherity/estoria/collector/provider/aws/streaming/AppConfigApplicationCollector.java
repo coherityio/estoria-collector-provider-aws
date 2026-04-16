@@ -38,7 +38,6 @@ public class AppConfigApplicationCollector extends AbstractAwsContextAwareCollec
 {
     public static final String ENTITY_TYPE = "AppConfigApplication";
 
-    private AppConfigClient appConfigClient;
 
     public AppConfigApplicationCollector()
     {
@@ -64,10 +63,7 @@ public class AppConfigApplicationCollector extends AbstractAwsContextAwareCollec
     {
         log.debug("AppConfigApplicationCollector.collectEntities called");
 
-        if (this.appConfigClient == null)
-        {
-            this.appConfigClient = AwsClientFactory.getInstance().getAppConfigClient(providerContext);
-        }
+        AppConfigClient appConfigClient = AwsClientFactory.getInstance().getAppConfigClient(providerContext);
 
         try
         {
@@ -87,7 +83,7 @@ public class AppConfigApplicationCollector extends AbstractAwsContextAwareCollec
                 requestBuilder.nextToken(token);
             });
 
-            ListApplicationsResponse response = this.appConfigClient.listApplications(requestBuilder.build());
+            ListApplicationsResponse response = appConfigClient.listApplications(requestBuilder.build());
             List<Application> apps   = response.items();
             String nextToken         = response.nextToken();
 

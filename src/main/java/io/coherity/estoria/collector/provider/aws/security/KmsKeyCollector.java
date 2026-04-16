@@ -42,7 +42,6 @@ public class KmsKeyCollector extends AbstractAwsContextAwareCollector
     public static final String ENTITY_TYPE = "KmsKey";
     private static final int PAGE_SIZE = 100;
 
-    private KmsClient kmsClient;
 
     public KmsKeyCollector()
     {
@@ -68,10 +67,7 @@ public class KmsKeyCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("KmsKeyCollector.collect called");
 
-        if (this.kmsClient == null)
-        {
-            this.kmsClient = AwsClientFactory.getInstance().getKmsClient(providerContext);
-        }
+        KmsClient kmsClient = AwsClientFactory.getInstance().getKmsClient(providerContext);
 
         try
         {
@@ -80,7 +76,7 @@ public class KmsKeyCollector extends AbstractAwsContextAwareCollector
 
             do
             {
-                ListKeysResponse listResponse = this.kmsClient.listKeys(
+                ListKeysResponse listResponse = kmsClient.listKeys(
                     ListKeysRequest.builder()
                         .limit(PAGE_SIZE)
                         .marker(marker)
@@ -90,7 +86,7 @@ public class KmsKeyCollector extends AbstractAwsContextAwareCollector
                 {
                     try
                     {
-                        DescribeKeyResponse describeResponse = this.kmsClient.describeKey(
+                        DescribeKeyResponse describeResponse = kmsClient.describeKey(
                             DescribeKeyRequest.builder()
                                 .keyId(keyEntry.keyId())
                                 .build());

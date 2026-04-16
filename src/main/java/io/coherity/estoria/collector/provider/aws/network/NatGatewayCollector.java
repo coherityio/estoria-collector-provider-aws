@@ -42,7 +42,6 @@ public class NatGatewayCollector extends AbstractAwsContextAwareCollector
 {
 	public static final String ENTITY_TYPE = "NatGateway";
 
-	private Ec2Client ec2Client;
 
 	public NatGatewayCollector()
 	{
@@ -73,10 +72,7 @@ public class NatGatewayCollector extends AbstractAwsContextAwareCollector
 	{
 		log.debug("NatGatewayCollector.collectEntities called with request: {}", collectorRequestParams);
 
-		if (this.ec2Client == null)
-		{
-			this.ec2Client = AwsClientFactory.getInstance().getEc2Client(providerContext);
-		}
+		Ec2Client ec2Client = AwsClientFactory.getInstance().getEc2Client(providerContext);
 
 		try
 		{
@@ -100,7 +96,7 @@ public class NatGatewayCollector extends AbstractAwsContextAwareCollector
 			DescribeNatGatewaysRequest describeRequest = requestBuilder.build();
 			log.debug("NatGatewayCollector.collect calling DescribeNatGateways with maxResults={} nextToken={}",
 				describeRequest.maxResults(), describeRequest.nextToken());
-			DescribeNatGatewaysResponse response = this.ec2Client.describeNatGateways(describeRequest);
+			DescribeNatGatewaysResponse response = ec2Client.describeNatGateways(describeRequest);
 			List<NatGateway> natGateways = response.natGateways();
 			String nextToken = response.nextToken();
 

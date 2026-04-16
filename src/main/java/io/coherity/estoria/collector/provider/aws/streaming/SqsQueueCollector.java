@@ -39,7 +39,6 @@ public class SqsQueueCollector extends AbstractAwsContextAwareCollector
 {
     public static final String ENTITY_TYPE = "SqsQueue";
 
-    private SqsClient sqsClient;
 
     public SqsQueueCollector()
     {
@@ -65,10 +64,7 @@ public class SqsQueueCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("SqsQueueCollector.collectEntities called");
 
-        if (this.sqsClient == null)
-        {
-            this.sqsClient = AwsClientFactory.getInstance().getSqsClient(providerContext);
-        }
+        SqsClient sqsClient = AwsClientFactory.getInstance().getSqsClient(providerContext);
 
         try
         {
@@ -88,7 +84,7 @@ public class SqsQueueCollector extends AbstractAwsContextAwareCollector
                 requestBuilder.nextToken(token);
             });
 
-            ListQueuesResponse response = this.sqsClient.listQueues(requestBuilder.build());
+            ListQueuesResponse response = sqsClient.listQueues(requestBuilder.build());
             List<String> queueUrls  = response.queueUrls();
             String       nextToken  = response.nextToken();
 
@@ -128,7 +124,7 @@ public class SqsQueueCollector extends AbstractAwsContextAwareCollector
                     Map<String, String> attrs = new HashMap<>();
                     try
                     {
-                        attrs = this.sqsClient.getQueueAttributes(
+                        attrs = sqsClient.getQueueAttributes(
                             GetQueueAttributesRequest.builder()
                                 .queueUrl(queueUrl)
                                 .attributeNames(attrNames)

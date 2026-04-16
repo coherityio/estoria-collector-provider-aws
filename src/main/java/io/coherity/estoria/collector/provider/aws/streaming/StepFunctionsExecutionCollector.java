@@ -42,7 +42,6 @@ public class StepFunctionsExecutionCollector extends AbstractAwsContextAwareColl
 {
     public static final String ENTITY_TYPE = "StepFunctionsExecution";
 
-    private SfnClient sfnClient;
 
     public StepFunctionsExecutionCollector()
     {
@@ -68,10 +67,7 @@ public class StepFunctionsExecutionCollector extends AbstractAwsContextAwareColl
     {
         log.debug("StepFunctionsExecutionCollector.collectEntities called");
 
-        if (this.sfnClient == null)
-        {
-            this.sfnClient = AwsClientFactory.getInstance().getSfnClient(providerContext);
-        }
+        SfnClient sfnClient = AwsClientFactory.getInstance().getSfnClient(providerContext);
 
         try
         {
@@ -87,7 +83,7 @@ public class StepFunctionsExecutionCollector extends AbstractAwsContextAwareColl
             {
                 ListStateMachinesRequest.Builder smReq = ListStateMachinesRequest.builder().maxResults(100);
                 if (smCursor != null) smReq.nextToken(smCursor);
-                ListStateMachinesResponse smRes = this.sfnClient.listStateMachines(smReq.build());
+                ListStateMachinesResponse smRes = sfnClient.listStateMachines(smReq.build());
                 if (smRes.stateMachines() != null)
                 {
                     smRes.stateMachines().forEach(m -> { if (m.stateMachineArn() != null) stateMachineArns.add(m.stateMachineArn()); });
@@ -109,7 +105,7 @@ public class StepFunctionsExecutionCollector extends AbstractAwsContextAwareColl
                         .maxResults(pageSize);
                     if (execCursor != null) execReq.nextToken(execCursor);
 
-                    ListExecutionsResponse execRes = this.sfnClient.listExecutions(execReq.build());
+                    ListExecutionsResponse execRes = sfnClient.listExecutions(execReq.build());
                     List<ExecutionListItem> executions = execRes.executions();
 
                     if (executions != null)

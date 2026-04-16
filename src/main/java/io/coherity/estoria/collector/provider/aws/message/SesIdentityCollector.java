@@ -39,7 +39,6 @@ public class SesIdentityCollector extends AbstractAwsContextAwareCollector
 {
 	public static final String ENTITY_TYPE = "SesIdentity";
 
-	private SesV2Client sesV2Client;
 
 	public SesIdentityCollector()
 	{
@@ -65,10 +64,7 @@ public class SesIdentityCollector extends AbstractAwsContextAwareCollector
 	{
 		log.debug("SesIdentityCollector.collectEntities called");
 
-		if (this.sesV2Client == null)
-		{
-			this.sesV2Client = AwsClientFactory.getInstance().getSesV2Client(providerContext);
-		}
+		SesV2Client sesV2Client = AwsClientFactory.getInstance().getSesV2Client(providerContext);
 
 		try
 		{
@@ -85,7 +81,7 @@ public class SesIdentityCollector extends AbstractAwsContextAwareCollector
 				requestBuilder.nextToken(token);
 			});
 
-			ListEmailIdentitiesResponse response = this.sesV2Client.listEmailIdentities(requestBuilder.build());
+			ListEmailIdentitiesResponse response = sesV2Client.listEmailIdentities(requestBuilder.build());
 			List<IdentityInfo> identities = response.emailIdentities();
 			String             nextToken  = response.nextToken();
 

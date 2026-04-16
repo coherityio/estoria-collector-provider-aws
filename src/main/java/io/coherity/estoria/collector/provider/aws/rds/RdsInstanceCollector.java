@@ -40,7 +40,6 @@ public class RdsInstanceCollector extends AbstractAwsContextAwareCollector
 {
     public static final String ENTITY_TYPE = "RdsInstance";
 
-    private RdsClient rdsClient;
 
     public RdsInstanceCollector()
     {
@@ -66,10 +65,7 @@ public class RdsInstanceCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("RdsInstanceCollector.collectEntities called");
 
-        if (this.rdsClient == null)
-        {
-            this.rdsClient = AwsClientFactory.getInstance().getRdsClient(providerContext);
-        }
+        RdsClient rdsClient = AwsClientFactory.getInstance().getRdsClient(providerContext);
 
         try
         {
@@ -86,7 +82,7 @@ public class RdsInstanceCollector extends AbstractAwsContextAwareCollector
                 requestBuilder.marker(token);
             });
 
-            DescribeDbInstancesResponse response = this.rdsClient.describeDBInstances(requestBuilder.build());
+            DescribeDbInstancesResponse response = rdsClient.describeDBInstances(requestBuilder.build());
             List<DBInstance> instances = response.dbInstances();
             String nextMarker = response.marker();
 

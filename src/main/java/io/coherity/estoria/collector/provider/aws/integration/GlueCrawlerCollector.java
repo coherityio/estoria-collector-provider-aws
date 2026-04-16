@@ -38,7 +38,6 @@ public class GlueCrawlerCollector extends AbstractAwsContextAwareCollector
 {
     public static final String ENTITY_TYPE = "GlueCrawler";
 
-    private GlueClient glueClient;
 
     public GlueCrawlerCollector()
     {
@@ -64,10 +63,7 @@ public class GlueCrawlerCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("GlueCrawlerCollector.collectEntities called");
 
-        if (this.glueClient == null)
-        {
-            this.glueClient = AwsClientFactory.getInstance().getGlueClient(providerContext);
-        }
+        GlueClient glueClient = AwsClientFactory.getInstance().getGlueClient(providerContext);
 
         try
         {
@@ -87,7 +83,7 @@ public class GlueCrawlerCollector extends AbstractAwsContextAwareCollector
                 requestBuilder.nextToken(token);
             });
 
-            GetCrawlersResponse response = this.glueClient.getCrawlers(requestBuilder.build());
+            GetCrawlersResponse response = glueClient.getCrawlers(requestBuilder.build());
             List<Crawler> crawlers = response.crawlers();
             String        nextToken = response.nextToken();
 

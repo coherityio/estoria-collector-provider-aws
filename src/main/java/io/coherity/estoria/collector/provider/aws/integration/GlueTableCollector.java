@@ -41,7 +41,6 @@ public class GlueTableCollector extends AbstractAwsContextAwareCollector
 {
     public static final String ENTITY_TYPE = "GlueTable";
 
-    private GlueClient glueClient;
 
     public GlueTableCollector()
     {
@@ -67,10 +66,7 @@ public class GlueTableCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("GlueTableCollector.collectEntities called");
 
-        if (this.glueClient == null)
-        {
-            this.glueClient = AwsClientFactory.getInstance().getGlueClient(providerContext);
-        }
+        GlueClient glueClient = AwsClientFactory.getInstance().getGlueClient(providerContext);
 
         try
         {
@@ -84,7 +80,7 @@ public class GlueTableCollector extends AbstractAwsContextAwareCollector
             {
                 GetDatabasesRequest.Builder dbReq = GetDatabasesRequest.builder();
                 if (dbNextToken != null) dbReq.nextToken(dbNextToken);
-                GetDatabasesResponse dbResp = this.glueClient.getDatabases(dbReq.build());
+                GetDatabasesResponse dbResp = glueClient.getDatabases(dbReq.build());
                 if (dbResp.databaseList() != null)
                 {
                     for (Database db : dbResp.databaseList())
@@ -110,7 +106,7 @@ public class GlueTableCollector extends AbstractAwsContextAwareCollector
                     if (pageSize > 0)   reqBuilder.maxResults(pageSize);
                     if (tableNextToken != null) reqBuilder.nextToken(tableNextToken);
 
-                    GetTablesResponse tabResp = this.glueClient.getTables(reqBuilder.build());
+                    GetTablesResponse tabResp = glueClient.getTables(reqBuilder.build());
                     tableNextToken = tabResp.nextToken();
 
                     List<Table> tables = tabResp.tableList();

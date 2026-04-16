@@ -41,7 +41,6 @@ public class Ec2LaunchTemplateCollector extends AbstractAwsContextAwareCollector
 {
     public static final String ENTITY_TYPE = "Ec2LaunchTemplate";
 
-    private Ec2Client ec2Client;
 
     public Ec2LaunchTemplateCollector()
     {
@@ -76,10 +75,7 @@ public class Ec2LaunchTemplateCollector extends AbstractAwsContextAwareCollector
     {
         log.debug("Ec2LaunchTemplateCollector.collect called");
 
-        if (this.ec2Client == null)
-        {
-            this.ec2Client = AwsClientFactory.getInstance().getEc2Client(providerContext);
-        }
+        Ec2Client ec2Client = AwsClientFactory.getInstance().getEc2Client(providerContext);
 
         try
         {
@@ -99,7 +95,7 @@ public class Ec2LaunchTemplateCollector extends AbstractAwsContextAwareCollector
                 requestBuilder.nextToken(token);
             });
 
-            DescribeLaunchTemplatesResponse response = this.ec2Client.describeLaunchTemplates(requestBuilder.build());
+            DescribeLaunchTemplatesResponse response = ec2Client.describeLaunchTemplates(requestBuilder.build());
             List<LaunchTemplate> templates = response.launchTemplates();
             String nextToken = response.nextToken();
 
